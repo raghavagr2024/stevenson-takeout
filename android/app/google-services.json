@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "835278701885",
+    "firebase_url": "https://stevenson-takeo-default-rtdb.firebaseio.com",
+    "project_id": "stevenson-takeo",
+    "storage_bucket": "stevenson-takeo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:835278701885:android:13da19df59840f80b73154",
+        "android_client_info": {
+          "package_name": "stevenson.students.stevensontakeout"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "835278701885-saor2gupir7oj011u32fuhs270271o1a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5LSWJ6CycpNVbERRkTHAv0TCa_CV7juY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "835278701885-saor2gupir7oj011u32fuhs270271o1a.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "835278701885-ls09e31toj3iutf1p1qrfskpb4mim0aa.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.stevensontakeout"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
