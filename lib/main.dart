@@ -5,6 +5,8 @@ import 'firebase_options.dart';
 
 Future<void> main() async {
 
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -14,9 +16,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("in build");
     return MaterialApp(
-      home: Text('hello'),
+      home: Text('stevenson-takeout'),
     );
 
   }
