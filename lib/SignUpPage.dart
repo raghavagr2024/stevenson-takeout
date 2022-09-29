@@ -1,5 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'main.dart';
 late TextEditingController _name;
 late TextEditingController _email;
 late TextEditingController _password;
@@ -9,14 +10,17 @@ class signUpPage extends StatelessWidget{
     return Scaffold(
       body: Column(
         children: <Widget>[
-          SizedBox(height: 150),
+          SizedBox(height: 100),
           emailTextField(),
           SizedBox(height: 30),
           passwordTextField(),
           SizedBox(height: 30),
           studentIDTextField(),
           SizedBox(height: 30),
-          nameTextField()
+          nameTextField(),
+          SizedBox(height: 50),
+          signupButton()
+
         ],
       )
     );
@@ -143,4 +147,43 @@ class _studentIDTextField extends State<studentIDTextField>{
     );
   }
 
+}
+
+class signupButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+        onPressed: () async {
+          await _signUpWithEmailAndPassword();
+        },
+        style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFFc99a2c),
+            padding: const EdgeInsets.fromLTRB(60, 0, 60, 0)
+        ),
+        child: const Text("Sign up")
+    );
+  }
+
+  Future<UserCredential?> _signUpWithEmailAndPassword() async {
+    //create a timer that expires the email
+    //if email is resent then they can still be verified
+    //if email is expired and they go back delete their account
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _email.text,
+        password: _password.text,
+      );
+      user?.reload();
+      if (user!= null && !user.emailVerified) {
+        await user.sendEmailVerification();
+        print("sent");
+      }
+    }
+    on FirebaseAuthException catch (e) {
+      /// These are two examples of several possible error messages from
+      /// FirebaseAuth. Find the [complete list of error messages here.](https://firebase.google.com/docs/auth/admin/errors)
+      print(e.code);
+    }
+  }
 }
