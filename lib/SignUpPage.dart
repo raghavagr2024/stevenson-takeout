@@ -1,25 +1,30 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'main.dart';
+import 'LoginPage.dart';
+import 'VerificationPage.dart';
 late TextEditingController _name;
-late TextEditingController _email;
+late TextEditingController email;
 late TextEditingController _password;
 late TextEditingController _studentID;
-class signUpPage extends StatelessWidget{
+bool temp = false;
+class SignUpPage extends StatelessWidget{
+  @override
   Widget build(BuildContext context){
     return Scaffold(
       body: Column(
         children: <Widget>[
-          SizedBox(height: 100),
-          emailTextField(),
-          SizedBox(height: 30),
-          passwordTextField(),
-          SizedBox(height: 30),
-          studentIDTextField(),
-          SizedBox(height: 30),
-          nameTextField(),
-          SizedBox(height: 50),
-          signupButton()
+          const SizedBox(height: 50),
+          EmailTextField(),
+          const SizedBox(height: 30),
+          PasswordTextField(),
+          const SizedBox(height: 30),
+          StudentIDTextField(),
+          const SizedBox(height: 30),
+          NameTextField(),
+          const SizedBox(height: 50),
+          SignupButton(),
+          const SizedBox(height: 10),
+          LoginNavigator()
 
         ],
       )
@@ -27,10 +32,11 @@ class signUpPage extends StatelessWidget{
   }
 }
 
-class nameTextField extends StatefulWidget{
-  State<nameTextField> createState() => _nameTextField();
+class NameTextField extends StatefulWidget{
+  @override
+  State<NameTextField> createState() => _NameTextField();
 }
-class _nameTextField extends State<nameTextField>{
+class _NameTextField extends State<NameTextField>{
 
   @override
   void initState(){
@@ -46,9 +52,9 @@ class _nameTextField extends State<nameTextField>{
                 controller: _name,
                 decoration: const InputDecoration(
                   labelText: 'Last Name',
-                  labelStyle: TextStyle(color: const Color(0xFFc99a2c)),
+                  labelStyle: TextStyle(color: Color(0xFFc99a2c)),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: const Color(0xFFc99a2c)),
+                    borderSide: BorderSide(color: Color(0xFFc99a2c)),
                   ),
                 ),
               ),
@@ -57,15 +63,16 @@ class _nameTextField extends State<nameTextField>{
   }
 
 }
-class emailTextField extends StatefulWidget{
-  State<emailTextField> createState() => _emailTextField();
+class EmailTextField extends StatefulWidget{
+  @override
+  State<EmailTextField> createState() => _EmailTextField();
 }
-class _emailTextField extends State<emailTextField>{
+class _EmailTextField extends State<EmailTextField>{
 
   @override
   void initState(){
     super.initState();
-    _email = TextEditingController();
+    email = TextEditingController();
   }
   @override
   Widget build(BuildContext context) {
@@ -73,12 +80,12 @@ class _emailTextField extends State<emailTextField>{
         child: SizedBox(
           width: 250,
           child: TextFormField(
-            controller: _email,
+            controller: email,
             decoration: const InputDecoration(
               labelText: 'Email',
-              labelStyle: TextStyle(color: const Color(0xFFc99a2c)),
+              labelStyle: TextStyle(color: Color(0xFFc99a2c)),
               focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: const Color(0xFFc99a2c)),
+                borderSide: BorderSide(color: Color(0xFFc99a2c)),
               ),
             ),
           ),
@@ -87,10 +94,11 @@ class _emailTextField extends State<emailTextField>{
   }
 
 }
-class passwordTextField extends StatefulWidget{
-  State<passwordTextField> createState() => _passwordTextField();
+class PasswordTextField extends StatefulWidget{
+  @override
+  State<PasswordTextField> createState() => _PasswordTextField();
 }
-class _passwordTextField extends State<passwordTextField>{
+class _PasswordTextField extends State<PasswordTextField>{
 
   @override
   void initState(){
@@ -107,9 +115,9 @@ class _passwordTextField extends State<passwordTextField>{
             obscureText: true,
             decoration: const InputDecoration(
               labelText: 'Password',
-              labelStyle: TextStyle(color: const Color(0xFFc99a2c)),
+              labelStyle: TextStyle(color: Color(0xFFc99a2c)),
               focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: const Color(0xFFc99a2c)),
+                borderSide: BorderSide(color: Color(0xFFc99a2c)),
               ),
             ),
           ),
@@ -118,10 +126,11 @@ class _passwordTextField extends State<passwordTextField>{
   }
 
 }
-class studentIDTextField extends StatefulWidget{
-  State<studentIDTextField> createState() => _studentIDTextField();
+class StudentIDTextField extends StatefulWidget{
+  @override
+  State<StudentIDTextField> createState() => _StudentIDTextField();
 }
-class _studentIDTextField extends State<studentIDTextField>{
+class _StudentIDTextField extends State<StudentIDTextField>{
 
   @override
   void initState(){
@@ -137,9 +146,9 @@ class _studentIDTextField extends State<studentIDTextField>{
             controller: _studentID,
             decoration: const InputDecoration(
               labelText: 'Student ID',
-              labelStyle: TextStyle(color: const Color(0xFFc99a2c)),
+              labelStyle: TextStyle(color: Color(0xFFc99a2c)),
               focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: const Color(0xFFc99a2c)),
+                borderSide: BorderSide(color: Color(0xFFc99a2c)),
               ),
             ),
           ),
@@ -149,12 +158,15 @@ class _studentIDTextField extends State<studentIDTextField>{
 
 }
 
-class signupButton extends StatelessWidget {
+class SignupButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
         onPressed: () async {
           await _signUpWithEmailAndPassword();
+          Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => VerificationPage()));
         },
         style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFFc99a2c),
@@ -171,7 +183,7 @@ class signupButton extends StatelessWidget {
     try {
       User? user = FirebaseAuth.instance.currentUser;
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _email.text,
+        email: email.text,
         password: _password.text,
       );
       user?.reload();
@@ -186,4 +198,23 @@ class signupButton extends StatelessWidget {
       print(e.code);
     }
   }
+}
+
+class LoginNavigator extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      style: TextButton.styleFrom(
+        foregroundColor: const Color(0xFFc99a2c),
+      ),
+      onPressed: (){
+        Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()));
+      },
+      child: const Text("Have an account? Login Instead"),
+
+    );
+  }
+
 }

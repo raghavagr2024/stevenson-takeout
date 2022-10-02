@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:stevensontakeout/SignUpPage.dart';
 
+import 'LoginPage.dart';
+
 class firstPage extends StatelessWidget{
   Widget build(BuildContext context){
     return Scaffold(
@@ -15,9 +17,9 @@ class firstPage extends StatelessWidget{
             ),
           ),
           SizedBox(height: 50,),
-          signUpButton(),
+          LoginButton(),
           SizedBox(height: 50,),
-          loginButton()
+          SignUpButton()
 
         ],
       ),
@@ -25,7 +27,7 @@ class firstPage extends StatelessWidget{
   }
 }
 
-class signUpButton extends StatelessWidget{
+class LoginButton extends StatelessWidget{
 
   Widget build(BuildContext context){
       return ElevatedButton(
@@ -34,14 +36,16 @@ class signUpButton extends StatelessWidget{
             padding: EdgeInsets.fromLTRB(60, 0, 60, 0)
         ),
           onPressed: (){
-            print("text");
+            Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => LoginPage()));
           },
 
           child: Text("Log In")
       );
   }
 }
-class loginButton extends StatelessWidget{
+class SignUpButton extends StatelessWidget{
   Widget build(BuildContext context){
     return ElevatedButton(
         style: ElevatedButton.styleFrom(
@@ -51,7 +55,7 @@ class loginButton extends StatelessWidget{
         onPressed: (){
           Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => signUpPage()));
+              MaterialPageRoute(builder: (context) => SignUpPage()));
 
         },
 
