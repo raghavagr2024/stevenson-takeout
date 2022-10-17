@@ -97,16 +97,20 @@ class LoginButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
         onPressed: () async {
+
+          await _login();
           User? user = FirebaseAuth.instance.currentUser;
           if(user!= null && !user.emailVerified){
             Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => VerificationPage()));
+                MaterialPageRoute(builder: (context) => VerificationPage(_email)));
           }
-          await _login();
-          Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => HomePage()));
+          else{
+            Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomePage()));
+          }
+
         },
         style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFF1f5d39),
@@ -121,12 +125,14 @@ class LoginButton extends StatelessWidget {
     //if email is resent then they can still be verified
     //if email is expired and they go back delete their account
     try {
-
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _email.text,
         password: _password.text,
       );
+
+
     }
+
     on FirebaseAuthException catch (e) {
       /// These are two examples of several possible error messages from
       /// FirebaseAuth. Find the [complete list of error messages here.](https://firebase.google.com/docs/auth/admin/errors)

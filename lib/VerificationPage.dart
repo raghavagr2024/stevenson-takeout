@@ -4,11 +4,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:stevensontakeout/HomePage.dart';
 
-import 'SignUpPage.dart';
 
 
+TextEditingController _email = TextEditingController();
 class VerificationPage extends StatefulWidget{
-  State<VerificationPage> createState() => _VerificationPage();
+  var temp;
+  VerificationPage(
+      this.temp,
+  );
+
+  State<VerificationPage> createState() {
+    _email = temp;
+    return _VerificationPage();
+  }
 }
 
 class _VerificationPage extends State<VerificationPage> {
@@ -20,6 +28,7 @@ class _VerificationPage extends State<VerificationPage> {
     User? user = FirebaseAuth.instance.currentUser;
 
     if(user!=null){
+      print("not verified");
       user.reload();
     }
     if (user != null && user.emailVerified) {
@@ -29,16 +38,16 @@ class _VerificationPage extends State<VerificationPage> {
           MaterialPageRoute(builder: (context) => HomePage()));
     }
     else{
-      scheduleTimeout(1);
+      scheduleTimeout(5);
     }
   }
     @override
     void initState() {
-      scheduleTimeout(1);
+      scheduleTimeout(5);
     }
     @override
     Widget build(BuildContext context) {
-      print("in build");
+      print(_email.text);
 
       return Scaffold(
         body: Column(
@@ -65,7 +74,7 @@ class _emailVerifiedField extends State<emailVerificationField>{
         child: SizedBox(
           width: 250,
           child: TextFormField(
-            controller: email,
+            controller: _email,
             decoration: const InputDecoration(
               labelText: 'email',
               labelStyle: TextStyle(color: const Color(0xFFc99a2c)),

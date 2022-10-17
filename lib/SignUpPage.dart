@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'LoginPage.dart';
 import 'VerificationPage.dart';
 late TextEditingController _name;
-late TextEditingController email;
+late TextEditingController _email;
 late TextEditingController _password;
 late TextEditingController _studentID;
 bool temp = false;
@@ -72,7 +72,7 @@ class _EmailTextField extends State<EmailTextField>{
   @override
   void initState(){
     super.initState();
-    email = TextEditingController();
+    _email = TextEditingController();
   }
   @override
   Widget build(BuildContext context) {
@@ -80,7 +80,7 @@ class _EmailTextField extends State<EmailTextField>{
         child: SizedBox(
           width: 250,
           child: TextFormField(
-            controller: email,
+            controller: _email,
             decoration: const InputDecoration(
               labelText: 'Email',
               labelStyle: TextStyle(color: Color(0xFFc99a2c)),
@@ -164,9 +164,10 @@ class SignupButton extends StatelessWidget {
     return ElevatedButton(
         onPressed: () async {
           await _signUpWithEmailAndPassword();
+          print(_email.text);
           Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => VerificationPage()));
+              MaterialPageRoute(builder: (context) => VerificationPage(_email)));
         },
         style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFFc99a2c),
@@ -183,7 +184,7 @@ class SignupButton extends StatelessWidget {
     try {
       User? user = FirebaseAuth.instance.currentUser;
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email.text,
+        email: _email.text,
         password: _password.text,
       );
       user?.reload();
