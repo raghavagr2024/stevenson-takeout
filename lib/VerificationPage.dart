@@ -77,9 +77,9 @@ class _emailVerifiedField extends State<emailVerificationField>{
             controller: _email,
             decoration: const InputDecoration(
               labelText: 'email',
-              labelStyle: TextStyle(color: const Color(0xFFc99a2c)),
+              labelStyle: TextStyle(color: Color(0xFFc99a2c)),
               focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: const Color(0xFFc99a2c)),
+                borderSide: BorderSide(color: Color(0xFFc99a2c)),
               ),
             ),
           ),

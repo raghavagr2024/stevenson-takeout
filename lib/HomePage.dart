@@ -7,9 +7,9 @@ class HomePage extends StatelessWidget{
     return Scaffold(
       body: Column(
         children: <Widget>[
-            WeekText(),
-          EveryDayItems(),
-          Counter()
+            //WeekText(),
+            EveryDayItems(),
+
 
         ],
       ),
@@ -65,56 +65,68 @@ class EveryDayItems extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.done) {
             items = snapshot.data!.data() as Map<String, dynamic>;
           }
-          Map name = {"hi": "hi"};
-          try {
-            name = items["Grille"] as Map;
+          try{
+            return Expanded(
+              child: Column(
+                children: <Widget>[
+                  SizedBox(height: 50),
+                  Text("Grille:"),
+                  Expanded(
+                      child: ListView.builder(
+                          itemCount: items["Grille"].length,
+                          itemBuilder: _getItemsForGrille)
+                  )
+
+                ],
+              ),
+            );
           }
-          catch (_CastError) {
-            print("error caught");
+          catch(NoSuchMethodError){
+            print("test");
+
           }
-          return Expanded(
-            //child: ListView.builder(itemBuilder: _getItems)
-              child: Text(name.keys.toString())
-          );
+          return SizedBox(height:0);
         }
 
     );
   }
-  }
 
-  Widget _getItems(BuildContext context,items){
-    return Tile(context,items['Grille']['Baked Curly Fries']);
+  Widget _getItemsForGrille(BuildContext context,int index) {
+    return Tile(context, items['Grille'],index);
   }
-
+}
 
 class Tile extends StatefulWidget{
   Map<String, dynamic> items;
   BuildContext context;
+  int index;
 
-  Tile(this.context,this.items);
+  Tile(this.context,this.items,this.index);
 
   @override
   State<StatefulWidget> createState() {
-    return _Tile(context,items);
+    return _Tile(context,items,this.index);
   }
 }
 
 class _Tile extends State<Tile>{
   BuildContext context;
   Map<String, dynamic> items;
-
-  _Tile(this.context,this.items);
-
+  int index;
+  
+  _Tile(this.context,this.items,this.index);
+ 
   Widget build(context){
-    return Text("hi");
-    // return Card(
-    //   child: ListTile(
-    //       trailing:
-    //   )
-    // )
+    
+    return Card(
+      child: ListTile(
+          title: Text(items.keys.elementAt(index)),
+      )
+    );
   }
 }
 
+/*
 class Counter extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
@@ -164,3 +176,4 @@ class _Counter extends State<Counter>{
   }
 
 }
+*/
