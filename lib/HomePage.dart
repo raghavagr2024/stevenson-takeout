@@ -1,19 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 class HomePage extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return Scaffold(
-      body: Column(
-        children: <Widget>[
-            //WeekText(),
-            EveryDayItems(),
-
-
-        ],
-      ),
-    );
+    return EveryDayItems();
   }
 
 }
@@ -66,19 +58,34 @@ class EveryDayItems extends StatelessWidget {
             items = snapshot.data!.data() as Map<String, dynamic>;
           }
           try{
-            return Expanded(
+            return Scaffold(
+              body: SingleChildScrollView(
+                physics: ScrollPhysics(),
               child: Column(
                 children: <Widget>[
-                  SizedBox(height: 50),
-                  Text("Grille:"),
-                  Expanded(
-                      child: ListView.builder(
+                  const SizedBox(height: 30),
+                  const Text("Grille:", style: TextStyle(fontSize: 30),),
+                       ListView.builder(
+                           physics: NeverScrollableScrollPhysics(),
+                         shrinkWrap: true,
                           itemCount: items["Grille"].length,
-                          itemBuilder: _getItemsForGrille)
-                  )
+                          itemBuilder: _getItemsForGrille),
+                  const Text("Panini:", style: TextStyle(fontSize: 30),),
+                      ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: items["Panini"].length,
+                          itemBuilder: _getItemsForPanini),
+                  const Text("Slice of Life:", style: TextStyle(fontSize: 30),),
+                      ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: items["Slice of Life"].length,
+                          itemBuilder: _getItemsForSliceOfLife)
 
                 ],
               ),
+              )
             );
           }
           catch(NoSuchMethodError){
@@ -93,6 +100,12 @@ class EveryDayItems extends StatelessWidget {
 
   Widget _getItemsForGrille(BuildContext context,int index) {
     return Tile(context, items['Grille'],index);
+  }
+  Widget _getItemsForPanini(BuildContext context,int index) {
+    return Tile(context, items['Panini'],index);
+  }
+  Widget _getItemsForSliceOfLife(BuildContext context,int index) {
+    return Tile(context, items['Slice of Life'],index);
   }
 }
 
@@ -117,38 +130,44 @@ class _Tile extends State<Tile>{
   _Tile(this.context,this.items,this.index);
  
   Widget build(context){
-    
+    var format = NumberFormat.currency(symbol: "\$", decimalDigits: 2);
+
     return Card(
       child: ListTile(
+        trailing: const CounterButton(),
           title: Text(items.keys.elementAt(index)),
-      )
+          subtitle: Text(format.format(items.values.elementAt(index)))
+    )
     );
   }
 }
 
-/*
-class Counter extends StatefulWidget{
+
+class CounterButton extends StatefulWidget{
+  const CounterButton({Key? key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
-    return _Counter();
+    return _CounterButton();
   }
 }
 
-class _Counter extends State<Counter>{
+class _CounterButton extends State<CounterButton>{
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(3),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
-          color: const Color(0xFF1f5d39)),
+          ),
+      width: 60,
       child: Row(
         children: [
           InkWell(
               onTap: () {},
-              child: Icon(
+              child: const Icon(
                 Icons.remove,
-                color: Colors.white,
+                color: Colors.black,
                 size: 16,
               )),
           Container(
@@ -159,7 +178,7 @@ class _Counter extends State<Counter>{
                 borderRadius: BorderRadius.circular(3),
                 color: Colors.white),
             child: Text(
-              '3',
+              '0',
               style: TextStyle(color: Colors.black, fontSize: 16),
             ),
           ),
@@ -167,7 +186,7 @@ class _Counter extends State<Counter>{
               onTap: () {},
               child: Icon(
                 Icons.add,
-                color: Colors.white,
+                color: Colors.black,
                 size: 16,
               )),
         ],
@@ -176,4 +195,3 @@ class _Counter extends State<Counter>{
   }
 
 }
-*/
