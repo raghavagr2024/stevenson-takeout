@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:stevensontakeout/FirstPage.dart';
 
 
-
+Map selected = {};
 Future<void> main() async {
 
   WidgetsFlutterBinding.ensureInitialized();

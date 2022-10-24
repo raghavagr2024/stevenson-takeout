@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+
+import 'main.dart';
 class HomePage extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return EveryDayItems();
+    return Scaffold(
+      body: EveryDayItems(),
+    );
   }
 
 }
+Map<String, dynamic> items = {};
 class WeekText extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
@@ -34,13 +39,13 @@ class WeekText extends StatelessWidget{
 
 class EveryDayItems extends StatelessWidget {
 
-  Map<String, dynamic> items = {};
+
 
   @override
   Widget build(BuildContext context) {
     CollectionReference users = FirebaseFirestore.instance.collection(
         'everyday');
-    Map<String, dynamic> data = {};
+
     String id = "IppA94yUj2wrIzawr5Al";
     return FutureBuilder<DocumentSnapshot>(
         future: users.doc(id).get(),
@@ -63,22 +68,22 @@ class EveryDayItems extends StatelessWidget {
                 physics: ScrollPhysics(),
               child: Column(
                 children: <Widget>[
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 50),
                   const Text("Grille:", style: TextStyle(fontSize: 30),),
                        ListView.builder(
-                           physics: NeverScrollableScrollPhysics(),
+                           physics: const NeverScrollableScrollPhysics(),
                          shrinkWrap: true,
-                          itemCount: items["Grille"].length,
+                          itemCount: (items["Grille"]).length,
                           itemBuilder: _getItemsForGrille),
                   const Text("Panini:", style: TextStyle(fontSize: 30),),
                       ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          itemCount: items["Panini"].length,
+                          itemCount: (items["Panini"]).length,
                           itemBuilder: _getItemsForPanini),
                   const Text("Slice of Life:", style: TextStyle(fontSize: 30),),
                       ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: items["Slice of Life"].length,
                           itemBuilder: _getItemsForSliceOfLife)
@@ -134,9 +139,10 @@ class _Tile extends State<Tile>{
 
     return Card(
       child: ListTile(
-        trailing: const CounterButton(),
-          title: Text(items.keys.elementAt(index)),
-          subtitle: Text(format.format(items.values.elementAt(index)))
+        trailing: SizedBox(width: 130,child:CounterButton(index,this.items)),
+          title: Text(this.items.keys.elementAt(index)),
+          subtitle: Text(format.format(this.items.values.elementAt(index))),
+
     )
     );
   }
@@ -144,54 +150,89 @@ class _Tile extends State<Tile>{
 
 
 class CounterButton extends StatefulWidget{
-  const CounterButton({Key? key}) : super(key: key);
 
+  var index;
+  var items;
+  CounterButton(this.index,this.items);
   @override
   State<StatefulWidget> createState() {
-    return _CounterButton();
+    return _CounterButton(this.index,this.items);
   }
 }
 
 class _CounterButton extends State<CounterButton>{
+  var index;
+  var items;
+  _CounterButton(this.index,this.items);
   @override
   Widget build(BuildContext context) {
+
+    var text;
+    if(!selected.containsKey(this.items.keys.elementAt(index))){
+      text = 0;
+    }
+    else{
+      text = selected[this.items.keys.elementAt(index)];
+    }
+
     return Container(
-      padding: EdgeInsets.all(3),
+      padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
           ),
-      width: 60,
+
       child: Row(
         children: [
-          InkWell(
-              onTap: () {},
-              child: const Icon(
-                Icons.remove,
-                color: Colors.black,
-                size: 16,
-              )),
+          IconButton(
+            icon:   Icon(Icons.remove_circle,color: text!=0 ? Color(0xFFc99a2c):Colors.grey,size: 20),
+            onPressed:  text!=0 ? () => subtract(this.items.keys.elementAt(index)) : null,
+
+          ),
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 3),
+            margin: const EdgeInsets.symmetric(horizontal: 3),
             padding:
-            EdgeInsets.symmetric(horizontal: 3, vertical: 2),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(3),
-                color: Colors.white),
-            child: Text(
-              '0',
+            const EdgeInsets.symmetric(horizontal: 1, vertical: 2),
+
+            child:  Text(
+              text.toString(),
               style: TextStyle(color: Colors.black, fontSize: 16),
             ),
           ),
-          InkWell(
-              onTap: () {},
-              child: Icon(
-                Icons.add,
-                color: Colors.black,
-                size: 16,
-              )),
+          IconButton(
+            icon: const Icon(Icons.add_circle,color: Color(0xFFc99a2c),size: 20),
+            onPressed: (){
+              add(this.items.keys.elementAt(index));
+            },
+
+          ),
         ],
       ),
     );
   }
+
+  void subtract(String s){
+    selected[s]--;
+    if(selected[s]==0){
+      selected.remove(s);
+    }
+    
+    setState(() {
+
+    });
+  }
+  void add(String s){
+    if(selected[s]!=null){
+      selected[s]++;
+    }
+    else{
+      selected[s] = 1;
+    }
+    
+    setState(() {
+
+    });
+  }
+
+
 
 }
