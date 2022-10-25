@@ -8,39 +8,15 @@ class HomePage extends StatelessWidget{
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      body: EveryDayItems(),
+      body: WeekItems(),
     );
   }
 
 }
-Map<String, dynamic> items = {};
-class WeekText extends StatelessWidget{
-  @override
-  Widget build(BuildContext context) {
-    DateTime now = DateTime.now();
-    String text = "";
-    if(now.day-7<0){
-       text = "week 1";
-    }
-    else if (now.day-14<0){
-      text = "week 2";
-    }
-    else if(now.day-21<0){
-      text = "week 3";
-    }
-    else{
-      text = "week 4";
-    }
-    return Text(text);
-  }
+Map<String, dynamic> everyDayItems = {};
 
-
-}
 
 class EveryDayItems extends StatelessWidget {
-
-
-
   @override
   Widget build(BuildContext context) {
     CollectionReference users = FirebaseFirestore.instance.collection(
@@ -53,6 +29,7 @@ class EveryDayItems extends StatelessWidget {
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.hasError) {
             print(snapshot.error);
+            print("got error");
           }
 
           if (snapshot.hasData && !snapshot.data!.exists) {
@@ -60,8 +37,10 @@ class EveryDayItems extends StatelessWidget {
           }
 
           if (snapshot.connectionState == ConnectionState.done) {
-            items = snapshot.data!.data() as Map<String, dynamic>;
+            print("done");
+            everyDayItems = snapshot.data!.data() as Map<String, dynamic>;
           }
+
           try{
             return Scaffold(
               body: SingleChildScrollView(
@@ -73,19 +52,19 @@ class EveryDayItems extends StatelessWidget {
                        ListView.builder(
                            physics: const NeverScrollableScrollPhysics(),
                          shrinkWrap: true,
-                          itemCount: (items["Grille"]).length,
+                          itemCount: (everyDayItems["Grille"]).length,
                           itemBuilder: _getItemsForGrille),
                   const Text("Panini:", style: TextStyle(fontSize: 30),),
                       ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          itemCount: (items["Panini"]).length,
+                          itemCount: (everyDayItems["Panini"]).length,
                           itemBuilder: _getItemsForPanini),
                   const Text("Slice of Life:", style: TextStyle(fontSize: 30),),
                       ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          itemCount: items["Slice of Life"].length,
+                          itemCount: everyDayItems["Slice of Life"].length,
                           itemBuilder: _getItemsForSliceOfLife)
 
                 ],
@@ -104,14 +83,143 @@ class EveryDayItems extends StatelessWidget {
   }
 
   Widget _getItemsForGrille(BuildContext context,int index) {
-    return Tile(context, items['Grille'],index);
+    return Tile(context, everyDayItems['Grille'],index);
   }
   Widget _getItemsForPanini(BuildContext context,int index) {
-    return Tile(context, items['Panini'],index);
+    return Tile(context, everyDayItems['Panini'],index);
   }
   Widget _getItemsForSliceOfLife(BuildContext context,int index) {
-    return Tile(context, items['Slice of Life'],index);
+    return Tile(context, everyDayItems['Slice of Life'],index);
   }
+}
+Map<String, dynamic> weeklyItems = {};
+class WeekItems extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    var week = getWeek()[0];
+    var id = getWeek()[1];
+
+    print("in build");
+    CollectionReference users = FirebaseFirestore.instance.collection(
+        week);
+
+
+    return FutureBuilder<DocumentSnapshot>(
+        future: users.doc(id).get(),
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (snapshot.hasError) {
+            print("following error");
+            print(snapshot.error);
+          }
+
+          if (snapshot.hasData && !snapshot.data!.exists) {
+            print("no data");
+          }
+
+          if (snapshot.connectionState == ConnectionState.done) {
+            print("done");
+            weeklyItems = snapshot.data!.data() as Map<String, dynamic>;
+            print(weeklyItems);
+          }
+          /*
+          try{
+
+            return Scaffold(
+                body: SingleChildScrollView(
+                  physics: ScrollPhysics(),
+                  child: Column(
+                    children: <Widget>[
+                      const SizedBox(height: 50),
+                      Text(getDay(), style: TextStyle(fontSize: 30),),
+                      ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: weeklyItems[getDay()],
+                          itemBuilder: _getItemsForDay),
+                      const Text("Panini:", style: TextStyle(fontSize: 30),),
+                      ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: weeklyItems["Panini"],
+                          itemBuilder: _getItemsForPanini),
+                      /*
+                      const Text("Slice of Life:", style: TextStyle(fontSize: 30),),
+                      ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: ,
+                          itemBuilder: )
+                      */
+                    ],
+                  ),
+                )
+            );
+          }
+          catch(NoSuchMethodError){
+            print("test");
+
+          }
+          */
+
+          return Text("None");
+        }
+
+    );
+
+
+
+  }
+
+
+
+  String getDay(){
+    DateTime now = DateTime.now();
+    switch (now.weekday){
+      case DateTime.monday:
+        return "Monday";
+      case DateTime.tuesday:
+        return "Tuesday";
+      case DateTime.wednesday:
+        return "Wednesday";
+      case DateTime.thursday:
+        return "Thursday";
+      case DateTime.friday:
+        return "Friday";
+      default:
+        return "Monday";
+    }
+  }
+
+  List getWeek(){
+    DateTime now = DateTime.now();
+    var text = [];
+    if(now.day-7<0){
+      text.add("week 1");
+      text.add("GoeTLas8A4sj29bRuyw2");
+    }
+    else if (now.day-14<0){
+      text.add("week 2");
+      text.add("JypyeLKmIyhEXlLebvHk");
+    }
+    else if(now.day-21<0){
+      text.add("week 3");
+      text.add("NvUFdn08oieSPYfLQkU9");
+    }
+    else{
+      text.add("week 4");
+      text.add("YToUal6YkEc8XWndizBU");
+    }
+    return text;
+  }
+
+  Widget _getItemsForPanini(BuildContext context,int index) {
+    return Tile(context, weeklyItems['Panini'],index);
+  }
+  Widget _getItemsForDay(BuildContext context,int index) {
+    return Tile(context, weeklyItems[getDay()],index);
+  }
+
 }
 
 class Tile extends StatefulWidget{
