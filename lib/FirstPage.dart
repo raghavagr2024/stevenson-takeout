@@ -5,6 +5,7 @@ import 'HomePage.dart';
 import 'LoginPage.dart';
 
 class firstPage extends StatelessWidget{
+  @override
   Widget build(BuildContext context){
 
 
@@ -12,7 +13,7 @@ class firstPage extends StatelessWidget{
     return Scaffold(
       body: Column(
         children: <Widget>[
-          Center(
+          const Center(
             child: Image(
                 image: AssetImage('assets/images/patriot.png'),
                 width: 300,
@@ -20,9 +21,9 @@ class firstPage extends StatelessWidget{
 
             ),
           ),
-          SizedBox(height: 50,),
+          const SizedBox(height: 50,),
           LoginButton(),
-          SizedBox(height: 50,),
+          const SizedBox(height: 50,),
           SignUpButton()
 
         ],
@@ -32,12 +33,12 @@ class firstPage extends StatelessWidget{
 }
 
 class LoginButton extends StatelessWidget{
-
+  @override
   Widget build(BuildContext context){
       return ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF1f5d39),
-            padding: EdgeInsets.fromLTRB(60, 0, 60, 0)
+            padding: const EdgeInsets.fromLTRB(60, 0, 60, 0)
         ),
           onPressed: (){
             Navigator.push(
@@ -45,7 +46,7 @@ class LoginButton extends StatelessWidget{
                 MaterialPageRoute(builder: (context) => LoginPage()));
           },
 
-          child: Text("Log In")
+          child: const Text("Log In")
       );
   }
 }
@@ -54,7 +55,7 @@ class SignUpButton extends StatelessWidget{
     return ElevatedButton(
         style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFFc99a2c),
-            padding: EdgeInsets.fromLTRB(60, 0, 60, 0)
+            padding: const EdgeInsets.fromLTRB(60, 0, 60, 0)
         ),
         onPressed: (){
           //change to Sign Up
@@ -64,7 +65,7 @@ class SignUpButton extends StatelessWidget{
 
         },
 
-        child: Text("Sign Up")
+        child: const Text("Sign Up")
     );
   }
 }

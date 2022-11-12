@@ -2,20 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
+import 'Cart.dart';
 import 'main.dart';
 class HomePage extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      body: WeekItems(),
+      body: EveryDayItems(),
     );
   }
 
 }
 Map<String, dynamic> everyDayItems = {};
-
-
+List meats = ["Chicken","Gyro", "Italian Sausage","Meatballs","Barbacoa", "BBQ Chicken","Bacon Bits"];
+String station = "";
 class EveryDayItems extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -23,6 +24,7 @@ class EveryDayItems extends StatelessWidget {
         'everyday');
 
     String id = "IppA94yUj2wrIzawr5Al";
+
     return FutureBuilder<DocumentSnapshot>(
         future: users.doc(id).get(),
         builder:
@@ -42,39 +44,39 @@ class EveryDayItems extends StatelessWidget {
           }
 
           try{
-            return Scaffold(
-              body: SingleChildScrollView(
-                physics: ScrollPhysics(),
-              child: Column(
-                children: <Widget>[
-                  const SizedBox(height: 50),
-                  const Text("Grille:", style: TextStyle(fontSize: 30),),
-                       ListView.builder(
-                           physics: const NeverScrollableScrollPhysics(),
-                         shrinkWrap: true,
+            return SingleChildScrollView(
+                  physics: const ScrollPhysics(),
+                  child: Column(
+                    children: <Widget>[
+                      const SizedBox(height: 50),
+                      const Text("Grille:", style: TextStyle(fontSize: 30),),
+                      ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
                           itemCount: (everyDayItems["Grille"]).length,
                           itemBuilder: _getItemsForGrille),
-                  const Text("Panini:", style: TextStyle(fontSize: 30),),
+                      const Text("Panini:", style: TextStyle(fontSize: 30),),
                       ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: (everyDayItems["Panini"]).length,
                           itemBuilder: _getItemsForPanini),
-                  const Text("Slice of Life:", style: TextStyle(fontSize: 30),),
+                      const Text("Slice of Life:", style: TextStyle(fontSize: 30),),
                       ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: everyDayItems["Slice of Life"].length,
-                          itemBuilder: _getItemsForSliceOfLife)
+                          itemBuilder: _getItemsForSliceOfLife),
+                      SizedBox(height: MediaQuery.of(context).size.height*1.7,child: WeekItems()),
 
-                ],
-              ),
-              )
-            );
+
+                    ],
+                  ),
+
+                );
           }
           catch(NoSuchMethodError){
             print("test");
-
           }
           return SizedBox(height:0);
         }
@@ -98,8 +100,9 @@ class WeekItems extends StatelessWidget{
   Widget build(BuildContext context) {
     var week = getWeek()[0];
     var id = getWeek()[1];
+    station = getStation();
+    print("in week items");
 
-    print("in build");
     CollectionReference users = FirebaseFirestore.instance.collection(
         week);
 
@@ -120,39 +123,59 @@ class WeekItems extends StatelessWidget{
           if (snapshot.connectionState == ConnectionState.done) {
             print("done");
             weeklyItems = snapshot.data!.data() as Map<String, dynamic>;
-            print(weeklyItems);
+            print(weeklyItems[getDay()].length.toString());
           }
-          /*
-          try{
 
+          try{
             return Scaffold(
-                body: SingleChildScrollView(
-                  physics: ScrollPhysics(),
+                body: Container(
+                child: SingleChildScrollView(
+                  physics: const ScrollPhysics(),
                   child: Column(
                     children: <Widget>[
+
                       const SizedBox(height: 50),
-                      Text(getDay(), style: TextStyle(fontSize: 30),),
+                      Text(getDay(), style: const TextStyle(fontSize: 30),),
+                      const Text("Comfort",style: TextStyle(fontSize: 30),),
+
                       ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          itemCount: weeklyItems[getDay()],
-                          itemBuilder: _getItemsForDay),
+                          itemCount: weeklyItems[getDay()][0].length,
+                          itemBuilder: _getComfort),
+
+                      const Text("Mindful",style: TextStyle(fontSize: 30),),
+                      ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: weeklyItems[getDay()][1].length,
+                          itemBuilder: _getMindful),
+                      const Text("Sides",style: TextStyle(fontSize: 30),),
+                      ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: weeklyItems[getDay()][2].length,
+                          itemBuilder: _getSides),
                       const Text("Panini:", style: TextStyle(fontSize: 30),),
                       ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          itemCount: weeklyItems["Panini"],
-                          itemBuilder: _getItemsForPanini),
-                      /*
-                      const Text("Slice of Life:", style: TextStyle(fontSize: 30),),
+                          itemCount: weeklyItems["Panini"].length,
+                          itemBuilder: _getPanini),
+                      const Text("International Station:", style: TextStyle(fontSize: 30),),
+                      Text(getStation(), style: TextStyle(fontSize: 30),),
                       ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          itemCount: ,
-                          itemBuilder: )
-                      */
+                          itemCount: weeklyItems[getStation()].length,
+                          itemBuilder: _getInternational),
+                     NextButton()
+                      
+
                     ],
+
                   ),
+                )
                 )
             );
           }
@@ -160,9 +183,9 @@ class WeekItems extends StatelessWidget{
             print("test");
 
           }
-          */
 
-          return Text("None");
+
+          return const Text("None");
         }
 
     );
@@ -171,7 +194,21 @@ class WeekItems extends StatelessWidget{
 
   }
 
-
+  Widget _getPanini(BuildContext context,int index) {
+    return Tile(context, weeklyItems['Panini'],index);
+  }
+  Widget _getComfort(BuildContext context,int index) {
+    return Tile(context, weeklyItems[getDay()][0],index);
+  }
+  Widget _getMindful(BuildContext context,int index) {
+    return Tile(context, weeklyItems[getDay()][1],index);
+  }
+  Widget _getSides(BuildContext context,int index) {
+    return Tile(context, weeklyItems[getDay()][2],index);
+  }
+  Widget _getInternational(BuildContext context,int index) {
+    return InternationalTile(context, weeklyItems[getStation()],index);
+  }
 
   String getDay(){
     DateTime now = DateTime.now();
@@ -190,7 +227,6 @@ class WeekItems extends StatelessWidget{
         return "Monday";
     }
   }
-
   List getWeek(){
     DateTime now = DateTime.now();
     var text = [];
@@ -206,20 +242,32 @@ class WeekItems extends StatelessWidget{
       text.add("week 3");
       text.add("NvUFdn08oieSPYfLQkU9");
     }
-    else{
+    else if(now.day-28<0){
       text.add("week 4");
       text.add("YToUal6YkEc8XWndizBU");
     }
+    else{
+      text.add("week 1");
+      text.add("GoeTLas8A4sj29bRuyw2");
+    }
     return text;
   }
+  String getStation(){
+    String week = getWeek()[0];
+    if(week == "week 1"){
 
-  Widget _getItemsForPanini(BuildContext context,int index) {
-    return Tile(context, weeklyItems['Panini'],index);
+      return "Mediterranean";
+    }
+    else if(week == "week 2"){
+      return "Pasta";
+    }
+    else if(week == "week 3"){
+      return "Burrito Bowl";
+    }
+    else{
+      return "Macaroni and Cheese";
+    }
   }
-  Widget _getItemsForDay(BuildContext context,int index) {
-    return Tile(context, weeklyItems[getDay()],index);
-  }
-
 }
 
 class Tile extends StatefulWidget{
@@ -248,8 +296,8 @@ class _Tile extends State<Tile>{
     return Card(
       child: ListTile(
         trailing: SizedBox(width: 130,child:CounterButton(index,this.items)),
-          title: Text(this.items.keys.elementAt(index)),
-          subtitle: Text(format.format(this.items.values.elementAt(index))),
+          title: Text(items.keys.elementAt(index)),
+          subtitle: Text(format.format(items.values.elementAt(index))),
 
     )
     );
@@ -276,11 +324,11 @@ class _CounterButton extends State<CounterButton>{
   Widget build(BuildContext context) {
 
     var text;
-    if(!selected.containsKey(this.items.keys.elementAt(index))){
+    if(!selected.containsKey(items.keys.elementAt(index))){
       text = 0;
     }
     else{
-      text = selected[this.items.keys.elementAt(index)];
+      text = selected[items.keys.elementAt(index)];
     }
 
     return Container(
@@ -292,8 +340,8 @@ class _CounterButton extends State<CounterButton>{
       child: Row(
         children: [
           IconButton(
-            icon:   Icon(Icons.remove_circle,color: text!=0 ? Color(0xFFc99a2c):Colors.grey,size: 20),
-            onPressed:  text!=0 ? () => subtract(this.items.keys.elementAt(index)) : null,
+            icon:   Icon(Icons.remove_circle,color: text!=0 ? const Color(0xFFc99a2c):Colors.grey,size: 20,),
+            onPressed:  text!=0 ? () => subtract(items.keys.elementAt(index)) : null,
 
           ),
           Container(
@@ -303,13 +351,13 @@ class _CounterButton extends State<CounterButton>{
 
             child:  Text(
               text.toString(),
-              style: TextStyle(color: Colors.black, fontSize: 16),
+              style: const TextStyle(color: Colors.black, fontSize: 16),
             ),
           ),
           IconButton(
             icon: const Icon(Icons.add_circle,color: Color(0xFFc99a2c),size: 20),
             onPressed: (){
-              add(this.items.keys.elementAt(index));
+              add(items.keys.elementAt(index));
             },
 
           ),
@@ -343,4 +391,78 @@ class _CounterButton extends State<CounterButton>{
 
 
 
+}
+
+var international = [];
+
+class InternationalTile extends StatefulWidget{
+  Map<String, dynamic> items;
+  BuildContext context;
+  int index;
+
+  InternationalTile(this.context,this.items,this.index);
+
+  @override
+  State<StatefulWidget> createState() {
+    return _InternationalTile(context,items,this.index);
+  }
+}
+
+class _InternationalTile extends State<InternationalTile>{
+  BuildContext context;
+  Map<String, dynamic> items;
+  int index;
+
+  _InternationalTile(this.context,this.items,this.index);
+
+  Widget build(context){
+
+
+    return Card(
+        child: ListTile(
+          trailing: international.contains(items.keys.elementAt(index)) ? const Icon(Icons.check_circle, color: Colors.green,) : const Icon(Icons.circle_outlined) ,
+          onTap: (){
+            if(international.contains(items.keys.elementAt(index))){
+              removeItem();
+            }
+            else{
+              addItem();
+            }
+          } ,
+          title: Text(items.keys.elementAt(index)),
+
+        )
+    );
+  }
+
+  void addItem(){
+    international.add(items.keys.elementAt(index));
+    setState(() {
+
+    });
+  }
+  void removeItem(){
+    international.remove(items.keys.elementAt(index));
+    setState(() {
+
+    });
+  }
+}
+
+class NextButton extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+        onPressed: (){
+          selected[station] = international;
+          Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Cart()));
+          },
+        child: const Text("continue"),
+      style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1f5d39)),
+    );
+
+  }
+  
 }
