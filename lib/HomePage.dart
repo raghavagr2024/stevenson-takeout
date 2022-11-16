@@ -67,7 +67,7 @@ class EveryDayItems extends StatelessWidget {
                           shrinkWrap: true,
                           itemCount: everyDayItems["Slice of Life"].length,
                           itemBuilder: _getItemsForSliceOfLife),
-                      SizedBox(height: MediaQuery.of(context).size.height*1.7,child: WeekItems()),
+                      SizedBox(height: MediaQuery.of(context).size.height*2,child: WeekItems()),
 
 
                     ],
