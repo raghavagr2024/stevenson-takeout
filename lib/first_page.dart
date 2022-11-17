@@ -72,34 +72,3 @@ class SignUpButton extends StatelessWidget{
   }
 }
 
-class Tile extends StatefulWidget{
-
-  BuildContext context;
-  int index;
-
-  Tile(this.context,this.index);
-
-  @override
-  State<StatefulWidget> createState() {
-    return _Tile(context,index);
-  }
-}
-
-class _Tile extends State<Tile>{
-  BuildContext context;
-  int index;
-
-  _Tile(this.context,this.index);
-
-  Widget build(context){
-    
-
-    return Card(
-        child: ListTile(
-          title: Text(selected.keys.elementAt(0)),
-          subtitle: Text(selected.values.elementAt(0)),
-
-        )
-    );
-  }
-}
