@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:stevensontakeout/SignUpPage.dart';
+import 'package:stevensontakeout/sign_up_page.dart';
 
-import 'HomePage.dart';
-import 'LoginPage.dart';
+import 'home_page.dart';
+import 'login_page.dart';
+import 'main.dart';
 
-class firstPage extends StatelessWidget{
+class FirstPage extends StatelessWidget{
   @override
   Widget build(BuildContext context){
 
@@ -51,6 +52,7 @@ class LoginButton extends StatelessWidget{
   }
 }
 class SignUpButton extends StatelessWidget{
+  @override
   Widget build(BuildContext context){
     return ElevatedButton(
         style: ElevatedButton.styleFrom(
@@ -66,6 +68,38 @@ class SignUpButton extends StatelessWidget{
         },
 
         child: const Text("Sign Up")
+    );
+  }
+}
+
+class Tile extends StatefulWidget{
+
+  BuildContext context;
+  int index;
+
+  Tile(this.context,this.index);
+
+  @override
+  State<StatefulWidget> createState() {
+    return _Tile(context,index);
+  }
+}
+
+class _Tile extends State<Tile>{
+  BuildContext context;
+  int index;
+
+  _Tile(this.context,this.index);
+
+  Widget build(context){
+    
+
+    return Card(
+        child: ListTile(
+          title: Text(selected.keys.elementAt(0)),
+          subtitle: Text(selected.values.elementAt(0)),
+
+        )
     );
   }
 }

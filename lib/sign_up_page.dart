@@ -1,7 +1,9 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'LoginPage.dart';
-import 'VerificationPage.dart';
+import 'login_page.dart';
+import 'verification_page.dart';
 late TextEditingController _name;
 late TextEditingController _email;
 late TextEditingController _password;
@@ -164,7 +166,7 @@ class SignupButton extends StatelessWidget {
     return ElevatedButton(
         onPressed: () async {
           await _signUpWithEmailAndPassword();
-          print(_email.text);
+          log(_email.text);
           Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => VerificationPage(_email)));
@@ -190,13 +192,13 @@ class SignupButton extends StatelessWidget {
       user?.reload();
       if (user!= null && !user.emailVerified) {
         await user.sendEmailVerification();
-        print("sent");
+        log("sent");
       }
     }
     on FirebaseAuthException catch (e) {
       /// These are two examples of several possible error messages from
       /// FirebaseAuth. Find the [complete list of error messages here.](https://firebase.google.com/docs/auth/admin/errors)
-      print(e.code);
+      log(e.code);
     }
   }
 }

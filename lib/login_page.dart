@@ -1,10 +1,12 @@
 
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:stevensontakeout/HomePage.dart';
-import 'package:stevensontakeout/SignUpPage.dart';
+import 'package:stevensontakeout/home_page.dart';
+import 'package:stevensontakeout/sign_up_page.dart';
 
-import 'VerificationPage.dart';
+import 'verification_page.dart';
 
 late TextEditingController _email, _password;
 class LoginPage extends StatelessWidget{
@@ -136,7 +138,7 @@ class LoginButton extends StatelessWidget {
     on FirebaseAuthException catch (e) {
       /// These are two examples of several possible error messages from
       /// FirebaseAuth. Find the [complete list of error messages here.](https://firebase.google.com/docs/auth/admin/errors)
-      print(e.code);
+      log(e.code);
     }
   }
 }

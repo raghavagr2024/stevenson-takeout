@@ -1,8 +1,9 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:stevensontakeout/HomePage.dart';
+import 'package:stevensontakeout/home_page.dart';
 
 
 
@@ -13,6 +14,7 @@ class VerificationPage extends StatefulWidget{
       this.temp,
   );
 
+  @override
   State<VerificationPage> createState() {
     _email = temp;
     return _VerificationPage();
@@ -28,7 +30,7 @@ class _VerificationPage extends State<VerificationPage> {
     User? user = FirebaseAuth.instance.currentUser;
 
     if(user!=null){
-      print("not verified");
+      log("not verified");
       user.reload();
     }
     if (user != null && user.emailVerified) {
@@ -47,13 +49,13 @@ class _VerificationPage extends State<VerificationPage> {
     }
     @override
     Widget build(BuildContext context) {
-      print(_email.text);
+      log(_email.text);
 
       return Scaffold(
         body: Column(
           children: <Widget>[
-            emailVerificationField(),
-            verificationButton()
+            EmailVerificationField(),
+            VerificationButton()
           ],
         ),
       );
@@ -62,11 +64,12 @@ class _VerificationPage extends State<VerificationPage> {
 
 
 
-class emailVerificationField extends StatefulWidget{
-  State<emailVerificationField> createState() => _emailVerifiedField();
+class EmailVerificationField extends StatefulWidget{
+  @override
+  State<EmailVerificationField> createState() => _EmailVerifiedField();
 }
 
-class _emailVerifiedField extends State<emailVerificationField>{
+class _EmailVerifiedField extends State<EmailVerificationField>{
   @override
   Widget build(BuildContext context) {
 
@@ -90,23 +93,25 @@ class _emailVerifiedField extends State<emailVerificationField>{
 }
 
 
-class verificationButton extends StatefulWidget{
-  State<verificationButton> createState() => _verificationButton();
+class VerificationButton extends StatefulWidget{
+  @override
+  State<VerificationButton> createState() => _VerificationButton();
 }
 
-class _verificationButton extends State<verificationButton>{
+class _VerificationButton extends State<VerificationButton>{
   Timer scheduleTimeout([int milliseconds = 10000]) =>
       Timer(Duration(milliseconds: milliseconds), handleTimeout);
   var valid = false;
   void handleTimeout() {
-    print("timer over");
+    log("timer over");
     setState(() {
       valid = true;
     });
   }
+
   @override
   void initState(){
-    print("in schedule timeout");
+    log("in schedule timeout");
     scheduleTimeout(60000);
   }
   @override
@@ -125,9 +130,9 @@ class _verificationButton extends State<verificationButton>{
 
   Future<void> sendEmail() async {
     User? user = FirebaseAuth.instance.currentUser;
-    print("in pressed");
+    log("in pressed");
     if(user == null){
-      print("user is null");
+      log("user is null");
     }
     setState(() {
       valid = false;
@@ -137,10 +142,10 @@ class _verificationButton extends State<verificationButton>{
       await user.sendEmailVerification();
       valid = false;
       scheduleTimeout(60000);
-      print("sent");
+      log("sent");
     }
     else{
-      print("email sending error");
+      log("email sending error");
     }
   }
 

@@ -1,9 +1,9 @@
 
 
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:stevensontakeout/FirstPage.dart';
+import 'package:stevensontakeout/first_page.dart';
 
 
 Map selected = {};
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0.0,),
-        body: firstPage()
+        body: FirstPage()
       ),
     );
 

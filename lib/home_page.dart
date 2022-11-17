@@ -1,8 +1,12 @@
+// ignore_for_file: use_key_in_widget_constructors
+
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
-import 'Cart.dart';
+import 'cart.dart';
 import 'main.dart';
 class HomePage extends StatelessWidget{
   @override
@@ -30,16 +34,16 @@ class EveryDayItems extends StatelessWidget {
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.hasError) {
-            print(snapshot.error);
-            print("got error");
+            log(snapshot.error as String);
+            log("got error");
           }
 
           if (snapshot.hasData && !snapshot.data!.exists) {
-            print("no data");
+            log("no data");
           }
 
           if (snapshot.connectionState == ConnectionState.done) {
-            print("done");
+            log("done");
             everyDayItems = snapshot.data!.data() as Map<String, dynamic>;
           }
 
@@ -75,10 +79,10 @@ class EveryDayItems extends StatelessWidget {
 
                 );
           }
-          catch(NoSuchMethodError){
-            print("test");
+          catch(noSuchMethodError){
+            log("test");
           }
-          return SizedBox(height:0);
+          return const SizedBox(height:0);
         }
 
     );
@@ -101,7 +105,7 @@ class WeekItems extends StatelessWidget{
     var week = getWeek()[0];
     var id = getWeek()[1];
     station = getStation();
-    print("in week items");
+    log("in week items");
 
     CollectionReference users = FirebaseFirestore.instance.collection(
         week);
@@ -112,18 +116,18 @@ class WeekItems extends StatelessWidget{
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.hasError) {
-            print("following error");
-            print(snapshot.error);
+            log("following error");
+            log(snapshot.error as String);
           }
 
           if (snapshot.hasData && !snapshot.data!.exists) {
-            print("no data");
+            log("no data");
           }
 
           if (snapshot.connectionState == ConnectionState.done) {
-            print("done");
+            log("done");
             weeklyItems = snapshot.data!.data() as Map<String, dynamic>;
-            print(weeklyItems[getDay()].length.toString());
+            log(weeklyItems[getDay()].length.toString());
           }
 
           try{
@@ -163,7 +167,7 @@ class WeekItems extends StatelessWidget{
                           itemCount: weeklyItems["Panini"].length,
                           itemBuilder: _getPanini),
                       const Text("International Station:", style: TextStyle(fontSize: 30),),
-                      Text(getStation(), style: TextStyle(fontSize: 30),),
+                      Text(getStation(), style: const TextStyle(fontSize: 30),),
                       ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
@@ -180,7 +184,7 @@ class WeekItems extends StatelessWidget{
             );
           }
           catch(NoSuchMethodError){
-            print("test");
+            log("test");
 
           }
 
@@ -279,7 +283,7 @@ class Tile extends StatefulWidget{
 
   @override
   State<StatefulWidget> createState() {
-    return _Tile(context,items,this.index);
+    return _Tile(context,items,index);
   }
 }
 
@@ -295,7 +299,7 @@ class _Tile extends State<Tile>{
 
     return Card(
       child: ListTile(
-        trailing: SizedBox(width: 130,child:CounterButton(index,this.items)),
+        trailing: SizedBox(width: 130,child:CounterButton(index,items)),
           title: Text(items.keys.elementAt(index)),
           subtitle: Text(format.format(items.values.elementAt(index))),
 
@@ -312,7 +316,7 @@ class CounterButton extends StatefulWidget{
   CounterButton(this.index,this.items);
   @override
   State<StatefulWidget> createState() {
-    return _CounterButton(this.index,this.items);
+    return _CounterButton(index,items);
   }
 }
 
@@ -404,17 +408,19 @@ class InternationalTile extends StatefulWidget{
 
   @override
   State<StatefulWidget> createState() {
-    return _InternationalTile(context,items,this.index);
+    return _InternationalTile(context,items,index);
   }
 }
 
 class _InternationalTile extends State<InternationalTile>{
+  @override
   BuildContext context;
   Map<String, dynamic> items;
   int index;
 
   _InternationalTile(this.context,this.items,this.index);
 
+  @override
   Widget build(context){
 
 
@@ -459,8 +465,8 @@ class NextButton extends StatelessWidget{
               context,
               MaterialPageRoute(builder: (context) => Cart()));
           },
-        child: const Text("continue"),
       style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1f5d39)),
+        child: const Text("continue"),
     );
 
   }
