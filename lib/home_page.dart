@@ -332,7 +332,7 @@ class _CounterButton extends State<CounterButton>{
       text = 0;
     }
     else{
-      text = selected[items.keys.elementAt(index)];
+      text = selected[items.keys.elementAt(index)][0];
     }
 
     return Container(
@@ -361,7 +361,7 @@ class _CounterButton extends State<CounterButton>{
           IconButton(
             icon: const Icon(Icons.add_circle,color: Color(0xFFc99a2c),size: 20),
             onPressed: (){
-              add(items.keys.elementAt(index));
+              add(items.keys.elementAt(index),items.values.elementAt(index));
             },
 
           ),
@@ -371,23 +371,26 @@ class _CounterButton extends State<CounterButton>{
   }
 
   void subtract(String s){
-    selected[s]--;
-    if(selected[s]==0){
+    selected[s][0]--;
+    if(selected[s][0]==0){
       selected.remove(s);
     }
-    
+    print(selected.toString());
     setState(() {
 
     });
   }
-  void add(String s){
+  void add(String s, var i){
+
     if(selected[s]!=null){
-      selected[s]++;
+      selected[s][0]++;
     }
     else{
-      selected[s] = 1;
+
+      selected[s] = [1,i];
     }
-    
+
+
     setState(() {
 
     });
@@ -458,6 +461,7 @@ class _InternationalTile extends State<InternationalTile>{
 class NextButton extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
+    log(selected.toString());
     return ElevatedButton(
         onPressed: (){
           selected[station] = international;

@@ -7,7 +7,7 @@ import 'main.dart';
 
 var periods = ["4A (11:10 - 11:30)", "4B (11:37 - 11:57)","5A (12:02-12:22)", "5B (12:02 - 12:22)", "6A (12:45 - 1:14)"];
 var selectedPeriod, selectedLocation;
-
+var total = 0;
 var locations = ["East Commons", "West Commons"];
 class Cart extends StatelessWidget{
   @override
@@ -18,9 +18,20 @@ class Cart extends StatelessWidget{
       body: Column(
         children: <Widget>[
           SizedBox(height: 100,),
+          Row(
+            children: <Widget>[
+              Text("item"),
+              SizedBox(width: 50),
+              Text("Price"),
+              SizedBox(width: 50,),
+              Text("amount"),
+              SizedBox(width: 50,),
+              Text("total")
+            ],
+          ),
           Expanded(
               child: ListView.builder(
-                itemCount: selected.length,
+                itemCount: selected.length-1,
                 itemBuilder: _getSelectedItems,
               ),
 
@@ -31,7 +42,7 @@ class Cart extends StatelessWidget{
 
   }
   Widget _getSelectedItems(BuildContext context, int index){
-    return Tile(context, index);
+    return ItemTile(context, index);
   }
 
 }
@@ -96,33 +107,33 @@ class _LocationButton extends State<LocationButton>{
   }
 
 
-class Tile extends StatefulWidget{
+class ItemTile extends StatefulWidget{
 
   BuildContext context;
   int index;
 
-  Tile(this.context,this.index);
+  ItemTile(this.context,this.index);
 
   @override
   State<StatefulWidget> createState() {
-    return _Tile(context,index);
+    return _ItemTile(context,index);
   }
 }
 
-class _Tile extends State<Tile>{
+class _ItemTile extends State<ItemTile>{
   BuildContext context;
 
   int index;
 
-  _Tile(this.context,this.index);
+  _ItemTile(this.context,this.index);
 
   Widget build(context){
-
+    print("in item tile");
 
     return Card(
         child: ListTile(
 
-          title: Text(selected.keys.elementAt(index)),
+          title: Item(index),
           shape: RoundedRectangleBorder( //<-- SEE HERE
             side: BorderSide(width: 0),
             borderRadius: BorderRadius.circular(0),
@@ -131,4 +142,21 @@ class _Tile extends State<Tile>{
         )
     );
   }
+}
+
+class Item extends StatelessWidget{
+  var index;
+  Item(index);
+  @override
+  Widget build(BuildContext context) {
+    print("in item");
+    print(selected.toString());
+    print(selected.keys.elementAt(index));
+    return Row(
+      children: <Widget>[
+        Text(selected.keys.elementAt(index).toString())
+      ],
+    );
+  }
+  
 }
