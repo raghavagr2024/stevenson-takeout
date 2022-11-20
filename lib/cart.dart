@@ -30,9 +30,13 @@ class Cart extends StatelessWidget{
             ],
           ),
           Expanded(
-              child: ListView.builder(
+              child: ListView.separated(
                 itemCount: selected.length-1,
                 itemBuilder: _getSelectedItems,
+                separatorBuilder: (BuildContext context, int index) => SizedBox(
+                  height: 0,
+                ),
+
               ),
 
           )
@@ -130,31 +134,33 @@ class _ItemTile extends State<ItemTile>{
   Widget build(context){
     print("in item tile");
 
-    return Card(
+    return Container(
         child: ListTile(
 
           title: Item(index),
-          shape: RoundedRectangleBorder( //<-- SEE HERE
-            side: BorderSide(width: 0),
-            borderRadius: BorderRadius.circular(0),
-          ),
+          tileColor: null,
 
         )
+
     );
   }
 }
 
 class Item extends StatelessWidget{
   var index;
-  Item(index);
+  Item(this.index);
   @override
   Widget build(BuildContext context) {
-    print("in item");
-    print(selected.toString());
-    print(selected.keys.elementAt(index));
+
     return Row(
       children: <Widget>[
-        Text(selected.keys.elementAt(index).toString())
+        Text(selected.keys.elementAt(index).toString()),
+        SizedBox(width: 50),
+        Text(selected.values.elementAt(index)[0].toString()),
+        SizedBox(width: 50),
+        Text(selected.values.elementAt(index)[1].toString()),
+        SizedBox(width: 50),
+        Text("0"),
       ],
     );
   }
