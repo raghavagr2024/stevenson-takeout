@@ -27,25 +27,46 @@ class Cart extends StatelessWidget {
           const SizedBox(
             height: 50,
           ),
+    Expanded(
 
-
-          Expanded(
-            child: ListView.separated(
-              itemCount: selected.length - 1,
-              itemBuilder: _getSelectedItems,
-              separatorBuilder: (BuildContext context, int index) => SizedBox(
-                height: 0,
-              ),
-            ),
-          )
+    child: ItemList()
+    )
         ],
       ),
     );
   }
 
-  Widget _getSelectedItems(BuildContext context, int index) {
-    return ItemTile(context, index);
+
+}
+
+class ItemList extends StatefulWidget {
+  @override
+  State<ItemList> createState() => _ItemList();
+}
+
+class _ItemList extends State<ItemList> {
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+        itemCount: selected.length - 1,
+        itemBuilder: _getSelectedItems,
+        separatorBuilder: (BuildContext context, int index) =>
+            SizedBox(
+              height: 0,
+            )
+
+    );
   }
+    Widget _getSelectedItems(BuildContext context, int index) {
+      return ItemTile(context, index);
+    }
+
+
+
+
+
+
+
 }
 
 class PeriodButton extends StatefulWidget {
@@ -105,40 +126,40 @@ class _LocationButton extends State<LocationButton> {
   }
 }
 
-class ItemTile extends StatefulWidget {
+
+class ItemTile extends StatelessWidget {
   BuildContext context;
+
   int index;
 
   ItemTile(this.context, this.index);
-
-  @override
-  State<StatefulWidget> createState() {
-    return _ItemTile(context, index);
-  }
-}
-
-class _ItemTile extends State<ItemTile> {
-  BuildContext context;
-
-  int index;
-
-  _ItemTile(this.context, this.index);
 
   Widget build(context) {
     print("in item tile");
 
     return Container(
         child: ListTile(
-      title: Item(index),
-      tileColor: null,
-    ));
+          title: Item(index),
+          tileColor: null,
+        ));
   }
 }
 
-class Item extends StatelessWidget {
+class Item extends StatefulWidget {
   var index;
 
   Item(this.index);
+
+  @override
+  State<StatefulWidget> createState() {
+    return _Item(index);
+  }
+}
+
+class _Item extends State<Item> {
+  var index;
+
+  _Item(this.index);
 
   var format = NumberFormat.currency(symbol: "\$", decimalDigits: 2);
 
@@ -152,18 +173,21 @@ class Item extends StatelessWidget {
         SizedBox(width: 20),
         Expanded(
           child: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              (selected.keys.elementAt(index).toString()),
-              //style: TextStyle(fontSize: 20),
-            ),
+              alignment: Alignment.center,
+              child: TextButton(
+                onPressed: () {
+                  _displayInfo(context, index);
+                },
+                child: Text(selected.keys.elementAt(index)),
+              )
+            //style: TextStyle(fontSize: 20),
           ),
         ),
         Expanded(
           child: Align(
-            alignment: Alignment.center,
+            alignment: Alignment.centerLeft,
             child: Text(selected.values.elementAt(index)[0].toString(),
-            style: TextStyle(fontSize: 20)),
+                style: TextStyle(fontSize: 20)),
           ),
         ),
         Expanded(
@@ -178,17 +202,110 @@ class Item extends StatelessWidget {
       ],
     );
   }
+
+  Future<void> _displayInfo(BuildContext context, int index) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(selected.keys.elementAt(index)),
+          content: CounterButton(index),
+          actions: <Widget>[
+            TextButton(onPressed: () {
+              setState(() {
+
+              });
+              Navigator.of(context).pop();
+
+            },
+                child: const Text("done"))
+          ],
+        );
+      },
+    );
+  }
 }
 
-Future<void> _displayInfo(BuildContext context, int index) async{
-  return showDialog<void>(
-    context: context,
-    barrierDismissible: false,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: selected.values.elementAt(index),
-        //content: CounterButton(index, ),
-      );
-    },
-  );
+class CounterButton extends StatefulWidget {
+
+  var index;
+
+  CounterButton(this.index,);
+
+  @override
+  State<StatefulWidget> createState() {
+    return _CounterButton(index);
+  }
 }
+
+class _CounterButton extends State<CounterButton> {
+  var index;
+
+  _CounterButton(this.index);
+
+  @override
+  Widget build(BuildContext context) {
+    var text = selected.values.elementAt(index)[0];
+
+
+    return Container(
+      padding: const EdgeInsets.all(3),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+      ),
+
+      child: Row(
+        children: [
+          IconButton(
+            icon: Icon(Icons.remove_circle,
+              color: text != 1 ? const Color(0xFFc99a2c) : Colors.grey,
+              size: 20,),
+            onPressed: text != 1 ? () => subtract(index) : null,
+
+          ),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 3),
+            padding:
+            const EdgeInsets.symmetric(horizontal: 1, vertical: 2),
+
+            child: Text(
+              text.toString(),
+              style: const TextStyle(color: Colors.black, fontSize: 16),
+            ),
+          ),
+          IconButton(
+            icon: const Icon(
+                Icons.add_circle, color: Color(0xFFc99a2c), size: 20),
+            onPressed: () {
+              add(index);
+            },
+
+          ),
+        ],
+      ),
+    );
+  }
+
+  void subtract(var i) {
+    selected.values.elementAt(i)[0]--;
+
+    print(selected.toString());
+    setState(() {
+
+    });
+  }
+
+  void add(var i) {
+    print(selected.values.elementAt(i)[0]);
+    selected.values.elementAt(i)[0]++;
+
+    setState(() {
+
+    });
+  }
+
+
+}
+
+
