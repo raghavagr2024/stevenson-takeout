@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:stevensontakeout/home_page.dart';
 
 import 'main.dart';
 
@@ -16,7 +17,20 @@ var selectedPeriod, selectedLocation;
 var total = 0;
 var locations = ["East Commons", "West Commons"];
 
-class Cart extends StatelessWidget {
+
+class Cart extends StatefulWidget{
+  @override
+  State<Cart> createState() => _Cart();
+
+
+
+
+
+
+
+}
+
+class _Cart extends State<Cart> {
   @override
   Widget build(BuildContext context) {
     log("in build");
@@ -27,6 +41,10 @@ class Cart extends StatelessWidget {
           const SizedBox(
             height: 50,
           ),
+    Align(
+    alignment: Alignment.centerLeft,
+    child: BackButton(),
+    ),
     Expanded(
 
     child: ItemList()
@@ -35,6 +53,15 @@ class Cart extends StatelessWidget {
       ),
     );
   }
+
+  Widget _getSelectedItems(BuildContext context, int index) {
+
+    return ItemTile(context, index);
+
+  }
+
+
+
 
 
 }
@@ -140,7 +167,7 @@ class ItemTile extends StatelessWidget {
     return Container(
         child: ListTile(
           title: Item(index),
-          tileColor: null,
+
         ));
   }
 }
@@ -173,6 +200,32 @@ class _Item extends State<Item> {
         SizedBox(width: 20),
         Expanded(
           child: Align(
+
+            alignment: Alignment.centerLeft,
+            child: Row(
+              children: <Widget>[
+                Text(selected.values.elementAt(index)[0].toString(), style: TextStyle(fontSize: 20),),
+                SizedBox(width: 20,),
+                IconButton(
+                    onPressed: (){
+                      selected.remove(selected.keys.elementAt(index));
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => Cart()), // this mymainpage is your page to refresh
+                            (Route<dynamic> route) => false,
+                      );
+                    },
+                    icon: const Icon(Icons.delete)
+                ),
+
+
+              ],
+            )
+
+          ),
+        ),
+        Expanded(
+          child: Align(
               alignment: Alignment.center,
               child: TextButton(
                 onPressed: () {
@@ -183,13 +236,7 @@ class _Item extends State<Item> {
             //style: TextStyle(fontSize: 20),
           ),
         ),
-        Expanded(
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(selected.values.elementAt(index)[0].toString(),
-                style: TextStyle(fontSize: 20)),
-          ),
-        ),
+
         Expanded(
           child: Align(
             alignment: Alignment.centerRight,
@@ -212,6 +259,7 @@ class _Item extends State<Item> {
           title: Text(selected.keys.elementAt(index)),
           content: CounterButton(index),
           actions: <Widget>[
+
             TextButton(onPressed: () {
               setState(() {
 
@@ -224,6 +272,15 @@ class _Item extends State<Item> {
         );
       },
     );
+  }
+
+  void _deleteItem(){
+
+
+    log("in on pressed");
+
+
+
   }
 }
 
@@ -307,5 +364,21 @@ class _CounterButton extends State<CounterButton> {
 
 
 }
+
+class BackButton extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+        onPressed: (){
+      Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()));
+    }
+        ,
+        icon: Icon(Icons.arrow_back_ios_new));
+  }
+
+}
+
 
 

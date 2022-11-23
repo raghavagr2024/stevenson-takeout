@@ -375,10 +375,9 @@ class NextButton extends StatelessWidget{
     log(selected.toString());
     return ElevatedButton(
         onPressed: (){
+          selected.remove(station);
           selected[station] = international;
           print(selected.toString());
-          print(everyDayItems.toString());
-          print(weeklyItems.toString());
           Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => Cart()));
