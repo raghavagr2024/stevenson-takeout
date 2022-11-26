@@ -16,18 +16,19 @@ var periods = [
 var selectedPeriod, selectedLocation;
 var total = 0;
 var locations = ["East Commons", "West Commons"];
+List meats = [
+  "Chicken",
+  "Gyro",
+  "Italian Sausage",
+  "Meatballs",
+  "Barbacoa",
+  "BBQ Chicken",
+  "Bacon Bits"
+];
 
-
-class Cart extends StatefulWidget{
+class Cart extends StatefulWidget {
   @override
   State<Cart> createState() => _Cart();
-
-
-
-
-
-
-
 }
 
 class _Cart extends State<Cart> {
@@ -39,29 +40,23 @@ class _Cart extends State<Cart> {
       body: Column(
         children: <Widget>[
           const SizedBox(
-            height: 50,
+            height: 40,
           ),
-    Align(
-    alignment: Alignment.centerLeft,
-    child: BackButton(),
-    ),
-    Expanded(
+          Align(
+            alignment: Alignment.centerLeft,
+            child: BackButton(),
+          ),
+          Container(height: (selected.length - 1) * 75, child: ItemList()),
+          const SizedBox(
+            height: 20,
+          ),
+          InternationalOption(),
 
-    child: ItemList()
-    )
+
         ],
       ),
     );
   }
-
-  Widget _getSelectedItems(BuildContext context, int index) {
-
-    return ItemTile(context, index);
-
-  }
-
-
-
 
 
 }
@@ -77,23 +72,14 @@ class _ItemList extends State<ItemList> {
     return ListView.separated(
         itemCount: selected.length - 1,
         itemBuilder: _getSelectedItems,
-        separatorBuilder: (BuildContext context, int index) =>
-            SizedBox(
+        separatorBuilder: (BuildContext context, int index) => const SizedBox(
               height: 0,
-            )
-
-    );
+            ));
   }
-    Widget _getSelectedItems(BuildContext context, int index) {
-      return ItemTile(context, index);
-    }
 
-
-
-
-
-
-
+  Widget _getSelectedItems(BuildContext context, int index) {
+    return ItemTile(context, index);
+  }
 }
 
 class PeriodButton extends StatefulWidget {
@@ -153,7 +139,6 @@ class _LocationButton extends State<LocationButton> {
   }
 }
 
-
 class ItemTile extends StatelessWidget {
   BuildContext context;
 
@@ -166,9 +151,8 @@ class ItemTile extends StatelessWidget {
 
     return Container(
         child: ListTile(
-          title: Item(index),
-
-        ));
+      title: Item(index),
+    ));
   }
 }
 
@@ -200,29 +184,29 @@ class _Item extends State<Item> {
         SizedBox(width: 20),
         Expanded(
           child: Align(
+              alignment: Alignment.centerLeft,
+              child: Row(
+                children: <Widget>[
+                  Text(
+                    selected.values.elementAt(index)[0].toString(),
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  IconButton(
+                      onPressed: () {
+                        selected.remove(selected.keys.elementAt(index));
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => Cart()),
 
-            alignment: Alignment.centerLeft,
-            child: Row(
-              children: <Widget>[
-                Text(selected.values.elementAt(index)[0].toString(), style: TextStyle(fontSize: 20),),
-                SizedBox(width: 20,),
-                IconButton(
-                    onPressed: (){
-                      selected.remove(selected.keys.elementAt(index));
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => Cart()), // this mymainpage is your page to refresh
-                            (Route<dynamic> route) => false,
-                      );
-                    },
-                    icon: const Icon(Icons.delete)
-                ),
-
-
-              ],
-            )
-
-          ),
+                          (Route<dynamic> route) => false,
+                        );
+                      },
+                      icon: const Icon(Icons.delete)),
+                ],
+              )),
         ),
         Expanded(
           child: Align(
@@ -231,16 +215,15 @@ class _Item extends State<Item> {
                 onPressed: () {
                   _displayInfo(context, index);
                 },
-                child: Text(selected.keys.elementAt(index)),
+                child: Text(selected.keys.elementAt(index), style: const TextStyle(fontSize: 15)),
               )
-            //style: TextStyle(fontSize: 20),
-          ),
-        ),
 
+              ),
+        ),
         Expanded(
           child: Align(
             alignment: Alignment.centerRight,
-            child: Text(ans, style: TextStyle(fontSize: 20)),
+            child: Text(ans, style: const TextStyle(fontSize: 20)),
           ),
         ),
         SizedBox(
@@ -259,36 +242,25 @@ class _Item extends State<Item> {
           title: Text(selected.keys.elementAt(index)),
           content: CounterButton(index),
           actions: <Widget>[
-
-            TextButton(onPressed: () {
-              setState(() {
-
-              });
-              Navigator.of(context).pop();
-
-            },
+            TextButton(
+                onPressed: () {
+                  setState(() {});
+                  Navigator.of(context).pop();
+                },
                 child: const Text("done"))
           ],
         );
       },
     );
   }
-
-  void _deleteItem(){
-
-
-    log("in on pressed");
-
-
-
-  }
 }
 
 class CounterButton extends StatefulWidget {
-
   var index;
 
-  CounterButton(this.index,);
+  CounterButton(
+    this.index,
+  );
 
   @override
   State<StatefulWidget> createState() {
@@ -305,39 +277,35 @@ class _CounterButton extends State<CounterButton> {
   Widget build(BuildContext context) {
     var text = selected.values.elementAt(index)[0];
 
-
     return Container(
       padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(5),
       ),
-
       child: Row(
         children: [
           IconButton(
-            icon: Icon(Icons.remove_circle,
+            icon: Icon(
+              Icons.remove_circle,
               color: text != 1 ? const Color(0xFFc99a2c) : Colors.grey,
-              size: 20,),
+              size: 20,
+            ),
             onPressed: text != 1 ? () => subtract(index) : null,
-
           ),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 3),
-            padding:
-            const EdgeInsets.symmetric(horizontal: 1, vertical: 2),
-
+            padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 2),
             child: Text(
               text.toString(),
               style: const TextStyle(color: Colors.black, fontSize: 16),
             ),
           ),
           IconButton(
-            icon: const Icon(
-                Icons.add_circle, color: Color(0xFFc99a2c), size: 20),
+            icon: const Icon(Icons.add_circle,
+                color: Color(0xFFc99a2c), size: 20),
             onPressed: () {
               add(index);
             },
-
           ),
         ],
       ),
@@ -348,37 +316,116 @@ class _CounterButton extends State<CounterButton> {
     selected.values.elementAt(i)[0]--;
 
     print(selected.toString());
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   void add(var i) {
     print(selected.values.elementAt(i)[0]);
     selected.values.elementAt(i)[0]++;
 
-    setState(() {
-
-    });
+    setState(() {});
   }
-
-
 }
 
-class BackButton extends StatelessWidget{
+class BackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-        onPressed: (){
-      Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()));
-    }
-        ,
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => HomePage()));
+        },
         icon: Icon(Icons.arrow_back_ios_new));
+  }
+}
+
+class InternationalOption extends StatefulWidget{
+  @override
+  State<StatefulWidget> createState() {
+    return _InternationalOption();
   }
 
 }
 
+class _InternationalOption extends State<InternationalOption>{
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        const SizedBox(width: 37),
+        Expanded(
+            child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text("${selected.values.elementAt(selected.length-1).length} items", style: TextStyle(fontSize: 20),)
+            )
+        ),
+        Expanded(
+          child: Align(
+              alignment: Alignment.center,
+              child: TextButton(
+                onPressed: () {
+                  _displayInfo(context);
+                },
+                child: Text(selected.keys.elementAt(selected.length-1),style: const TextStyle(fontSize: 15),),
+              )
+            //style: TextStyle(fontSize: 20),
+          ),
+        ),
+        Expanded(
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: Text(getPrice(), style: const TextStyle(fontSize: 20)),
+          ),
+        ),
+        const SizedBox(
+          width: 37,
+        )
+      ],
+    );
+  }
+  Future<void> _displayInfo(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(selected.keys.elementAt(selected.length-1)),
+          content: Container(
+            width: 300,
+            height: 300,
+            child: ListView.builder(
+              shrinkWrap: true,
+                  itemCount: weeklyItems[station].length,
+                  itemBuilder: _getInternational),
+          ),
+          actions: <Widget>[
+            TextButton(
+                onPressed: () {
+                  setState(() {
 
+                  });
+                  Navigator.of(context).pop();
+                },
+                child: const Text("done"))
+          ],
+        );
+      },
+    );
+  }
+
+  String getPrice(){
+
+    for(String i in  selected.values.elementAt(selected.length-1)){
+      if(meats.contains(i)){
+        return("\$5.00");
+
+       }
+    }
+    return ("\$4.00");
+  }
+  Widget _getInternational(BuildContext context,int index) {
+    return InternationalTile(context, weeklyItems[station],index);
+  }
+
+}
 

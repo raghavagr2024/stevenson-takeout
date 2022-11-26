@@ -1,4 +1,4 @@
-// ignore_for_file: use_key_in_widget_constructors
+
 
 import 'dart:developer';
 
@@ -19,9 +19,9 @@ class HomePage extends StatelessWidget{
 
 }
 
-List meats = ["Chicken","Gyro", "Italian Sausage","Meatballs","Barbacoa", "BBQ Chicken","Bacon Bits"];
 String station = "";
 class EveryDayItems extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     CollectionReference users = FirebaseFirestore.instance.collection(
@@ -256,6 +256,7 @@ class WeekItems extends StatelessWidget{
     }
     return text;
   }
+
   String getStation(){
     String week = getWeek()[0];
     if(week == "week 1"){
