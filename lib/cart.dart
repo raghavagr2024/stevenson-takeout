@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -34,8 +34,6 @@ class Cart extends StatefulWidget {
 class _Cart extends State<Cart> {
   @override
   Widget build(BuildContext context) {
-    log("in build");
-    log(selected.toString());
     return Scaffold(
       body: Column(
         children: <Widget>[
@@ -46,11 +44,19 @@ class _Cart extends State<Cart> {
             alignment: Alignment.centerLeft,
             child: BackButton(),
           ),
-          Container(height: (selected.length - 1) * 75, child: ItemList()),
+          SizedBox(
+              height:(selected.length)*53,
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: ItemList(),
+              ),
+
+          ),
           const SizedBox(
             height: 20,
           ),
           InternationalOption(),
+          TotalPrice()
 
 
         ],
@@ -70,6 +76,7 @@ class _ItemList extends State<ItemList> {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
+      physics: const NeverScrollableScrollPhysics(),
         itemCount: selected.length - 1,
         itemBuilder: _getSelectedItems,
         separatorBuilder: (BuildContext context, int index) => const SizedBox(
@@ -150,6 +157,7 @@ class ItemTile extends StatelessWidget {
     print("in item tile");
 
     return Container(
+      height: 53,
         child: ListTile(
       title: Item(index),
     ));
@@ -226,7 +234,7 @@ class _Item extends State<Item> {
             child: Text(ans, style: const TextStyle(fontSize: 20)),
           ),
         ),
-        SizedBox(
+        const SizedBox(
           width: 20,
         )
       ],
@@ -245,7 +253,12 @@ class _Item extends State<Item> {
             TextButton(
                 onPressed: () {
                   setState(() {});
-                  Navigator.of(context).pop();
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => Cart()),
+
+                        (Route<dynamic> route) => false,
+                  );
                 },
                 child: const Text("done"))
           ],
@@ -350,38 +363,45 @@ class InternationalOption extends StatefulWidget{
 class _InternationalOption extends State<InternationalOption>{
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        const SizedBox(width: 37),
-        Expanded(
-            child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text("${selected.values.elementAt(selected.length-1).length} items", style: TextStyle(fontSize: 20),)
-            )
-        ),
-        Expanded(
-          child: Align(
-              alignment: Alignment.center,
-              child: TextButton(
-                onPressed: () {
-                  _displayInfo(context);
-                },
-                child: Text(selected.keys.elementAt(selected.length-1),style: const TextStyle(fontSize: 15),),
+    if(selected.values.elementAt(selected.length-1).length==0){
+      return const SizedBox(height: 0,width: 0,);
+    }
+    return Container(
+      height: 50,
+      child: Row(
+        children: <Widget>[
+          const SizedBox(width: 37),
+          Expanded(
+              child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("${selected.values.elementAt(selected.length-1).length} items", style: TextStyle(fontSize: 20),)
               )
-            //style: TextStyle(fontSize: 20),
           ),
-        ),
-        Expanded(
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: Text(getPrice(), style: const TextStyle(fontSize: 20)),
+          Expanded(
+            child: Align(
+                alignment: Alignment.center,
+                child: TextButton(
+                  onPressed: () {
+                    _displayInfo(context);
+                  },
+                  child: Text(selected.keys.elementAt(selected.length-1),style: const TextStyle(fontSize: 15),),
+                )
+              //style: TextStyle(fontSize: 20),
+            ),
           ),
-        ),
-        const SizedBox(
-          width: 37,
-        )
-      ],
+          Expanded(
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Text(getPrice(), style: const TextStyle(fontSize: 20)),
+            ),
+          ),
+          const SizedBox(
+            width: 37,
+          )
+        ],
+      ),
     );
+
   }
   Future<void> _displayInfo(BuildContext context) async {
     return showDialog<void>(
@@ -404,7 +424,12 @@ class _InternationalOption extends State<InternationalOption>{
                   setState(() {
 
                   });
-                  Navigator.of(context).pop();
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => Cart()),
+
+                        (Route<dynamic> route) => false,
+                  );
                 },
                 child: const Text("done"))
           ],
@@ -421,6 +446,7 @@ class _InternationalOption extends State<InternationalOption>{
 
        }
     }
+
     return ("\$4.00");
   }
   Widget _getInternational(BuildContext context,int index) {
@@ -429,3 +455,65 @@ class _InternationalOption extends State<InternationalOption>{
 
 }
 
+class TotalPrice extends StatefulWidget{
+  @override
+  State<StatefulWidget> createState() {
+    return _TotalPrice();
+  }
+
+}
+
+class _TotalPrice extends State<TotalPrice>{
+  @override
+  Widget build(BuildContext context) {
+    var format = NumberFormat.currency(symbol: "\$", decimalDigits: 2);
+      return Container(
+        height: 50,
+        child: Row(
+          children:  <Widget>[
+
+            Expanded(
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Text("total:   ${format.format(_getPrice())}",style: TextStyle(fontSize: 20),),
+              ),
+
+            ),
+            SizedBox(width: 34,)
+
+          ],
+        ),
+      );
+  }
+
+  double _getPrice(){
+    double total = 0;
+    for(int i = 0; i<selected.length-1;i++){
+      total += selected.values.elementAt(i)[0] * selected.values.elementAt(i)[1];
+    }
+
+    for(String i in  selected.values.elementAt(selected.length-1)){
+      if(meats.contains(i)){
+        setState(() {
+
+        });
+        return total + 5;
+
+      }
+    }
+
+    if(selected.values.elementAt(selected.length-1).length==0){
+      setState(() {
+
+      });
+      return total;
+    }
+    setState(() {
+
+    });
+    return total + 4;
+
+
+  }
+
+}
