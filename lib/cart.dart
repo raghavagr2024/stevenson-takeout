@@ -1,9 +1,8 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:stevensontakeout/home_page.dart';
 
+import 'checkout.dart';
 import 'main.dart';
 
 var periods = [
@@ -13,9 +12,11 @@ var periods = [
   "5B (12:02 - 12:22)",
   "6A (12:45 - 1:14)"
 ];
-var selectedPeriod, selectedLocation;
+
 var total = 0;
 var locations = ["East Commons", "West Commons"];
+var paymentOptions = ["Pay online", "Pay in person"];
+var preferences = [periods.first,locations.first,paymentOptions.first];
 List meats = [
   "Chicken",
   "Gyro",
@@ -45,26 +46,29 @@ class _Cart extends State<Cart> {
             child: BackButton(),
           ),
           SizedBox(
-              height:(selected.length)*53,
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: ItemList(),
-              ),
-
+            height: (selected.length) * 53,
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: ItemList(),
+            ),
           ),
           const SizedBox(
             height: 20,
           ),
           InternationalOption(),
-          TotalPrice()
-
-
+          TotalPrice(),
+          PeriodButton(),
+          SizedBox(
+            height: 20,
+          ),
+          LocationButton(),
+          SizedBox(height: 20,),
+          Payment(),
+          NextButton()
         ],
       ),
     );
   }
-
-
 }
 
 class ItemList extends StatefulWidget {
@@ -76,7 +80,7 @@ class _ItemList extends State<ItemList> {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      physics: const NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         itemCount: selected.length - 1,
         itemBuilder: _getSelectedItems,
         separatorBuilder: (BuildContext context, int index) => const SizedBox(
@@ -99,20 +103,35 @@ class _PeriodButton extends State<PeriodButton> {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButton(
-      value: value,
-      onChanged: (String? v) {
-        setState(() {
-          value = v!;
-          selectedPeriod = value;
-        });
-      },
-      items: periods.map<DropdownMenuItem<String>>((String v) {
-        return DropdownMenuItem<String>(
-          value: v,
-          child: Text(v),
-        );
-      }).toList(),
+
+    return Row(
+      children: [
+        const SizedBox(
+          width: 37,
+        ),
+        const Text(
+          "Time",
+          style: TextStyle(fontSize: 20),
+        ),
+        const SizedBox(
+          width: 20,
+        ),
+        DropdownButton(
+          value: value,
+          onChanged: (String? v) {
+            setState(() {
+              value = v!;
+              preferences[0] = value;
+            });
+          },
+          items: periods.map<DropdownMenuItem<String>>((String v) {
+            return DropdownMenuItem<String>(
+              value: v,
+              child: Text(v),
+            );
+          }).toList(),
+        )
+      ],
     );
   }
 }
@@ -123,27 +142,81 @@ class LocationButton extends StatefulWidget {
 }
 
 class _LocationButton extends State<LocationButton> {
-  @override
+
   var value = locations.first;
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButton(
-      value: value,
-      onChanged: (String? v) {
-        setState(() {
-          value = v!;
-          selectedLocation = value;
-        });
-      },
-      items: locations.map<DropdownMenuItem<String>>((String v) {
-        return DropdownMenuItem<String>(
-          value: v,
-          child: Text(v),
-        );
-      }).toList(),
+
+    return Row(
+      children: <Widget>[
+        const SizedBox(
+          width: 37,
+        ),
+        const Text(
+          "Location: ",
+          style: TextStyle(fontSize: 20),
+        ),
+        const SizedBox(
+          width: 20,
+        ),
+        DropdownButton(
+          value: value,
+          onChanged: (String? v) {
+            setState(() {
+              value = v!;
+              preferences[1] = value;
+            });
+          },
+          items: locations.map<DropdownMenuItem<String>>((String v) {
+            return DropdownMenuItem<String>(
+              value: v,
+              child: Text(v),
+            );
+          }).toList(),
+        )
+      ],
     );
   }
+}
+
+class Payment extends StatefulWidget{
+  @override
+  State<StatefulWidget> createState() {
+    return _Payment();
+  }
+
+}
+
+class _Payment extends State<Payment>{
+  var value = paymentOptions.first;
+  @override
+  Widget build(BuildContext context) {
+
+    return Row(
+      children: [
+        const SizedBox(width: 37,),
+        const Text("Payment option: ", style: TextStyle(fontSize: 20),),
+        const SizedBox(width: 20,),
+        DropdownButton(
+          value: value,
+          onChanged: (String? v) {
+            setState(() {
+              value = v!;
+              preferences[2] = value;
+            });
+          },
+          items: paymentOptions.map<DropdownMenuItem<String>>((String v) {
+            return DropdownMenuItem<String>(
+              value: v,
+              child: Text(v),
+            );
+          }).toList(),
+        )
+      ],
+    );
+  }
+
 }
 
 class ItemTile extends StatelessWidget {
@@ -157,10 +230,10 @@ class ItemTile extends StatelessWidget {
     print("in item tile");
 
     return Container(
-      height: 53,
+        height: 53,
         child: ListTile(
-      title: Item(index),
-    ));
+          title: Item(index),
+        ));
   }
 }
 
@@ -208,7 +281,6 @@ class _Item extends State<Item> {
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(builder: (context) => Cart()),
-
                           (Route<dynamic> route) => false,
                         );
                       },
@@ -223,10 +295,9 @@ class _Item extends State<Item> {
                 onPressed: () {
                   _displayInfo(context, index);
                 },
-                child: Text(selected.keys.elementAt(index), style: const TextStyle(fontSize: 15)),
-              )
-
-              ),
+                child: Text(selected.keys.elementAt(index),
+                    style: const TextStyle(fontSize: 15)),
+              )),
         ),
         Expanded(
           child: Align(
@@ -256,8 +327,7 @@ class _Item extends State<Item> {
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (context) => Cart()),
-
-                        (Route<dynamic> route) => false,
+                    (Route<dynamic> route) => false,
                   );
                 },
                 child: const Text("done"))
@@ -352,19 +422,21 @@ class BackButton extends StatelessWidget {
   }
 }
 
-class InternationalOption extends StatefulWidget{
+class InternationalOption extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return _InternationalOption();
   }
-
 }
 
-class _InternationalOption extends State<InternationalOption>{
+class _InternationalOption extends State<InternationalOption> {
   @override
   Widget build(BuildContext context) {
-    if(selected.values.elementAt(selected.length-1).length==0){
-      return const SizedBox(height: 0,width: 0,);
+    if (selected.values.elementAt(selected.length - 1).length == 0) {
+      return const SizedBox(
+        height: 0,
+        width: 0,
+      );
     }
     return Container(
       height: 50,
@@ -374,9 +446,10 @@ class _InternationalOption extends State<InternationalOption>{
           Expanded(
               child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text("${selected.values.elementAt(selected.length-1).length} items", style: TextStyle(fontSize: 20),)
-              )
-          ),
+                  child: Text(
+                    "${selected.values.elementAt(selected.length - 1).length} items",
+                    style: TextStyle(fontSize: 20),
+                  ))),
           Expanded(
             child: Align(
                 alignment: Alignment.center,
@@ -384,10 +457,13 @@ class _InternationalOption extends State<InternationalOption>{
                   onPressed: () {
                     _displayInfo(context);
                   },
-                  child: Text(selected.keys.elementAt(selected.length-1),style: const TextStyle(fontSize: 15),),
+                  child: Text(
+                    selected.keys.elementAt(selected.length - 1),
+                    style: const TextStyle(fontSize: 15),
+                  ),
                 )
-              //style: TextStyle(fontSize: 20),
-            ),
+                //style: TextStyle(fontSize: 20),
+                ),
           ),
           Expanded(
             child: Align(
@@ -401,34 +477,31 @@ class _InternationalOption extends State<InternationalOption>{
         ],
       ),
     );
-
   }
+
   Future<void> _displayInfo(BuildContext context) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(selected.keys.elementAt(selected.length-1)),
+          title: Text(selected.keys.elementAt(selected.length - 1)),
           content: Container(
             width: 300,
             height: 300,
             child: ListView.builder(
-              shrinkWrap: true,
-                  itemCount: weeklyItems[station].length,
-                  itemBuilder: _getInternational),
+                shrinkWrap: true,
+                itemCount: weeklyItems[station].length,
+                itemBuilder: _getInternational),
           ),
           actions: <Widget>[
             TextButton(
                 onPressed: () {
-                  setState(() {
-
-                  });
+                  setState(() {});
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (context) => Cart()),
-
-                        (Route<dynamic> route) => false,
+                    (Route<dynamic> route) => false,
                   );
                 },
                 child: const Text("done"))
@@ -438,82 +511,87 @@ class _InternationalOption extends State<InternationalOption>{
     );
   }
 
-  String getPrice(){
-
-    for(String i in  selected.values.elementAt(selected.length-1)){
-      if(meats.contains(i)){
-        return("\$5.00");
-
-       }
+  String getPrice() {
+    for (String i in selected.values.elementAt(selected.length - 1)) {
+      if (meats.contains(i)) {
+        return ("\$5.00");
+      }
     }
 
     return ("\$4.00");
   }
-  Widget _getInternational(BuildContext context,int index) {
-    return InternationalTile(context, weeklyItems[station],index);
-  }
 
+  Widget _getInternational(BuildContext context, int index) {
+    return InternationalTile(context, weeklyItems[station], index);
+  }
 }
 
-class TotalPrice extends StatefulWidget{
+class TotalPrice extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return _TotalPrice();
   }
-
 }
 
-class _TotalPrice extends State<TotalPrice>{
+class _TotalPrice extends State<TotalPrice> {
   @override
   Widget build(BuildContext context) {
     var format = NumberFormat.currency(symbol: "\$", decimalDigits: 2);
-      return Container(
-        height: 50,
-        child: Row(
-          children:  <Widget>[
-
-            Expanded(
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Text("total:   ${format.format(_getPrice())}",style: TextStyle(fontSize: 20),),
+    return Container(
+      height: 50,
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                "total:   ${format.format(_getPrice())}",
+                style: TextStyle(fontSize: 20),
               ),
-
             ),
-            SizedBox(width: 34,)
-
-          ],
-        ),
-      );
+          ),
+          SizedBox(
+            width: 34,
+          )
+        ],
+      ),
+    );
   }
 
-  double _getPrice(){
+  double _getPrice() {
     double total = 0;
-    for(int i = 0; i<selected.length-1;i++){
-      total += selected.values.elementAt(i)[0] * selected.values.elementAt(i)[1];
+    for (int i = 0; i < selected.length - 1; i++) {
+      total +=
+          selected.values.elementAt(i)[0] * selected.values.elementAt(i)[1];
     }
 
-    for(String i in  selected.values.elementAt(selected.length-1)){
-      if(meats.contains(i)){
-        setState(() {
-
-        });
+    for (String i in selected.values.elementAt(selected.length - 1)) {
+      if (meats.contains(i)) {
+        setState(() {});
         return total + 5;
-
       }
     }
 
-    if(selected.values.elementAt(selected.length-1).length==0){
-      setState(() {
-
-      });
+    if (selected.values.elementAt(selected.length - 1).length == 0) {
+      setState(() {});
       return total;
     }
-    setState(() {
-
-    });
+    setState(() {});
     return total + 4;
+  }
+}
 
-
+class NextButton extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement firebase calls
+    return TextButton(
+        onPressed: (){
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => CheckoutPage()));
+        },
+        child: Text("Continue")
+    );
   }
 
 }
