@@ -455,7 +455,7 @@ class _InternationalOption extends State<InternationalOption> {
                 alignment: Alignment.center,
                 child: TextButton(
                   onPressed: () {
-                    _displayInfo(context);
+                    //_displayInfo(context);
                   },
                   child: Text(
                     selected.keys.elementAt(selected.length - 1),
@@ -478,7 +478,7 @@ class _InternationalOption extends State<InternationalOption> {
       ),
     );
   }
-
+  /*
   Future<void> _displayInfo(BuildContext context) async {
     return showDialog<void>(
       context: context,
@@ -510,7 +510,7 @@ class _InternationalOption extends State<InternationalOption> {
       },
     );
   }
-
+  */
   String getPrice() {
     for (String i in selected.values.elementAt(selected.length - 1)) {
       if (meats.contains(i)) {
@@ -520,10 +520,12 @@ class _InternationalOption extends State<InternationalOption> {
 
     return ("\$4.00");
   }
-
+/*
   Widget _getInternational(BuildContext context, int index) {
     return InternationalTile(context, weeklyItems[station], index);
   }
+  */
+
 }
 
 class TotalPrice extends StatefulWidget {

@@ -166,13 +166,6 @@ class WeekItems extends StatelessWidget{
                           shrinkWrap: true,
                           itemCount: weeklyItems["Panini"].length,
                           itemBuilder: _getPanini),
-                      const Text("International Station:", style: TextStyle(fontSize: 30),),
-                      Text(getStation(), style: const TextStyle(fontSize: 30),),
-                      ListView.builder(
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: weeklyItems[getStation()].length,
-                          itemBuilder: _getInternational),
                      NextButton()
                       
 
@@ -210,9 +203,7 @@ class WeekItems extends StatelessWidget{
   Widget _getSides(BuildContext context,int index) {
     return Tile(context, weeklyItems[getDay()][2],index);
   }
-  Widget _getInternational(BuildContext context,int index) {
-    return InternationalTile(context, weeklyItems[getStation()],index);
-  }
+
 
   String getDay(){
     DateTime now = DateTime.now();
@@ -234,19 +225,19 @@ class WeekItems extends StatelessWidget{
   List getWeek(){
     DateTime now = DateTime.now();
     var text = [];
-    if(now.day-7<0){
+    if(now.day-7<=0){
       text.add("week 1");
       text.add("GoeTLas8A4sj29bRuyw2");
     }
-    else if (now.day-14<0){
+    else if (now.day-14<=0){
       text.add("week 2");
       text.add("JypyeLKmIyhEXlLebvHk");
     }
-    else if(now.day-21<0){
+    else if(now.day-21<=0){
       text.add("week 3");
       text.add("NvUFdn08oieSPYfLQkU9");
     }
-    else if(now.day-28<0){
+    else if(now.day-28<=0){
       text.add("week 4");
       text.add("YToUal6YkEc8XWndizBU");
     }
@@ -312,8 +303,8 @@ class _Tile extends State<Tile>{
 
 
 
-var international = [];
-
+//var international = [];
+/*
 class InternationalTile extends StatefulWidget{
   Map<String, dynamic> items;
   BuildContext context;
@@ -369,15 +360,14 @@ class _InternationalTile extends State<InternationalTile>{
     });
   }
 }
-
+*/
 class NextButton extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     log(selected.toString());
     return ElevatedButton(
         onPressed: (){
-          selected.remove(station);
-          selected[station] = international;
+
           print(selected.toString());
           Navigator.push(
               context,
