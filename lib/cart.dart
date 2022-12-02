@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:stevensontakeout/confirmation.dart';
 import 'package:stevensontakeout/home_page.dart';
 
 import 'checkout.dart';
 import 'main.dart';
+import 'order.dart';
 
 var periods = [
   "4A (11:10 - 11:30)",
@@ -16,7 +18,7 @@ var periods = [
 var total = 0;
 var locations = ["East Commons", "West Commons"];
 var paymentOptions = ["Pay online", "Pay in person"];
-var preferences = [periods.first,locations.first,paymentOptions.first];
+var preferences = [periods.first, locations.first, paymentOptions.first];
 List meats = [
   "Chicken",
   "Gyro",
@@ -35,6 +37,8 @@ class Cart extends StatefulWidget {
 class _Cart extends State<Cart> {
   @override
   Widget build(BuildContext context) {
+    print("in cart");
+    print(selected.length);
     return Scaffold(
       body: Column(
         children: <Widget>[
@@ -46,23 +50,22 @@ class _Cart extends State<Cart> {
             child: BackButton(),
           ),
           SizedBox(
-            height: (selected.length) * 53,
+            height: (selected.length+1) * (50),
             child: Align(
               alignment: Alignment.topCenter,
               child: ItemList(),
             ),
           ),
-          const SizedBox(
-            height: 20,
-          ),
-          InternationalOption(),
+
           TotalPrice(),
           PeriodButton(),
           SizedBox(
             height: 20,
           ),
           LocationButton(),
-          SizedBox(height: 20,),
+          SizedBox(
+            height: 20,
+          ),
           Payment(),
           NextButton()
         ],
@@ -81,7 +84,7 @@ class _ItemList extends State<ItemList> {
   Widget build(BuildContext context) {
     return ListView.separated(
         physics: const NeverScrollableScrollPhysics(),
-        itemCount: selected.length - 1,
+        itemCount: selected.length,
         itemBuilder: _getSelectedItems,
         separatorBuilder: (BuildContext context, int index) => const SizedBox(
               height: 0,
@@ -99,11 +102,10 @@ class PeriodButton extends StatefulWidget {
 }
 
 class _PeriodButton extends State<PeriodButton> {
-  var value = periods.first;
+  var value = preferences[0];
 
   @override
   Widget build(BuildContext context) {
-
     return Row(
       children: [
         const SizedBox(
@@ -142,12 +144,10 @@ class LocationButton extends StatefulWidget {
 }
 
 class _LocationButton extends State<LocationButton> {
-
-  var value = locations.first;
+  var value = preferences[1];
 
   @override
   Widget build(BuildContext context) {
-
     return Row(
       children: <Widget>[
         const SizedBox(
@@ -180,24 +180,30 @@ class _LocationButton extends State<LocationButton> {
   }
 }
 
-class Payment extends StatefulWidget{
+class Payment extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return _Payment();
   }
-
 }
 
-class _Payment extends State<Payment>{
-  var value = paymentOptions.first;
+class _Payment extends State<Payment> {
+  var value = preferences[2];
+
   @override
   Widget build(BuildContext context) {
-
     return Row(
       children: [
-        const SizedBox(width: 37,),
-        const Text("Payment option: ", style: TextStyle(fontSize: 20),),
-        const SizedBox(width: 20,),
+        const SizedBox(
+          width: 37,
+        ),
+        const Text(
+          "Payment option: ",
+          style: TextStyle(fontSize: 20),
+        ),
+        const SizedBox(
+          width: 20,
+        ),
         DropdownButton(
           value: value,
           onChanged: (String? v) {
@@ -216,7 +222,6 @@ class _Payment extends State<Payment>{
       ],
     );
   }
-
 }
 
 class ItemTile extends StatelessWidget {
@@ -228,7 +233,7 @@ class ItemTile extends StatelessWidget {
 
   Widget build(context) {
     print("in item tile");
-
+    print(selected.keys.elementAt(index));
     return Container(
         height: 53,
         child: ListTile(
@@ -278,11 +283,20 @@ class _Item extends State<Item> {
                   IconButton(
                       onPressed: () {
                         selected.remove(selected.keys.elementAt(index));
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(builder: (context) => Cart()),
-                          (Route<dynamic> route) => false,
-                        );
+                        print(selected.toString());
+                        if (selected.isEmpty) {
+                          print("in null");
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => HomePage()));
+                        }
+                        else{
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (context) => Cart()),
+                                (Route<dynamic> route) => false,
+                          );
+                        }
+
                       },
                       icon: const Icon(Icons.delete)),
                 ],
@@ -421,7 +435,7 @@ class BackButton extends StatelessWidget {
         icon: Icon(Icons.arrow_back_ios_new));
   }
 }
-
+/*
 class InternationalOption extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -478,6 +492,7 @@ class _InternationalOption extends State<InternationalOption> {
       ),
     );
   }
+
   /*
   Future<void> _displayInfo(BuildContext context) async {
     return showDialog<void>(
@@ -527,7 +542,7 @@ class _InternationalOption extends State<InternationalOption> {
   */
 
 }
-
+*/
 class TotalPrice extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -562,38 +577,29 @@ class _TotalPrice extends State<TotalPrice> {
 
   double _getPrice() {
     double total = 0;
-    for (int i = 0; i < selected.length - 1; i++) {
+    for (int i = 0; i < selected.length ; i++) {
       total +=
           selected.values.elementAt(i)[0] * selected.values.elementAt(i)[1];
     }
 
-    for (String i in selected.values.elementAt(selected.length - 1)) {
-      if (meats.contains(i)) {
-        setState(() {});
-        return total + 5;
-      }
-    }
-
-    if (selected.values.elementAt(selected.length - 1).length == 0) {
-      setState(() {});
-      return total;
-    }
-    setState(() {});
-    return total + 4;
+    return total;
   }
 }
 
-class NextButton extends StatelessWidget{
+class NextButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement firebase calls
     return TextButton(
-        onPressed: (){
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => CheckoutPage()));
-        },
-        child: Text("Continue")
-    );
-  }
+        onPressed: () {
+          if(preferences[2]=="Pay in person"){
+            var order = Order(selected, preferences[0],preferences[1],preferences[2],54098);
+            order.addOrder();
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => ConfirmationPage()));
+          }
 
+        },
+        child: Text("Continue"));
+  }
 }

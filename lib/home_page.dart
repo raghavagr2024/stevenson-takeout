@@ -367,7 +367,6 @@ class NextButton extends StatelessWidget{
     log(selected.toString());
     return ElevatedButton(
         onPressed: (){
-
           print(selected.toString());
           Navigator.push(
               context,
