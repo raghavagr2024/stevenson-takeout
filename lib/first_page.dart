@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stevensontakeout/adminLogin.dart';
 import 'package:stevensontakeout/sign_up_page.dart';
 
 import 'home_page.dart';
@@ -23,9 +24,9 @@ class FirstPage extends StatelessWidget{
             ),
           ),
           const SizedBox(height: 50,),
-          LoginButton(),
+          AdminButton(),
           const SizedBox(height: 50,),
-          SignUpButton()
+          StudentButton()
 
         ],
       ),
@@ -33,7 +34,7 @@ class FirstPage extends StatelessWidget{
   }
 }
 
-class LoginButton extends StatelessWidget{
+class AdminButton extends StatelessWidget{
   @override
   Widget build(BuildContext context){
       return ElevatedButton(
@@ -44,14 +45,14 @@ class LoginButton extends StatelessWidget{
           onPressed: (){
             Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => LoginPage()));
+                MaterialPageRoute(builder: (context) => AdminLogin()));
           },
 
-          child: const Text("Log In")
+          child: const Text("Admin")
       );
   }
 }
-class SignUpButton extends StatelessWidget{
+class StudentButton extends StatelessWidget{
   @override
   Widget build(BuildContext context){
     return ElevatedButton(
@@ -67,7 +68,7 @@ class SignUpButton extends StatelessWidget{
 
         },
 
-        child: const Text("Sign Up")
+        child: const Text("Student")
     );
   }
 }
