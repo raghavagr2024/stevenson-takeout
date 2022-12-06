@@ -207,7 +207,7 @@ class WeekItems extends StatelessWidget{
 
   String getDay(){
     DateTime now = DateTime.now();
-    switch (now.weekday){
+    switch (now.weekday+1){
       case DateTime.monday:
         return "Monday";
       case DateTime.tuesday:

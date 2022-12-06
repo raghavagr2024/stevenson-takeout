@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stevensontakeout/adminHome.dart';
 
 class AdminLogin extends StatelessWidget {
   @override
@@ -7,12 +8,10 @@ class AdminLogin extends StatelessWidget {
       body: Column(
         children: [
           SizedBox(
-            height: 300,
+            height: 100,
           ),
           InputField(),
-          SizedBox(
-            height: 30,
-          ),
+
           ConfirmButton()
         ],
       ),
@@ -41,7 +40,7 @@ class _InputField extends State<InputField> {
           controller: _credential,
           decoration: InputDecoration(
               labelText: "id",
-              constraints: BoxConstraints.tight(Size(250, 300))),
+              constraints: BoxConstraints.tight(Size(250, 100))),
         )
       ],
     );
@@ -56,10 +55,38 @@ class ConfirmButton extends StatelessWidget {
         print(_credential.text);
         if (_credential.text == "admin") {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => AdminLogin()));
+              context, MaterialPageRoute(builder: (context) => AdminPage()));
+        }
+        else{
+          _addError(context);
         }
       },
       child: Text("Confirm"),
+    );
+  }
+
+  Future<void> _addError (BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Incorrect login credentials"),
+          content: Container(
+            width: 300,
+            height: 100,
+            child: const Text("Please enter the correct admin key (it is case and space sensitive)"),
+          ),
+          actions: <Widget>[
+            TextButton(
+                onPressed: () {
+
+                  Navigator.of(context).pop();
+                },
+                child: const Text("OK"))
+          ],
+        );
+      },
     );
   }
 }
