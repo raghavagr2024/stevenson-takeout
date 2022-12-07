@@ -1,17 +1,22 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 
 Map data = {};
-void _getData() async {
-  DatabaseReference ref = FirebaseDatabase.instance.ref("");
-  final snapshot = await ref.child("").get();
-  if(snapshot.exists){
-    data = snapshot.value as Map;
-  }
-  else{
-    print("an error occurred");
-  }
+void getData() async {
+  FirebaseFirestore.instance
+      .collection('users')
+      .doc("SxHI0lmZHaO8r2BnwtuH")
+      .get()
+      .then((DocumentSnapshot documentSnapshot) {
+    if (documentSnapshot.exists) {
+      data =  documentSnapshot.data() as Map<dynamic, dynamic>;
+      print(data.toString());
+    } else {
+      print('Document does not exist on the database');
+    }
+  });
 }
 
 
@@ -71,7 +76,8 @@ class _AdminPage extends State<AdminPage>{
   }
 
   Widget _getPage(){
-    if(_selectedIndex == 0){
+    getData();
+    if (_selectedIndex == 0){
       return OrderPage();
     }
     return EditPage();
@@ -87,16 +93,17 @@ class OrderPage extends StatelessWidget{
     return Expanded(
       child: Column(
         children: [
-            ListView.builder(
-                itemBuilder: _getOrders,
-                itemCount: data.length,
-            )
+            // ListView.builder(
+            //     itemBuilder: _getOrders,
+            //     itemCount: data.length,
+            // )
         ],
       ),
     );
   }
-  Widget _getOrders(BuildContext context,int index) {
-  }
+  // Widget _getOrders(BuildContext context,int index) {
+  //
+  // }
 
 
 
@@ -105,7 +112,7 @@ class OrderPage extends StatelessWidget{
 class EditPage extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
-    
+
     return _EditPage();
   }
 
@@ -119,12 +126,37 @@ class _EditPage extends State<EditPage>{
 
 }
 
-class OrderTile extends StatelessWidget{
+
+
+class OrderTile extends StatefulWidget{
+  Map<String, dynamic> items;
+  BuildContext context;
+  int index;
+
+ OrderTile(this.context,this.items,this.index);
+
   @override
-  Widget build(BuildContext context) {
-    return Card(
-
-    )
+  State<StatefulWidget> createState() {
+    return _OrderTile(context,items,index);
   }
+}
 
+class _OrderTile extends State<OrderTile>{
+  BuildContext context;
+  Map<String, dynamic> items;
+  int index;
+
+  _OrderTile(this.context,this.items,this.index);
+
+  Widget build(context){
+
+
+    return Card(
+        child: Column(
+          children: [
+
+          ],
+        )
+    );
+  }
 }

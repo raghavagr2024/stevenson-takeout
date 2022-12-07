@@ -48,6 +48,8 @@ class EveryDayItems extends StatelessWidget {
           }
 
           try{
+            print("size of screen");
+            print(MediaQuery.of(context).size.height);
             return SingleChildScrollView(
                   physics: const ScrollPhysics(),
                   child: Column(
@@ -71,7 +73,8 @@ class EveryDayItems extends StatelessWidget {
                           shrinkWrap: true,
                           itemCount: everyDayItems["Slice of Life"].length,
                           itemBuilder: _getItemsForSliceOfLife),
-                      Expanded(child: WeekItems())
+                      SizedBox(height:890,child: WeekItems()),
+
 
 
                     ],
@@ -132,8 +135,7 @@ class WeekItems extends StatelessWidget{
 
           try{
             return Scaffold(
-                body: Container(
-                child: SingleChildScrollView(
+                body: SingleChildScrollView(
                   physics: const ScrollPhysics(),
                   child: Column(
                     children: <Widget>[
@@ -167,12 +169,11 @@ class WeekItems extends StatelessWidget{
                           itemCount: weeklyItems["Panini"].length,
                           itemBuilder: _getPanini),
                      NextButton()
-                      
+
 
                     ],
 
                   ),
-                )
                 )
             );
           }
