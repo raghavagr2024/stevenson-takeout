@@ -1,6 +1,20 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
+
+Map data = {};
+void _getData() async {
+  DatabaseReference ref = FirebaseDatabase.instance.ref("");
+  final snapshot = await ref.child("").get();
+  if(snapshot.exists){
+    data = snapshot.value as Map;
+  }
+  else{
+    print("an error occurred");
+  }
+}
+
+
 class AdminPage extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
@@ -17,35 +31,34 @@ class _AdminPage extends State<AdminPage>{
       _selectedIndex = index;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
 
-      body: (
-            OrderPage()
-      ),
+      body: (_getPage()),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.featured_play_list_rounded),
             label: 'Orders',
-            backgroundColor: const Color(0xFFc99a2c),
+            backgroundColor: Color(0xFFc99a2c),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.edit),
             label: 'Edit Item',
-              backgroundColor: const Color(0xFFc99a2c)
+              backgroundColor: Color(0xFFc99a2c)
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.add),
             label: 'Add Item',
-              backgroundColor: const Color(0xFFc99a2c)
+              backgroundColor: Color(0xFFc99a2c)
 
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.production_quantity_limits),
             label: 'Set Limits',
-              backgroundColor: const Color(0xFFc99a2c)
+              backgroundColor: Color(0xFFc99a2c)
 
           ),
         ],
@@ -57,24 +70,35 @@ class _AdminPage extends State<AdminPage>{
 
   }
 
+  Widget _getPage(){
+    if(_selectedIndex == 0){
+      return OrderPage();
+    }
+    return EditPage();
+  }
+
 }
 
 class OrderPage extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
-    DatabaseReference ref = FirebaseDatabase.instance.ref("");
 
-// Get the Stream
-    Stream<DatabaseEvent> stream = ref.onValue;
 
-// Subscribe to the stream!
-    stream.listen((DatabaseEvent event) {
-      print('Event Type: ${event.type}'); // DatabaseEventType.value;
-      print('Snapshot: ${event.snapshot.value}'); // DataSnapshot
-    });
-
-    return Text("hi");
+    return Expanded(
+      child: Column(
+        children: [
+            ListView.builder(
+                itemBuilder: _getOrders,
+                itemCount: data.length,
+            )
+        ],
+      ),
+    );
   }
+  Widget _getOrders(BuildContext context,int index) {
+  }
+
+
 
 }
 
@@ -95,4 +119,12 @@ class _EditPage extends State<EditPage>{
 
 }
 
+class OrderTile extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return Card(
 
+    )
+  }
+
+}

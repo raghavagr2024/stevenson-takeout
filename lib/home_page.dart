@@ -71,7 +71,7 @@ class EveryDayItems extends StatelessWidget {
                           shrinkWrap: true,
                           itemCount: everyDayItems["Slice of Life"].length,
                           itemBuilder: _getItemsForSliceOfLife),
-                      SizedBox(height: MediaQuery.of(context).size.height*2,child: WeekItems()),
+                      Expanded(child: WeekItems())
 
 
                     ],
@@ -294,7 +294,6 @@ class _Tile extends State<Tile>{
         trailing: SizedBox(width: 130,child:CounterButton(index,items)),
           title: Text(items.keys.elementAt(index)),
           subtitle: Text(format.format(items.values.elementAt(index))),
-
     )
     );
   }
