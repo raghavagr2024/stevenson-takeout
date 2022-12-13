@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
-
 Map data = {};
+
 void getData() async {
   FirebaseFirestore.instance
       .collection('users')
@@ -11,7 +11,7 @@ void getData() async {
       .get()
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
-      data =  documentSnapshot.data() as Map<dynamic, dynamic>;
+      data = documentSnapshot.data() as Map<dynamic, dynamic>;
       print(data.toString());
     } else {
       print('Document does not exist on the database');
@@ -19,18 +19,16 @@ void getData() async {
   });
 }
 
-
-class AdminPage extends StatefulWidget{
+class AdminPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-
     return _AdminPage();
   }
-
 }
 
-class _AdminPage extends State<AdminPage>{
+class _AdminPage extends State<AdminPage> {
   int _selectedIndex = 0;
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -40,8 +38,7 @@ class _AdminPage extends State<AdminPage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-      body: (_getPage()),
+      body: (OrderPage()),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -50,113 +47,106 @@ class _AdminPage extends State<AdminPage>{
             backgroundColor: Color(0xFFc99a2c),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.edit),
-            label: 'Edit Item',
-              backgroundColor: Color(0xFFc99a2c)
-          ),
+              icon: Icon(Icons.edit),
+              label: 'Edit Item',
+              backgroundColor: Color(0xFFc99a2c)),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add),
-            label: 'Add Item',
-              backgroundColor: Color(0xFFc99a2c)
-
-          ),
+              icon: Icon(Icons.add),
+              label: 'Add Item',
+              backgroundColor: Color(0xFFc99a2c)),
           BottomNavigationBarItem(
-            icon: Icon(Icons.production_quantity_limits),
-            label: 'Set Limits',
-              backgroundColor: Color(0xFFc99a2c)
-
-          ),
+              icon: Icon(Icons.production_quantity_limits),
+              label: 'Set Limits',
+              backgroundColor: Color(0xFFc99a2c)),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: const Color(0xFF1f5d39),
         onTap: _onItemTapped,
       ),
     );
-
   }
 
-  Widget _getPage(){
+  Widget _getPage() {
+    print("in get page");
     getData();
-    if (_selectedIndex == 0){
-      return OrderPage();
-    }
-    return EditPage();
+    return OrderPage();
   }
-
 }
 
-class OrderPage extends StatelessWidget{
+class OrderPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    print("in order page");
+    return Column(
+      children: [
+        Expanded(
 
+          child: ListView.builder(
+            itemBuilder: _getOrders,
+            itemCount: data.length,
 
-    return Expanded(
-      child: Column(
-        children: [
-            // ListView.builder(
-            //     itemBuilder: _getOrders,
-            //     itemCount: data.length,
-            // )
-        ],
-      ),
+          ),
+        )
+      ],
     );
+
   }
-  // Widget _getOrders(BuildContext context,int index) {
-  //
-  // }
 
-
-
+  Widget _getOrders(BuildContext context, int index) {
+    print("in get orders");
+    return OrderTile(context, index);
+  }
 }
 
-class EditPage extends StatefulWidget{
+class EditPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-
     return _EditPage();
   }
-
 }
 
-class _EditPage extends State<EditPage>{
+class _EditPage extends State<EditPage> {
   @override
   Widget build(BuildContext context) {
     return Text("add Page");
   }
-
 }
 
+class OrderTile extends StatefulWidget {
 
-
-class OrderTile extends StatefulWidget{
-  Map<String, dynamic> items;
   BuildContext context;
   int index;
 
- OrderTile(this.context,this.items,this.index);
+  OrderTile(this.context, this.index);
 
   @override
   State<StatefulWidget> createState() {
-    return _OrderTile(context,items,index);
+    return _OrderTile(context, index);
   }
 }
 
-class _OrderTile extends State<OrderTile>{
+class _OrderTile extends State<OrderTile> {
   BuildContext context;
-  Map<String, dynamic> items;
+
   int index;
 
-  _OrderTile(this.context,this.items,this.index);
+  _OrderTile(this.context, this.index);
 
-  Widget build(context){
-
+  Widget build(context) {
+    String current = "";
+    Map values = data.values.elementAt(index);
+    for(var i = 0; i<values.length-1;i++){
+      current += values.keys.elementAt(i) + ":    " + values.values.elementAt(i) + "\n";
+    }
+    Map items = values.values.elementAt(values.length-1);
 
     return Card(
         child: Column(
-          children: [
-
-          ],
-        )
-    );
+      children: [
+        Text(data.keys.elementAt(index)),
+        SizedBox(height: 20),
+        Text(current)
+      ],
+    ));
   }
 }
