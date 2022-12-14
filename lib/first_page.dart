@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:stevensontakeout/adminLogin.dart';
 import 'package:stevensontakeout/sign_up_page.dart';
 
+import 'adminHome.dart';
 import 'home_page.dart';
 import 'login_page.dart';
 import 'main.dart';
@@ -43,6 +44,7 @@ class AdminButton extends StatelessWidget{
             padding: const EdgeInsets.fromLTRB(60, 0, 60, 0)
         ),
           onPressed: (){
+            getData();
             Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => AdminLogin()));

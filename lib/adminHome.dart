@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 Map data = {};
 
-void getData() async {
-  FirebaseFirestore.instance
+Future<void> getData() async {
+  await FirebaseFirestore.instance
       .collection('users')
       .doc("SxHI0lmZHaO8r2BnwtuH")
       .get()
@@ -16,6 +16,7 @@ void getData() async {
     } else {
       print('Document does not exist on the database');
     }
+    print("done with getData");
   });
 }
 
@@ -37,8 +38,10 @@ class _AdminPage extends State<AdminPage> {
 
   @override
   Widget build(BuildContext context) {
+    getData();
+    print("in main page");
     return Scaffold(
-      body: (OrderPage()),
+      body: (_getPage()),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -68,7 +71,7 @@ class _AdminPage extends State<AdminPage> {
 
   Widget _getPage() {
     print("in get page");
-    getData();
+    getData().then((value) => null);
     return OrderPage();
   }
 }
@@ -77,19 +80,18 @@ class OrderPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("in order page");
+
+    print(data.length);
     return Column(
       children: [
         Expanded(
-
           child: ListView.builder(
             itemBuilder: _getOrders,
             itemCount: data.length,
-
           ),
         )
       ],
     );
-
   }
 
   Widget _getOrders(BuildContext context, int index) {
@@ -113,7 +115,6 @@ class _EditPage extends State<EditPage> {
 }
 
 class OrderTile extends StatefulWidget {
-
   BuildContext context;
   int index;
 
@@ -133,20 +134,30 @@ class _OrderTile extends State<OrderTile> {
   _OrderTile(this.context, this.index);
 
   Widget build(context) {
+    print("in order tile");
     String current = "";
     Map values = data.values.elementAt(index);
-    for(var i = 0; i<values.length-1;i++){
-      current += values.keys.elementAt(i) + ":    " + values.values.elementAt(i) + "\n";
+    for (var i = 0; i < values.length - 1; i++) {
+      current += values.keys.elementAt(i) +
+          ":    " +
+          values.values.elementAt(i) +
+          "\n";
     }
-    Map items = values.values.elementAt(values.length-1);
+    Map items = values.values.elementAt(values.length - 1);
 
     return Card(
-        child: Column(
-      children: [
-        Text(data.keys.elementAt(index)),
-        SizedBox(height: 20),
-        Text(current)
-      ],
+        child: Align(
+      alignment: Alignment.centerLeft,
+      child: Column(
+        children: [
+          Text(
+            'Student id: ${data.keys.elementAt(index)}',
+            style: const TextStyle(fontSize: 25),
+          ),
+          const SizedBox(height: 20),
+          Text(current)
+        ],
+      ),
     ));
   }
 }
