@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+import 'orderAdminPage.dart';
 
 Map data = {};
 
@@ -71,93 +74,13 @@ class _AdminPage extends State<AdminPage> {
 
   Widget _getPage() {
     print("in get page");
-    getData().then((value) => null);
+    getData();
     return OrderPage();
   }
 }
 
-class OrderPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    print("in order page");
 
-    print(data.length);
-    return Column(
-      children: [
-        Expanded(
-          child: ListView.builder(
-            itemBuilder: _getOrders,
-            itemCount: data.length,
-          ),
-        )
-      ],
-    );
-  }
 
-  Widget _getOrders(BuildContext context, int index) {
-    print("in get orders");
-    return OrderTile(context, index);
-  }
-}
 
-class EditPage extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return _EditPage();
-  }
-}
 
-class _EditPage extends State<EditPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Text("add Page");
-  }
-}
 
-class OrderTile extends StatefulWidget {
-  BuildContext context;
-  int index;
-
-  OrderTile(this.context, this.index);
-
-  @override
-  State<StatefulWidget> createState() {
-    return _OrderTile(context, index);
-  }
-}
-
-class _OrderTile extends State<OrderTile> {
-  BuildContext context;
-
-  int index;
-
-  _OrderTile(this.context, this.index);
-
-  Widget build(context) {
-    print("in order tile");
-    String current = "";
-    Map values = data.values.elementAt(index);
-    for (var i = 0; i < values.length - 1; i++) {
-      current += values.keys.elementAt(i) +
-          ":    " +
-          values.values.elementAt(i) +
-          "\n";
-    }
-    Map items = values.values.elementAt(values.length - 1);
-
-    return Card(
-        child: Align(
-      alignment: Alignment.centerLeft,
-      child: Column(
-        children: [
-          Text(
-            'Student id: ${data.keys.elementAt(index)}',
-            style: const TextStyle(fontSize: 25),
-          ),
-          const SizedBox(height: 20),
-          Text(current)
-        ],
-      ),
-    ));
-  }
-}
