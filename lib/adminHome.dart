@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:stevensontakeout/editAdminPage.dart';
 
 import 'orderAdminPage.dart';
 
@@ -75,7 +76,13 @@ class _AdminPage extends State<AdminPage> {
   Widget _getPage() {
     print("in get page");
     getData();
-    return OrderPage();
+    if(_selectedIndex==0){
+      return OrderPage();
+    }
+    else if(_selectedIndex==1){
+      return EditPage();
+    }
+    return Text("default");
   }
 }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stevensontakeout/adminLogin.dart';
+import 'package:stevensontakeout/editAdminPage.dart';
 import 'package:stevensontakeout/sign_up_page.dart';
 
 import 'adminHome.dart';
@@ -45,6 +46,7 @@ class AdminButton extends StatelessWidget{
         ),
           onPressed: (){
             getData();
+            getFoodItems();
             Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => AdminLogin()));
