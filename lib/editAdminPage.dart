@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 
 Map foodItems = {};
 var _search = TextEditingController();
+
 Future<void> getFoodItems() async {
-    FirebaseFirestore.instance
+  FirebaseFirestore.instance
       .collection('everyday')
       .doc("IppA94yUj2wrIzawr5Al")
       .get()
@@ -18,63 +19,62 @@ Future<void> getFoodItems() async {
 
     print("done with getFoodItems");
   });
-    FirebaseFirestore.instance
-        .collection('week 1')
-        .doc("GoeTLas8A4sj29bRuyw2")
-        .get()
-        .then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        foodItems['week 1'] = documentSnapshot.data() as Map<dynamic, dynamic>;
-        print(foodItems.toString());
-      } else {
-        print('Document does not exist on the database');
-      }
+  FirebaseFirestore.instance
+      .collection('week 1')
+      .doc("GoeTLas8A4sj29bRuyw2")
+      .get()
+      .then((DocumentSnapshot documentSnapshot) {
+    if (documentSnapshot.exists) {
+      foodItems['week 1'] = documentSnapshot.data() as Map<dynamic, dynamic>;
+      print(foodItems.toString());
+    } else {
+      print('Document does not exist on the database');
+    }
 
-      print("done with getFoodItems");
-    });
-    FirebaseFirestore.instance
-        .collection('week 2')
-        .doc("JypyeLKmIyhEXlLebvHk")
-        .get()
-        .then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        foodItems['week 2'] = documentSnapshot.data() as Map<dynamic, dynamic>;
-        print(foodItems.toString());
-      } else {
-        print('Document does not exist on the database');
-      }
+    print("done with getFoodItems");
+  });
+  FirebaseFirestore.instance
+      .collection('week 2')
+      .doc("JypyeLKmIyhEXlLebvHk")
+      .get()
+      .then((DocumentSnapshot documentSnapshot) {
+    if (documentSnapshot.exists) {
+      foodItems['week 2'] = documentSnapshot.data() as Map<dynamic, dynamic>;
+      print(foodItems.toString());
+    } else {
+      print('Document does not exist on the database');
+    }
 
-      print("done with getFoodItems");
-    });
-    FirebaseFirestore.instance
-        .collection('week 3')
-        .doc("NvUFdn08oieSPYfLQkU9")
-        .get()
-        .then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        foodItems['week 3'] = documentSnapshot.data() as Map<dynamic, dynamic>;
-        print(foodItems.toString());
-      } else {
-        print('Document does not exist on the database');
-      }
+    print("done with getFoodItems");
+  });
+  FirebaseFirestore.instance
+      .collection('week 3')
+      .doc("NvUFdn08oieSPYfLQkU9")
+      .get()
+      .then((DocumentSnapshot documentSnapshot) {
+    if (documentSnapshot.exists) {
+      foodItems['week 3'] = documentSnapshot.data() as Map<dynamic, dynamic>;
+      print(foodItems.toString());
+    } else {
+      print('Document does not exist on the database');
+    }
 
-      print("done with getFoodItems");
-    });
-    FirebaseFirestore.instance
-        .collection('week 4')
-        .doc("YToUal6YkEc8XWndizBU")
-        .get()
-        .then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        foodItems['week 4'] = documentSnapshot.data() as Map<dynamic, dynamic>;
-        print(foodItems.toString());
-      } else {
-        print('Document does not exist on the database');
-      }
+    print("done with getFoodItems");
+  });
+  FirebaseFirestore.instance
+      .collection('week 4')
+      .doc("YToUal6YkEc8XWndizBU")
+      .get()
+      .then((DocumentSnapshot documentSnapshot) {
+    if (documentSnapshot.exists) {
+      foodItems['week 4'] = documentSnapshot.data() as Map<dynamic, dynamic>;
+      print(foodItems.toString());
+    } else {
+      print('Document does not exist on the database');
+    }
 
-      print("done with getFoodItems");
-    });
-
+    print("done with getFoodItems");
+  });
 }
 
 class EditPage extends StatefulWidget {
@@ -89,7 +89,9 @@ class _EditPage extends State<EditPage> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const SizedBox(height: 40,),
+        const SizedBox(
+          height: 40,
+        ),
         Align(
           alignment: Alignment.center,
           child: Container(
@@ -100,11 +102,11 @@ class _EditPage extends State<EditPage> {
               child: Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    border:Border.all(color: Colors.grey, width: 2)),
+                    border: Border.all(color: Colors.grey, width: 2)),
                 child: TextFormField(
                   textAlign: TextAlign.center,
                   controller: _search,
-                  onFieldSubmitted: (_search){
+                  onFieldSubmitted: (_search) {
                     print(_search.toString());
                   },
                   decoration: const InputDecoration(
@@ -115,58 +117,57 @@ class _EditPage extends State<EditPage> {
                     ),
                   ),
                 ),
-              )
-          ),
+              )),
         ),
         Expanded(
-          child: ListView.builder(
-              itemBuilder: _getMajorListViews,
-              itemCount: foodItems.length,
-          )
-        )
-
+            child: ListView.builder(
+          itemBuilder: _getMajorListViews,
+          itemCount: foodItems.length,
+        ))
       ],
     );
   }
 
-  Widget _getMajorListViews(BuildContext context, index){
-    return MajorListView(context,index);
+  Widget _getMajorListViews(BuildContext context, index) {
+    return MajorListView(context, index);
   }
 }
 
-class MajorListView extends StatefulWidget{
+class MajorListView extends StatefulWidget {
+  //collection part of database
   BuildContext context;
   int index;
 
-  MajorListView(this.context,this.index);
+  MajorListView(this.context, this.index);
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _MajorListView(context,index);
+    return _MajorListView(context, index);
   }
-
 }
 
-class _MajorListView extends State<MajorListView>{
+class _MajorListView extends State<MajorListView> {
   BuildContext context;
   int parent;
 
-  _MajorListView(this.context,this.parent);
+  _MajorListView(this.context, this.parent);
+
   @override
   Widget build(BuildContext context) {
     Map currentView = foodItems[foodItems.keys.elementAt(parent)];
-    // return
-    //   Expanded(child: ListView.builder(
-    //     itemCount: currentView.length,
-    //     itemBuilder: (BuildContext context, int index){
-    //       return ListTile(
-    //           title: Text("hello")
-    //       );
-    //     },
-    //
-    //   ));
+    print("length " + currentView.length.toString());
+    return Container(
+        height: 200,
+        child: ListView.builder(
+          itemCount: currentView.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+                title: Text(currentView.keys.elementAt(index))
+            );
+          },
+        )
+    );
     return Text(currentView.length.toString());
   }
-
 }
-
