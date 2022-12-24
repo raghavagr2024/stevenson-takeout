@@ -156,14 +156,22 @@ class _MajorListView extends State<MajorListView> {
   @override
   Widget build(BuildContext context) {
     Map currentView = foodItems[foodItems.keys.elementAt(parent)];
+
     print("length " + currentView.length.toString());
     return Container(
         height: 200,
         child: ListView.builder(
           itemCount: currentView.length,
           itemBuilder: (context, index) {
-            return ListTile(
-                title: Text(currentView.keys.elementAt(index))
+            Map currentItems = currentView[currentView.keys.elementAt(index)];
+            return ListView.builder(
+                itemCount: currentItems.length,
+                itemBuilder: (context,index){
+                  return ListTile(
+                    title: Text(currentItems.keys.elementAt(index)),
+                  );
+                },
+                
             );
           },
         )
