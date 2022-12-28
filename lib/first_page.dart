@@ -46,7 +46,7 @@ class AdminButton extends StatelessWidget{
         ),
           onPressed: (){
             getData();
-            getFoodItems();
+            getAllItems();
             Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => AdminLogin()));
