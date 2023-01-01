@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-
+//TODO: add search ability
 Map allItems = {};
 var _search = TextEditingController();
 var documents = [
@@ -347,7 +347,7 @@ class _EveryDayItems extends State<EveryDayItems> {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       print("done");
-                      if(s==_nameController.text&&  allItems['everyday'].values.elementAt(category)[s].toString()==_priceController.text&& value == 'everyday'){
+                      if(s==_nameController.text&& allItems['everyday'].values.elementAt(category)[s].toString()==_priceController.text&& value == 'everyday'){
                         Navigator.of(context).pop();
                       }
                       else if(allItems['everyday'].values.elementAt(category)[s].toString()!=_priceController.text){
@@ -364,7 +364,6 @@ class _EveryDayItems extends State<EveryDayItems> {
                         });
                         Navigator.of(context).pop();
                       }
-
                       return;
                     }
                   },

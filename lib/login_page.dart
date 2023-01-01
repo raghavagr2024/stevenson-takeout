@@ -102,16 +102,22 @@ class LoginButton extends StatelessWidget {
 
           await _login();
           User? user = FirebaseAuth.instance.currentUser;
-          if(user!= null && !user.emailVerified){
-            Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => VerificationPage(_email)));
-          }
-          else{
+          // if(user!= null && !user.emailVerified){
+          //   Navigator.push(
+          //       context,
+          //       MaterialPageRoute(builder: (context) => VerificationPage(_email)));
+          // }
+          // else{
+          //   createCount();
+          //   Navigator.push(
+          //       context,
+          //       MaterialPageRoute(builder: (context) => HomePage()));
+          // }
+
+          createCount();
             Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => HomePage()));
-          }
 
         },
         style: ElevatedButton.styleFrom(

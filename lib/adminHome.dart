@@ -82,7 +82,7 @@ class _AdminPage extends State<AdminPage> {
     else if(_selectedIndex==1){
       return EditPage();
     }
-    return Text("default");
+    return const Text("default");
   }
 }
 

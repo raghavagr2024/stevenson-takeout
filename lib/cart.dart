@@ -50,13 +50,19 @@ class _Cart extends State<Cart> {
             child: BackButton(),
           ),
           SizedBox(
-            height: (selected.length+1) * (50),
+            height: (selected.length + 1) * (50),
             child: Align(
               alignment: Alignment.topCenter,
               child: ItemList(),
             ),
           ),
-
+          SizedBox(
+            height: (selectedSoups.length + 1) * (50),
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: SoupList(),
+            ),
+          ),
           TotalPrice(),
           PeriodButton(),
           SizedBox(
@@ -286,17 +292,17 @@ class _Item extends State<Item> {
                         print(selected.toString());
                         if (selected.isEmpty) {
                           print("in null");
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => HomePage()));
-                        }
-                        else{
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomePage()));
+                        } else {
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(builder: (context) => Cart()),
-                                (Route<dynamic> route) => false,
+                            (Route<dynamic> route) => false,
                           );
                         }
-
                       },
                       icon: const Icon(Icons.delete)),
                 ],
@@ -435,114 +441,6 @@ class BackButton extends StatelessWidget {
         icon: Icon(Icons.arrow_back_ios_new));
   }
 }
-/*
-class InternationalOption extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return _InternationalOption();
-  }
-}
-
-class _InternationalOption extends State<InternationalOption> {
-  @override
-  Widget build(BuildContext context) {
-    if (selected.values.elementAt(selected.length - 1).length == 0) {
-      return const SizedBox(
-        height: 0,
-        width: 0,
-      );
-    }
-    return Container(
-      height: 50,
-      child: Row(
-        children: <Widget>[
-          const SizedBox(width: 37),
-          Expanded(
-              child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "${selected.values.elementAt(selected.length - 1).length} items",
-                    style: TextStyle(fontSize: 20),
-                  ))),
-          Expanded(
-            child: Align(
-                alignment: Alignment.center,
-                child: TextButton(
-                  onPressed: () {
-                    //_displayInfo(context);
-                  },
-                  child: Text(
-                    selected.keys.elementAt(selected.length - 1),
-                    style: const TextStyle(fontSize: 15),
-                  ),
-                )
-                //style: TextStyle(fontSize: 20),
-                ),
-          ),
-          Expanded(
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Text(getPrice(), style: const TextStyle(fontSize: 20)),
-            ),
-          ),
-          const SizedBox(
-            width: 37,
-          )
-        ],
-      ),
-    );
-  }
-
-  /*
-  Future<void> _displayInfo(BuildContext context) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(selected.keys.elementAt(selected.length - 1)),
-          content: Container(
-            width: 300,
-            height: 300,
-            child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: weeklyItems[station].length,
-                itemBuilder: _getInternational),
-          ),
-          actions: <Widget>[
-            TextButton(
-                onPressed: () {
-                  setState(() {});
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => Cart()),
-                    (Route<dynamic> route) => false,
-                  );
-                },
-                child: const Text("done"))
-          ],
-        );
-      },
-    );
-  }
-  */
-  String getPrice() {
-    for (String i in selected.values.elementAt(selected.length - 1)) {
-      if (meats.contains(i)) {
-        return ("\$5.00");
-      }
-    }
-
-    return ("\$4.00");
-  }
-/*
-  Widget _getInternational(BuildContext context, int index) {
-    return InternationalTile(context, weeklyItems[station], index);
-  }
-  */
-
-}
-*/
 class TotalPrice extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -577,13 +475,141 @@ class _TotalPrice extends State<TotalPrice> {
 
   double _getPrice() {
     double total = 0;
-    for (int i = 0; i < selected.length ; i++) {
+    for (int i = 0; i < selected.length; i++) {
       total +=
           selected.values.elementAt(i)[0] * selected.values.elementAt(i)[1];
     }
 
+    for (int i = 0; i < selectedSoups.length; i++) {
+      total += selectedSoups.values.elementAt(i)[0] * 2 +
+          selectedSoups.values.elementAt(i)[1] * 1.5;
+    }
+
     return total;
   }
+}
+
+class SoupList extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return _SoupList();
+  }
+}
+
+class _SoupList extends State<SoupList> {
+  @override
+  Widget build(BuildContext context) {
+    var format = NumberFormat.currency(symbol: "\$", decimalDigits: 2);
+    return ListView.builder(
+      itemBuilder: (BuildContext context, int index) {
+        var soup = selectedSoups.values.elementAt(index);
+        if (soup[0] != 0 && soup[1] != 0) {
+          var ans = soup[0] * 2 + soup[1] * 1.5;
+
+          return Container(
+              child: Row(
+            children: [
+              SizedBox(width: 20),
+              Expanded(
+                  child: Align(
+                alignment: Alignment.centerLeft,
+                child: SizedBox(
+                  height: 50,
+                  child: Column(children: [
+                    Text("12 oz.: ${soup[0]}",style: TextStyle(fontSize: 20)),
+                    Text("8 oz.: ${soup[1]}",style: TextStyle(fontSize: 20))
+                  ]),
+                ),
+              )),
+              Expanded(
+                child: Align(
+                  alignment: Alignment.center,
+                  child: TextButton(
+                    child: Text(selectedSoups.keys.elementAt(index),style: const TextStyle(fontSize: 15)),
+                    onPressed: () {
+                      print("hi");
+                    },
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(format.format(ans),style: TextStyle(fontSize: 20)),),
+              ),
+              SizedBox(width: 20),
+            ],
+          ));
+        } else if (soup[0] == 0 && soup[1] != 0) {
+          var ans = soup[0] * 2 + soup[1] * 1.5;
+
+          return Container(
+              child: Row(
+            children: [
+              SizedBox(width: 20),
+              Expanded(
+                  child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text("8 oz.: ${soup[1]}",style: TextStyle(fontSize: 20)))),
+              Expanded(
+                child: Align(
+                  alignment: Alignment.center,
+                  child: TextButton(
+                    child: Text(selectedSoups.keys.elementAt(index),style: const TextStyle(fontSize: 15)),
+                    onPressed: () {
+                      print("hi");
+                    },
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(format.format(ans),style: TextStyle(fontSize: 20))),
+              ),
+              SizedBox(width: 20),
+            ],
+          ));
+        } else {
+          var ans = soup[0] * 2 + soup[1] * 1.5;
+
+          return Container(
+
+              child: Row(
+
+            children: [
+              SizedBox(width: 20),
+              Expanded(
+                  child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text("12 oz.: ${soup[0]}",style: TextStyle(fontSize: 20)))),
+              Expanded(
+                child: Align(
+                  alignment: Alignment.center,
+                  child: TextButton(
+                    child: Text(selectedSoups.keys.elementAt(index),style: const TextStyle(fontSize: 15)),
+                    onPressed: () {
+                      print("hi");
+                    },
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(format.format(ans),style: TextStyle(fontSize: 20))),
+              ),
+              SizedBox(width: 20),
+            ],
+          ));
+        }
+      },
+      itemCount: selectedSoups.length,
+    );
+  }
+
+
 }
 
 class NextButton extends StatelessWidget {
@@ -592,14 +618,14 @@ class NextButton extends StatelessWidget {
     // TODO: implement firebase calls
     return TextButton(
         onPressed: () {
-          if(preferences[2]=="Pay in person"){
-            var order = Order(selected, preferences[0],preferences[1],preferences[2],54098);
+          if (preferences[2] == "Pay in person") {
+            var order = Order(selected, preferences[0], preferences[1],
+                preferences[2], 54098);
             order.addOrder();
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => ConfirmationPage()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => ConfirmationPage()));
           }
-
         },
-        child: Text("Continue"));
+        child: const Text("Continue"));
   }
 }

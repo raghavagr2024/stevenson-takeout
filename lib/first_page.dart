@@ -68,7 +68,7 @@ class StudentButton extends StatelessWidget{
           //change to Sign Up
           Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => HomePage()));
+              MaterialPageRoute(builder: (context) => LoginPage()));
 
         },
 

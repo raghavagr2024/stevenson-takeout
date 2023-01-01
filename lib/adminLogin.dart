@@ -7,7 +7,7 @@ class AdminLogin extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          SizedBox(
+          const SizedBox(
             height: 100,
           ),
           InputField(),
@@ -33,14 +33,14 @@ class _InputField extends State<InputField> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        SizedBox(
+        const SizedBox(
           width: 30,
         ),
         TextFormField(
           controller: _credential,
           decoration: InputDecoration(
               labelText: "id",
-              constraints: BoxConstraints.tight(Size(250, 100))),
+              constraints: BoxConstraints.tight(const Size(250, 100))),
         )
       ],
     );
@@ -62,7 +62,7 @@ class ConfirmButton extends StatelessWidget {
           _addError(context);
         }
       },
-      child: Text("Confirm"),
+      child: const Text("Confirm"),
     );
   }
 

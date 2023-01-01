@@ -8,6 +8,7 @@ import 'package:stevensontakeout/order.dart';
 //TODO: Migrate from realtime database to cloud firestore
 Map<String, dynamic> everyDayItems = {};
 Map selected = {};
+Map selectedSoups = {};
 Map<String, dynamic> weeklyItems = {};
 Future<void> main() async {
 
