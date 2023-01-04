@@ -9,6 +9,8 @@ import 'package:stevensontakeout/order.dart';
 Map<String, dynamic> everyDayItems = {};
 Map selected = {};
 Map selectedSoups = {};
+var soup1 = {};
+var soup2 = {};
 Map<String, dynamic> weeklyItems = {};
 Future<void> main() async {
 

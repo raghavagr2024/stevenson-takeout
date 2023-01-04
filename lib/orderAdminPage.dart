@@ -48,20 +48,47 @@ class _OrderTile extends State<OrderTile> {
 
   Widget build(context) {
     print("in order tile");
-    String current = "";
     Map values = data.values.elementAt(index);
+    Map foods = values['foods'];
+    Map soups = values['soups'];
+    values.remove('foods');
+    values.remove('soups');
+    String current = "";
+
     for (var i = 0; i < values.length - 1; i++) {
       current += values.keys.elementAt(i) +
           ":    " +
           values.values.elementAt(i) +
           "\n";
     }
-    current += "items: \n";
-    Map items = values.values.elementAt(values.length - 1);
     var format = NumberFormat.currency(symbol: "\$", decimalDigits: 2);
-    for(int i = 0; i<items.length;i++){
-      current += "${items.values.elementAt(i)[0]}   ${items.keys.elementAt(i)}:   ${format.format(items.values.elementAt(i)[0]*items.values.elementAt(i)[1])}\n";
+    if(foods==null){
+      current +="";
     }
+    else{
+      current += "foods: \n";
+      for(int i = 0; i<foods.length;i++){
+        current += "${foods.values.elementAt(i)[0]}   ${foods.keys.elementAt(i)}:   ${format.format(foods.values.elementAt(i)[0]*foods.values.elementAt(i)[1])}\n";
+      }
+    }
+    if(soups==null){
+      current+="";
+    }
+    else{
+      current += "Soups: \n";
+      for(int i = 0; i<soups.length;i++){
+        if(soups.values.elementAt(i)[0]!=0){
+          current += "${soups.values.elementAt(i)[0]}   12 oz. ${soups.keys.elementAt(i)}: ${format.format(soups.values.elementAt(i)[0]*2)}\n";
+        }
+        if(soups.values.elementAt(i)[1]!=0){
+          current += "${soups.values.elementAt(i)[1]}   8 oz. ${soups.keys.elementAt(i)}: ${format.format(soups.values.elementAt(i)[1]*1.5)}\n";
+        }
+      }
+    }
+
+
+
+
     return Card(
         child: Align(
           alignment: Alignment.centerLeft,

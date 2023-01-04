@@ -1,3 +1,4 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:stevensontakeout/confirmation.dart';
@@ -441,6 +442,7 @@ class BackButton extends StatelessWidget {
         icon: Icon(Icons.arrow_back_ios_new));
   }
 }
+
 class TotalPrice extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -506,7 +508,6 @@ class _SoupList extends State<SoupList> {
         var soup = selectedSoups.values.elementAt(index);
         if (soup[0] != 0 && soup[1] != 0) {
           var ans = soup[0] * 2 + soup[1] * 1.5;
-
           return Container(
               child: Row(
             children: [
@@ -517,8 +518,8 @@ class _SoupList extends State<SoupList> {
                 child: SizedBox(
                   height: 50,
                   child: Column(children: [
-                    Text("12 oz.: ${soup[0]}",style: TextStyle(fontSize: 20)),
-                    Text("8 oz.: ${soup[1]}",style: TextStyle(fontSize: 20))
+                    Text("12 oz.: ${soup[0]}", style: TextStyle(fontSize: 20)),
+                    Text("8 oz.: ${soup[1]}", style: TextStyle(fontSize: 20))
                   ]),
                 ),
               )),
@@ -526,19 +527,22 @@ class _SoupList extends State<SoupList> {
                 child: Align(
                   alignment: Alignment.center,
                   child: TextButton(
-                    child: Text(selectedSoups.keys.elementAt(index),style: const TextStyle(fontSize: 15)),
+                    child: Text(selectedSoups.keys.elementAt(index),
+                        style: const TextStyle(fontSize: 15)),
                     onPressed: () {
-                      print("hi");
+                      _showSoupDialog(index);
                     },
                   ),
                 ),
               ),
               Expanded(
                 child: Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(format.format(ans),style: TextStyle(fontSize: 20)),),
+                  alignment: Alignment.centerRight,
+                  child:
+                      Text(format.format(ans), style: TextStyle(fontSize: 20)),
+                ),
               ),
-              SizedBox(width: 20),
+              SizedBox(width: 25),
             ],
           ));
         } else if (soup[0] == 0 && soup[1] != 0) {
@@ -551,46 +555,51 @@ class _SoupList extends State<SoupList> {
               Expanded(
                   child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Text("8 oz.: ${soup[1]}",style: TextStyle(fontSize: 20)))),
+                      child: Text("8 oz.: ${soup[1]}",
+                          style: TextStyle(fontSize: 20)))),
+
+              SizedBox(
+                width: 20,
+              ),
               Expanded(
                 child: Align(
                   alignment: Alignment.center,
                   child: TextButton(
-                    child: Text(selectedSoups.keys.elementAt(index),style: const TextStyle(fontSize: 15)),
-                    onPressed: () {
-                      print("hi");
-                    },
+                    child: Text(selectedSoups.keys.elementAt(index),
+                        style: const TextStyle(fontSize: 15)),
+                    onPressed: () { _showSoupDialog(index);},
                   ),
                 ),
               ),
               Expanded(
                 child: Align(
                     alignment: Alignment.centerRight,
-                    child: Text(format.format(ans),style: TextStyle(fontSize: 20))),
+                    child: Text(format.format(ans),
+                        style: TextStyle(fontSize: 20))),
               ),
-              SizedBox(width: 20),
+              SizedBox(width: 35),
             ],
           ));
         } else {
           var ans = soup[0] * 2 + soup[1] * 1.5;
 
           return Container(
-
               child: Row(
-
             children: [
               SizedBox(width: 20),
               Expanded(
                   child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Text("12 oz.: ${soup[0]}",style: TextStyle(fontSize: 20)))),
+                      child: Text("12 oz.: ${soup[0]}",
+                          style: TextStyle(fontSize: 20)))),
               Expanded(
                 child: Align(
                   alignment: Alignment.center,
                   child: TextButton(
-                    child: Text(selectedSoups.keys.elementAt(index),style: const TextStyle(fontSize: 15)),
+                    child: Text(selectedSoups.keys.elementAt(index),
+                        style: const TextStyle(fontSize: 15)),
                     onPressed: () {
-                      print("hi");
+                      _showSoupDialog(index);
                     },
                   ),
                 ),
@@ -598,9 +607,10 @@ class _SoupList extends State<SoupList> {
               Expanded(
                 child: Align(
                     alignment: Alignment.centerRight,
-                    child: Text(format.format(ans),style: TextStyle(fontSize: 20))),
+                    child: Text(format.format(ans),
+                        style: TextStyle(fontSize: 20))),
               ),
-              SizedBox(width: 20),
+              SizedBox(width: 25),
             ],
           ));
         }
@@ -609,7 +619,129 @@ class _SoupList extends State<SoupList> {
     );
   }
 
+  Future<void> _showSoupDialog(int i) async {
+    var soup;
+    if(selectedSoups.keys.elementAt(i)==weeklyItems['Soup'].keys.elementAt(0)){
+      print(soup1.toString());
+      soup = [soup1.values.elementAt(0)[0],soup1.values.elementAt(0)[1]];
+    }
+    else{
+      print("soup 2");
+      print(soup2.toString());
+      soup = [soup2.values.elementAt(0)[0],soup2.values.elementAt(0)[1]];
+    }
 
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(builder: (context,setState){
+          return Container(
+            height: 400,
+            width: 320,
+            child: AlertDialog(
+              title: Text(selectedSoups.keys.elementAt(i)),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: [
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Tooltip(
+                            message: "Size: 12 oz.\nPrice: \$2.00",
+                            child: Text("L: "),
+                          ),
+                          const SizedBox(width: 20),
+                          Container(
+                              child: DropdownButton2<String>(
+                                value: soup[0].toString(),
+                                dropdownMaxHeight: 250,
+                                onChanged: (String? value) {
+                                  // This is called when the user selects an item.
+                                  setState((){
+                                    soup[0] = int.parse(value!);
+                                  });
+
+
+                                },
+                                items: count.map<DropdownMenuItem<String>>((var value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                              )
+                          ),
+                          const SizedBox(
+                            width: 30,
+                          ),
+                          const Tooltip(
+                            message: "Size: 8 oz.\nPrice: \$1.50",
+                            child: Text("S: "),
+                          ),
+                          Container(
+                              child: DropdownButton2<String>(
+                                dropdownMaxHeight: 250,
+                                value: soup[1].toString(),
+                                onChanged: (String? value) {
+                                  // This is called when the user selects an item.
+
+                                    setState((){
+                                      soup[1] = int.parse(value!);
+                                    });
+                                },
+                                items: count.map<DropdownMenuItem<String>>((var value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                              )
+                          ),
+
+
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                    onPressed: (){
+
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("cancel")
+                ),
+                TextButton(
+                    onPressed: (){
+                      setState((){
+                        if(selectedSoups.keys.elementAt(i)==weeklyItems['Soup'].keys.elementAt(0)){
+                          soup1[soup1.keys.elementAt(0)][0] = soup[0];
+                          soup1[soup1.keys.elementAt(0)][1] = soup[1];
+                          selectedSoups.remove(soup1.keys.elementAt(0));
+                          selectedSoups[soup1.keys.elementAt(0)] = soup;
+                        }
+                        else{
+                          soup2[soup2.keys.elementAt(0)][0] = soup[0];
+                          soup2[soup2.keys.elementAt(0)][1] = soup[1];
+                          selectedSoups.remove(soup2.keys.elementAt(0));
+                          selectedSoups[soup2.keys.elementAt(0)] = soup;
+                        }
+                      });
+
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("confirm")
+                )
+              ],
+
+            )
+          );}
+          );
+        });
+  }
 }
 
 class NextButton extends StatelessWidget {
@@ -618,13 +750,11 @@ class NextButton extends StatelessWidget {
     // TODO: implement firebase calls
     return TextButton(
         onPressed: () {
-          if (preferences[2] == "Pay in person") {
-            var order = Order(selected, preferences[0], preferences[1],
-                preferences[2], 54098);
-            order.addOrder();
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => ConfirmationPage()));
-          }
+          var order = Order(selected, selectedSoups, preferences[0],
+              preferences[1], preferences[2], 54098);
+          order.addOrder();
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => ConfirmationPage()));
         },
         child: const Text("Continue"));
   }

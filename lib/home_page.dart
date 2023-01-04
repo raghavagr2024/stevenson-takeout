@@ -24,8 +24,7 @@ class HomePage extends StatelessWidget {
 }
 
 String station = "";
-var soup1 = [0,0];
-var soup2 = [0,0];
+
 
 var count = [];
 
@@ -145,6 +144,7 @@ class WeekItems extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.done) {
             log("done");
             weeklyItems = snapshot.data!.data() as Map<String, dynamic>;
+
             log(weeklyItems[getDay()].length.toString());
             log(weeklyItems['Soup'].toString());
           }
@@ -209,7 +209,9 @@ class WeekItems extends StatelessWidget {
                         return Card(
                             child: ListTile(
                                 title: Text(soups.keys.elementAt(index)),
-                                trailing: SoupTrailer(index, soups)));
+                                trailing: SoupTrailer(index, soups)
+                            )
+                        );
                       }),
                   NextButton()
                 ],
@@ -397,21 +399,21 @@ class NextButton extends StatelessWidget {
           selectedSoups.remove(weeklyItems['Soup'].keys.elementAt(0));
         }
 
-        if(listEquals(soup1, [0,0]) || listEquals(soup2, [0,0])){
+        if(listEquals(soup1[soup1.keys.elementAt(0)], [0,0]) || listEquals(soup2[soup2.keys.elementAt(0)], [0,0])){
           print("in first if");
-          if(listEquals(soup1, [0,0]) && !listEquals(soup2, [0,0])){
+          if(listEquals(soup1[soup1.keys.elementAt(0)], [0,0]) && !listEquals(soup2[soup2.keys.elementAt(0)], [0,0])){
             print("in second if");
-            selectedSoups[weeklyItems['Soup'].keys.elementAt(1)] = soup2;
+            selectedSoups[weeklyItems['Soup'].keys.elementAt(1)] = soup2[soup2.keys.elementAt(0)];
           }
-          else if (!listEquals(soup1, [0,0]) && listEquals(soup2, [0,0])){
+          else if (!listEquals(soup1[soup1.keys.elementAt(0)], [0,0]) && listEquals(soup2[soup2.keys.elementAt(0)], [0,0])){
             print("in else if");
-            selectedSoups[weeklyItems['Soup'].keys.elementAt(0)] = soup1;
+            selectedSoups[weeklyItems['Soup'].keys.elementAt(0)] = soup1[soup1.keys.elementAt(0)];
           }
         }
         else{
           print("in else");
-          selectedSoups[weeklyItems['Soup'].keys.elementAt(1)] = soup2;
-          selectedSoups[weeklyItems['Soup'].keys.elementAt(0)] = soup1;
+          selectedSoups[weeklyItems['Soup'].keys.elementAt(1)] = soup2[soup2.keys.elementAt(0)];
+          selectedSoups[weeklyItems['Soup'].keys.elementAt(0)] = soup1[soup1.keys.elementAt(0)];
         }
 
 
@@ -532,6 +534,14 @@ class _SoupTrailer extends State<SoupTrailer> {
     }
     return false;
   }
+  @override
+  void initState(){
+    soup1 = {weeklyItems['Soup'].keys.elementAt(0):[0,0]};
+    print("soup 1");
+    print(soup1.values.elementAt(0)[0]);
+    soup2 = {weeklyItems['Soup'].keys.elementAt(1):[0,0]};
+    print(soup2.toString());
+  }
 
   _SoupTrailer(this.index, this.items);
 
@@ -550,16 +560,16 @@ class _SoupTrailer extends State<SoupTrailer> {
           const SizedBox(width: 20),
           Container(
             child: DropdownButton2<String>(
-              value: checkSoup() ? soup1[0].toString():soup2[0].toString(),
+              value: checkSoup() ? soup1.values.elementAt(0)[0].toString():soup2.values.elementAt(0)[0].toString(),
               dropdownMaxHeight: 250,
               onChanged: (String? value) {
                 // This is called when the user selects an item.
                 setState(() {
                   if (checkSoup()){
-                    soup1[0] = int.parse(value!);
+                    soup1[soup1.keys.elementAt(0)][0] = int.parse(value!);
                   }
                   else{
-                    soup2[0] = int.parse(value!);
+                    soup2[soup2.keys.elementAt(0)][0] = int.parse(value!);
                   }
                   print("soup 1: ${soup1.toString()}");
                   print("soup 2: ${soup2.toString()}");
@@ -583,15 +593,15 @@ class _SoupTrailer extends State<SoupTrailer> {
           Container(
               child: DropdownButton2<String>(
                 dropdownMaxHeight: 250,
-                value: checkSoup() ? soup1[1].toString():soup2[1].toString(),
+                value: checkSoup() ? soup1.values.elementAt(0)[1].toString():soup2.values.elementAt(0)[1].toString(),
                 onChanged: (String? value) {
                   // This is called when the user selects an item.
                   setState(() {
                     if (checkSoup()){
-                      soup1[1] = int.parse(value!);
+                      soup1[soup1.keys.first][1] = int.parse(value!);
                     }
                     else{
-                      soup2[1] = int.parse(value!);
+                      soup2[soup2.keys.first][1] = int.parse(value!);
                     }
                     print("soup 1: ${soup1.toString()}");
                     print("soup 2: ${soup2.toString()}");

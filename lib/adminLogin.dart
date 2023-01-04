@@ -11,7 +11,6 @@ class AdminLogin extends StatelessWidget {
             height: 100,
           ),
           InputField(),
-
           ConfirmButton()
         ],
       ),
