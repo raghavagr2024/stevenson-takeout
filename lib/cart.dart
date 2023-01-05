@@ -620,21 +620,25 @@ class _SoupList extends State<SoupList> {
   }
 
   Future<void> _showSoupDialog(int i) async {
-    var soup;
+    print(weeklyItems['Soup'].toString());
+    var soup = {};
     if(selectedSoups.keys.elementAt(i)==weeklyItems['Soup'].keys.elementAt(0)){
+      print("soup 1");
       print(soup1.toString());
-      soup = [soup1.values.elementAt(0)[0],soup1.values.elementAt(0)[1]];
+      soup = {soup1.keys.elementAt(0):[soup1.values.elementAt(0)[0],soup1.values.elementAt(0)[1]]};
+      print(soup.toString());
     }
     else{
       print("soup 2");
       print(soup2.toString());
-      soup = [soup2.values.elementAt(0)[0],soup2.values.elementAt(0)[1]];
+      soup = {soup2.keys.elementAt(0):[soup2.values.elementAt(0)[0],soup2.values.elementAt(0)[1]]};
+      print(soup.toString());
     }
 
     return showDialog(
         context: context,
         builder: (BuildContext context) {
-          return StatefulBuilder(builder: (context,setState){
+          return StatefulBuilder(builder: (context,s){
           return Container(
             height: 400,
             width: 320,
@@ -654,14 +658,14 @@ class _SoupList extends State<SoupList> {
                           const SizedBox(width: 20),
                           Container(
                               child: DropdownButton2<String>(
-                                value: soup[0].toString(),
+                                value: soup.values.elementAt(0)[0].toString(),
                                 dropdownMaxHeight: 250,
                                 onChanged: (String? value) {
                                   // This is called when the user selects an item.
-                                  setState((){
-                                    soup[0] = int.parse(value!);
+                                  s((){
+                                    soup.values.elementAt(0)[0] = int.parse(value!);
+                                    print(soup.toString());
                                   });
-
 
                                 },
                                 items: count.map<DropdownMenuItem<String>>((var value) {
@@ -682,12 +686,13 @@ class _SoupList extends State<SoupList> {
                           Container(
                               child: DropdownButton2<String>(
                                 dropdownMaxHeight: 250,
-                                value: soup[1].toString(),
+                                value: soup.values.elementAt(0)[1].toString(),
                                 onChanged: (String? value) {
                                   // This is called when the user selects an item.
 
-                                    setState((){
-                                      soup[1] = int.parse(value!);
+                                    s((){
+                                      soup.values.elementAt(0)[1] = int.parse(value!);
+                                      print(soup.toString());
                                     });
                                 },
                                 items: count.map<DropdownMenuItem<String>>((var value) {
@@ -716,22 +721,24 @@ class _SoupList extends State<SoupList> {
                 ),
                 TextButton(
                     onPressed: (){
+                      print("selected soups: ${selectedSoups.toString()}");
                       setState((){
-                        if(selectedSoups.keys.elementAt(i)==weeklyItems['Soup'].keys.elementAt(0)){
-                          soup1[soup1.keys.elementAt(0)][0] = soup[0];
-                          soup1[soup1.keys.elementAt(0)][1] = soup[1];
-                          selectedSoups.remove(soup1.keys.elementAt(0));
-                          selectedSoups[soup1.keys.elementAt(0)] = soup;
+                        if(soup.keys.elementAt(0)==soup1.keys.elementAt(0)){
+                          soup1[soup1.keys.elementAt(0)] = soup[soup.keys.elementAt(0)];
+                          selectedSoups[soup1.keys.elementAt(0)] = soup1[soup1.keys.elementAt(0)];
+
                         }
                         else{
-                          soup2[soup2.keys.elementAt(0)][0] = soup[0];
-                          soup2[soup2.keys.elementAt(0)][1] = soup[1];
-                          selectedSoups.remove(soup2.keys.elementAt(0));
-                          selectedSoups[soup2.keys.elementAt(0)] = soup;
+                          soup2[soup2.keys.elementAt(0)] = soup[soup.keys.elementAt(0)];
+                          selectedSoups[soup2.keys.elementAt(0)] = soup2[soup2.keys.elementAt(0)];
                         }
+                        print("soup 1");
+                        print(soup1.toString());
+                        print("soup 2");
+                        print(soup2.toString());
                       });
-
-                      Navigator.of(context).pop();
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Cart()));
                     },
                     child: Text("confirm")
                 )

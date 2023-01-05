@@ -92,7 +92,7 @@ class EveryDayItems extends StatelessWidget {
                       shrinkWrap: true,
                       itemCount: everyDayItems["Slice of Life"].length,
                       itemBuilder: _getItemsForSliceOfLife),
-                  SizedBox(height: 890, child: WeekItems()),
+                  SizedBox(height: 1100, child: WeekItems()),
                 ],
               ),
             );
@@ -125,7 +125,10 @@ class WeekItems extends StatelessWidget {
     var id = getWeek()[1];
     station = getStation();
     log("in week items");
-
+    print("soup 1");
+    print(soup1.toString());
+    print("soup 2");
+    print(soup2.toString());
     CollectionReference users = FirebaseFirestore.instance.collection(week);
 
     return FutureBuilder<DocumentSnapshot>(
@@ -152,7 +155,7 @@ class WeekItems extends StatelessWidget {
           try {
             return Scaffold(
                 body: SingleChildScrollView(
-              physics: const ScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               child: Column(
                 children: <Widget>[
                   const SizedBox(height: 50),
@@ -392,28 +395,20 @@ class NextButton extends StatelessWidget {
     log(selected.toString());
     return ElevatedButton(
       onPressed: () {
-        if(selectedSoups.containsKey(weeklyItems['Soup'].keys.elementAt(1))){
-          selectedSoups.remove(weeklyItems['Soup'].keys.elementAt(1));
+        if(selectedSoups.containsKey(soup1.keys.elementAt(0))){
+          selectedSoups.remove(soup1.keys.elementAt(0));
+          print(selectedSoups.toString());
         }
-        if(selectedSoups.containsKey(weeklyItems['Soup'].keys.elementAt(0))){
-          selectedSoups.remove(weeklyItems['Soup'].keys.elementAt(0));
+        if(selectedSoups.containsKey(soup2.keys.elementAt(0))){
+          selectedSoups.remove(soup2.keys.elementAt(0));
+          print(selectedSoups.toString());
         }
 
-        if(listEquals(soup1[soup1.keys.elementAt(0)], [0,0]) || listEquals(soup2[soup2.keys.elementAt(0)], [0,0])){
-          print("in first if");
-          if(listEquals(soup1[soup1.keys.elementAt(0)], [0,0]) && !listEquals(soup2[soup2.keys.elementAt(0)], [0,0])){
-            print("in second if");
-            selectedSoups[weeklyItems['Soup'].keys.elementAt(1)] = soup2[soup2.keys.elementAt(0)];
-          }
-          else if (!listEquals(soup1[soup1.keys.elementAt(0)], [0,0]) && listEquals(soup2[soup2.keys.elementAt(0)], [0,0])){
-            print("in else if");
-            selectedSoups[weeklyItems['Soup'].keys.elementAt(0)] = soup1[soup1.keys.elementAt(0)];
-          }
+        if(soup1.values.elementAt(0)[0]!=0||soup1.values.elementAt(0)[1]!=0){
+          selectedSoups[soup1.keys.elementAt(0)] = soup1.values.elementAt(0);
         }
-        else{
-          print("in else");
-          selectedSoups[weeklyItems['Soup'].keys.elementAt(1)] = soup2[soup2.keys.elementAt(0)];
-          selectedSoups[weeklyItems['Soup'].keys.elementAt(0)] = soup1[soup1.keys.elementAt(0)];
+        if(soup2.values.elementAt(0)[0]!=0||soup2.values.elementAt(0)[1]!=0){
+          selectedSoups[soup2.keys.elementAt(0)] = soup2.values.elementAt(0);
         }
 
 
@@ -536,10 +531,17 @@ class _SoupTrailer extends State<SoupTrailer> {
   }
   @override
   void initState(){
-    soup1 = {weeklyItems['Soup'].keys.elementAt(0):[0,0]};
-    print("soup 1");
-    print(soup1.values.elementAt(0)[0]);
-    soup2 = {weeklyItems['Soup'].keys.elementAt(1):[0,0]};
+    if(!initDone){
+      print("in initstate");
+      soup1 = {weeklyItems['Soup'].keys.elementAt(0):[0,0]};
+      print("soup 1");
+      print(soup1.values.elementAt(0)[0]);
+
+      soup2 = {weeklyItems['Soup'].keys.elementAt(1):[0,0]};
+      initDone = true;
+    }
+
+
     print(soup2.toString());
   }
 

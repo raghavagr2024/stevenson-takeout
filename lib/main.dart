@@ -11,6 +11,7 @@ Map selected = {};
 Map selectedSoups = {};
 var soup1 = {};
 var soup2 = {};
+bool initDone = false;
 Map<String, dynamic> weeklyItems = {};
 Future<void> main() async {
 
