@@ -90,10 +90,10 @@ Future<void> getAllItems() async {
           for(int j = 0; j<currentCategory.length;j++){
             String collection = 'week 1';
             String category = temp.keys.elementAt(i);
-            int tag = j;
-            for(int k = 0; k<currentCategory[j].length;k++){
-              String key = currentCategory[j].keys.elementAt(k);
-              var price = currentCategory[j].values.elementAt(k);
+            String tag = currentCategory.keys.elementAt(j);
+            for(int k = 0; k<currentCategory.values.elementAt(j).length;k++){
+              String key = currentCategory.values.elementAt(j).keys.elementAt(k);
+              var price = currentCategory.values.elementAt(j).values.elementAt(k);
               allItems[key] = [collection,category,tag,price];
             }
           }
@@ -143,11 +143,11 @@ Future<void> getAllItems() async {
           for(int j = 0; j<currentCategory.length;j++){
             String collection = 'week 2';
             String category = temp.keys.elementAt(i);
-            int tag = j;
-            for(int k = 0; k<currentCategory[j].length;k++){
-              String key = currentCategory[j].keys.elementAt(k);
-              var price = currentCategory[j].values.elementAt(k);
-              allItems[key] = [collection,category,tag,price];
+            String tag = currentCategory.keys.elementAt(j);
+            for(int k = 0; k<currentCategory.values.elementAt(j).length;k++){
+              String key = currentCategory.values.elementAt(j).keys.elementAt(k);
+              var price = currentCategory.values.elementAt(j).values.elementAt(k);
+              allItems["$key "] = [collection,category,tag,price];
             }
           }
         }
@@ -198,11 +198,11 @@ Future<void> getAllItems() async {
           for(int j = 0; j<currentCategory.length;j++){
             String collection = 'week 3';
             String category = temp.keys.elementAt(i);
-            int tag = j;
-            for(int k = 0; k<currentCategory[j].length;k++){
-              String key = currentCategory[j].keys.elementAt(k);
-              var price = currentCategory[j].values.elementAt(k);
-              allItems[key] = [collection,category,tag,price];
+            String tag = currentCategory.keys.elementAt(j);
+            for(int k = 0; k<currentCategory.values.elementAt(j).length;k++){
+              String key = currentCategory.values.elementAt(j).keys.elementAt(k);
+              var price = currentCategory.values.elementAt(j).values.elementAt(k);
+              allItems["$key  "] = [collection,category,tag,price];
             }
           }
         }
@@ -252,11 +252,11 @@ Future<void> getAllItems() async {
           for(int j = 0; j<currentCategory.length;j++){
             String collection = 'week 4';
             String category = temp.keys.elementAt(i);
-            int tag = j;
-            for(int k = 0; k<currentCategory[j].length;k++){
-              String key = currentCategory[j].keys.elementAt(k);
-              var price = currentCategory[j].values.elementAt(k);
-              allItems[key] = [collection,category,tag,price];
+            String tag = currentCategory.keys.elementAt(j);
+            for(int k = 0; k<currentCategory.values.elementAt(j).length;k++){
+              String key = currentCategory.values.elementAt(j).keys.elementAt(k);
+              var price = currentCategory.values.elementAt(j).values.elementAt(k);
+              allItems["$key   "] = [collection,category,tag,price];
             }
           }
         }
@@ -466,40 +466,27 @@ class _ItemCard extends State<ItemCard>{
                     displayItems.remove(displayItems.keys.elementAt(i));
                   });
                 }
-
-                else if(itemData.length ==4){
-                  print(displayItems.keys.elementAt(i));
-                  var currentDayItems = {};
-
-                  for(int j = 0;j<allItems.length;j++){
-                    if(allItems.values.elementAt(j)[0]==itemData[0]&&allItems.values.elementAt(j)[1]==itemData[1]){
-                      currentDayItems[{allItems.keys.elementAt(j):allItems.values.elementAt(j)[3]}] = allItems.values.elementAt(j)[2];
-                    }
-                  }
-
-                  var addingItems = sortList(currentDayItems);
-                  for (int j = 0; j<addingItems.length;j++){
-                    if(addingItems[j].keys.elementAt(0)==displayItems.keys.elementAt(i)){
-                      addingItems[j] = {"No item": addingItems[j].values.elementAt(0)};
-                    }
-                  }
-                  print(addingItems.toString());
+                else if(itemData.length == 4){
+                  String key = displayItems.keys.elementAt(i).trim();
+                  print("key");
                   FirebaseFirestore.instance
                       .collection(displayItems.values.elementAt(i)[0])
                       .doc(documents[docIndex])
                       .update({
-                    '${itemData[1]}': addingItems
+                    '${itemData[1]}.${itemData[2]}.$key': FieldValue.delete()
                   }).whenComplete(() {
                     print('Field Deleted');
+
                   });
                   print("done with delete");
                   setState(() {
-
                     allItems.remove(displayItems.keys.elementAt(i));
                     displayItems.remove(displayItems.keys.elementAt(i));
                   });
 
                 }
+
+
 
                 Navigator.of(context).pop();
               },
@@ -513,18 +500,6 @@ class _ItemCard extends State<ItemCard>{
 
   }
 
-  List sortList(Map items){
-    List ans = [];
-    while(ans.length<items.length){
-      for(int i = 0; i<items.length;i++){
-        if(items.values.elementAt(i)==ans.length || items.values.elementAt(i)==2){
-          ans.add(items.keys.elementAt(i));
-        }
-      }
 
-
-    }
-    return ans;
-  }
 }
 
