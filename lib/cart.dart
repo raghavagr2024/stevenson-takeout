@@ -51,7 +51,7 @@ class _Cart extends State<Cart> {
             child: BackButton(),
           ),
           SizedBox(
-            height: (selected.length + 1) * (50),
+            height: (selected.length + 1) * (55),
             child: Align(
               alignment: Alignment.topCenter,
               child: ItemList(),
@@ -66,12 +66,12 @@ class _Cart extends State<Cart> {
           ),
           TotalPrice(),
           PeriodButton(),
-          SizedBox(
-            height: 20,
+          const SizedBox(
+            height: 5,
           ),
           LocationButton(),
-          SizedBox(
-            height: 20,
+          const SizedBox(
+            height: 5,
           ),
           Payment(),
           NextButton()
@@ -274,7 +274,7 @@ class _Item extends State<Item> {
 
     return Row(
       children: <Widget>[
-        SizedBox(width: 20),
+        const SizedBox(width: 20),
         Expanded(
           child: Align(
               alignment: Alignment.centerLeft,
@@ -282,7 +282,7 @@ class _Item extends State<Item> {
                 children: <Widget>[
                   Text(
                     selected.values.elementAt(index)[0].toString(),
-                    style: TextStyle(fontSize: 20),
+                    style: const TextStyle(fontSize: 20),
                   ),
                   const SizedBox(
                     width: 20,
@@ -439,7 +439,7 @@ class BackButton extends StatelessWidget {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => HomePage()));
         },
-        icon: Icon(Icons.arrow_back_ios_new));
+        icon: const Icon(Icons.arrow_back_ios_new));
   }
 }
 
@@ -463,11 +463,11 @@ class _TotalPrice extends State<TotalPrice> {
               alignment: Alignment.centerRight,
               child: Text(
                 "total:   ${format.format(_getPrice())}",
-                style: TextStyle(fontSize: 20),
+                style: const TextStyle(fontSize: 20),
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 34,
           )
         ],
@@ -511,15 +511,15 @@ class _SoupList extends State<SoupList> {
           return Container(
               child: Row(
             children: [
-              SizedBox(width: 20),
+              const SizedBox(width: 20),
               Expanded(
                   child: Align(
                 alignment: Alignment.centerLeft,
                 child: SizedBox(
                   height: 50,
                   child: Column(children: [
-                    Text("12 oz.: ${soup[0]}", style: TextStyle(fontSize: 20)),
-                    Text("8 oz.: ${soup[1]}", style: TextStyle(fontSize: 20))
+                    Text("12 oz.: ${soup[0]}", style: const TextStyle(fontSize: 20)),
+                    Text("8 oz.: ${soup[1]}", style: const TextStyle(fontSize: 20))
                   ]),
                 ),
               )),
@@ -539,10 +539,10 @@ class _SoupList extends State<SoupList> {
                 child: Align(
                   alignment: Alignment.centerRight,
                   child:
-                      Text(format.format(ans), style: TextStyle(fontSize: 20)),
+                      Text(format.format(ans), style: const TextStyle(fontSize: 20)),
                 ),
               ),
-              SizedBox(width: 25),
+              const SizedBox(width: 25),
             ],
           ));
         } else if (soup[0] == 0 && soup[1] != 0) {
@@ -551,14 +551,14 @@ class _SoupList extends State<SoupList> {
           return Container(
               child: Row(
             children: [
-              SizedBox(width: 20),
+              const SizedBox(width: 20),
               Expanded(
                   child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text("8 oz.: ${soup[1]}",
-                          style: TextStyle(fontSize: 20)))),
+                          style: const TextStyle(fontSize: 20)))),
 
-              SizedBox(
+              const SizedBox(
                 width: 20,
               ),
               Expanded(
@@ -575,9 +575,9 @@ class _SoupList extends State<SoupList> {
                 child: Align(
                     alignment: Alignment.centerRight,
                     child: Text(format.format(ans),
-                        style: TextStyle(fontSize: 20))),
+                        style: const TextStyle(fontSize: 20))),
               ),
-              SizedBox(width: 35),
+              const SizedBox(width: 35),
             ],
           ));
         } else {
@@ -586,12 +586,12 @@ class _SoupList extends State<SoupList> {
           return Container(
               child: Row(
             children: [
-              SizedBox(width: 20),
+              const SizedBox(width: 20),
               Expanded(
                   child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text("12 oz.: ${soup[0]}",
-                          style: TextStyle(fontSize: 20)))),
+                          style: const TextStyle(fontSize: 20)))),
               Expanded(
                 child: Align(
                   alignment: Alignment.center,
@@ -608,9 +608,9 @@ class _SoupList extends State<SoupList> {
                 child: Align(
                     alignment: Alignment.centerRight,
                     child: Text(format.format(ans),
-                        style: TextStyle(fontSize: 20))),
+                        style: const TextStyle(fontSize: 20))),
               ),
-              SizedBox(width: 25),
+              const SizedBox(width: 25),
             ],
           ));
         }
@@ -620,19 +620,18 @@ class _SoupList extends State<SoupList> {
   }
 
   Future<void> _showSoupDialog(int i) async {
-    print(weeklyItems['Soup'].toString());
+
     var soup = {};
     if(selectedSoups.keys.elementAt(i)==weeklyItems['Soup'].keys.elementAt(0)){
-      print("soup 1");
-      print(soup1.toString());
+
+
       soup = {soup1.keys.elementAt(0):[soup1.values.elementAt(0)[0],soup1.values.elementAt(0)[1]]};
-      print(soup.toString());
+
     }
     else{
-      print("soup 2");
-      print(soup2.toString());
+
       soup = {soup2.keys.elementAt(0):[soup2.values.elementAt(0)[0],soup2.values.elementAt(0)[1]]};
-      print(soup.toString());
+
     }
 
     return showDialog(
@@ -664,7 +663,7 @@ class _SoupList extends State<SoupList> {
                                   // This is called when the user selects an item.
                                   s((){
                                     soup.values.elementAt(0)[0] = int.parse(value!);
-                                    print(soup.toString());
+
                                   });
 
                                 },
@@ -712,35 +711,54 @@ class _SoupList extends State<SoupList> {
                 ),
               ),
               actions: [
+                IconButton(
+                    onPressed: (){
+                      setState(() {
+                        if(soup.keys.elementAt(0)==soup1.keys.elementAt(0)){
+                          soup1[soup1.keys.elementAt(0)] = [0,0];
+                        }
+                        else{
+                          soup1[soup1.keys.elementAt(0)] = [0,0];
+                        }
+
+                        selectedSoups.remove(soup.keys.elementAt(0));
+                      });
+
+                      Navigator.of(context).pop();
+                    },
+                    icon: const Icon(Icons.delete),
+                ),
                 TextButton(
                     onPressed: (){
 
                       Navigator.of(context).pop();
                     },
-                    child: Text("cancel")
+                    child: const Text("cancel")
                 ),
                 TextButton(
                     onPressed: (){
-                      print("selected soups: ${selectedSoups.toString()}");
+
                       setState((){
                         if(soup.keys.elementAt(0)==soup1.keys.elementAt(0)){
                           soup1[soup1.keys.elementAt(0)] = soup[soup.keys.elementAt(0)];
                           selectedSoups[soup1.keys.elementAt(0)] = soup1[soup1.keys.elementAt(0)];
-
+                          if(soup.values.elementAt(0)[0]==0 && soup.values.elementAt(0)[1]==0){
+                            selectedSoups.remove(soup.keys.elementAt(0));
+                          }
                         }
                         else{
                           soup2[soup2.keys.elementAt(0)] = soup[soup.keys.elementAt(0)];
                           selectedSoups[soup2.keys.elementAt(0)] = soup2[soup2.keys.elementAt(0)];
+                          if(soup.values.elementAt(0)[0]==0 && soup.values.elementAt(0)[1]==0){
+                            selectedSoups.remove(soup.keys.elementAt(0));
+                          }
                         }
-                        print("soup 1");
-                        print(soup1.toString());
-                        print("soup 2");
-                        print(soup2.toString());
+
                       });
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => Cart()));
                     },
-                    child: Text("confirm")
+                    child: const Text("confirm")
                 )
               ],
 

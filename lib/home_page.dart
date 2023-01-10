@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter/foundation.dart';
+
 import 'cart.dart';
 import 'main.dart';
 
@@ -24,8 +24,7 @@ class HomePage extends StatelessWidget {
 }
 
 String station = "";
-
-
+final ValueNotifier<int> _counter = ValueNotifier<int>(0);
 var count = [];
 
 class EveryDayItems extends StatelessWidget {
@@ -58,8 +57,8 @@ class EveryDayItems extends StatelessWidget {
           }
 
           try {
-            print("size of screen");
-            print(MediaQuery.of(context).size.height);
+            log("size of screen");
+            log(MediaQuery.of(context).size.height.toString());
             return SingleChildScrollView(
               physics: const ScrollPhysics(),
               child: Column(
@@ -125,10 +124,10 @@ class WeekItems extends StatelessWidget {
     var id = getWeek()[1];
     station = getStation();
     log("in week items");
-    print("soup 1");
-    print(soup1.toString());
-    print("soup 2");
-    print(soup2.toString());
+    log("soup 1");
+    log(soup1.toString());
+    log("soup 2");
+    log(soup2.toString());
     CollectionReference users = FirebaseFirestore.instance.collection(week);
 
     return FutureBuilder<DocumentSnapshot>(
@@ -170,7 +169,7 @@ class WeekItems extends StatelessWidget {
                   ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount: weeklyItems[getDay()][0].length,
+                      itemCount: weeklyItems[getDay()].values.elementAt(0).length,
                       itemBuilder: _getComfort),
                   const Text(
                     "Mindful",
@@ -179,7 +178,7 @@ class WeekItems extends StatelessWidget {
                   ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount: weeklyItems[getDay()][1].length,
+                      itemCount: weeklyItems[getDay()].values.elementAt(1).length,
                       itemBuilder: _getMindful),
                   const Text(
                     "Sides",
@@ -188,7 +187,7 @@ class WeekItems extends StatelessWidget {
                   ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount: weeklyItems[getDay()][2].length,
+                      itemCount: weeklyItems[getDay()].values.elementAt(2).length,
                       itemBuilder: _getSides),
                   const Text(
                     "Panini:",
@@ -233,15 +232,15 @@ class WeekItems extends StatelessWidget {
   }
 
   Widget _getComfort(BuildContext context, int index) {
-    return Tile(context, weeklyItems[getDay()][0], index);
+    return Tile(context, weeklyItems[getDay()].values.elementAt(0), index);
   }
 
   Widget _getMindful(BuildContext context, int index) {
-    return Tile(context, weeklyItems[getDay()][1], index);
+    return Tile(context, weeklyItems[getDay()].values.elementAt(1), index);
   }
 
   Widget _getSides(BuildContext context, int index) {
-    return Tile(context, weeklyItems[getDay()][2], index);
+    return Tile(context, weeklyItems[getDay()].values.elementAt(2), index);
   }
 
   String getDay() {
@@ -389,36 +388,65 @@ class _InternationalTile extends State<InternationalTile>{
   }
 }
 */
-class NextButton extends StatelessWidget {
+
+class NextButton extends StatefulWidget{
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return _NextButton();
+  }
+
+}
+
+class _NextButton extends State<NextButton> {
+
   @override
   Widget build(BuildContext context) {
+    log("in build for nextbuttn");
     log(selected.toString());
-    return ElevatedButton(
-      onPressed: () {
-        if(selectedSoups.containsKey(soup1.keys.elementAt(0))){
-          selectedSoups.remove(soup1.keys.elementAt(0));
-          print(selectedSoups.toString());
-        }
-        if(selectedSoups.containsKey(soup2.keys.elementAt(0))){
-          selectedSoups.remove(soup2.keys.elementAt(0));
-          print(selectedSoups.toString());
-        }
+     return ValueListenableBuilder<int>(
+         valueListenable: _counter,
+         builder: (BuildContext context,var s,Widget? child){
+           return ElevatedButton(
+                 onPressed: ifEmpty()? null: ()=> nextPage(context),
+                 style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1f5d39)),
+                 child: const Text("continue"),
+               );
+         }
+     );
+    //
+  }
+  
+  bool ifEmpty(){
+    print("in if empty");
+    print(selected.toString());
+    if(_counter.value==0){
+      return true;
+    }
+    return false;
+  }
+  
+  void nextPage(BuildContext context){
+    if(selectedSoups.containsKey(soup1.keys.elementAt(0))){
+      selectedSoups.remove(soup1.keys.elementAt(0));
+      log(selectedSoups.toString());
+    }
+    if(selectedSoups.containsKey(soup2.keys.elementAt(0))){
+      selectedSoups.remove(soup2.keys.elementAt(0));
+      log(selectedSoups.toString());
+    }
 
-        if(soup1.values.elementAt(0)[0]!=0||soup1.values.elementAt(0)[1]!=0){
-          selectedSoups[soup1.keys.elementAt(0)] = soup1.values.elementAt(0);
-        }
-        if(soup2.values.elementAt(0)[0]!=0||soup2.values.elementAt(0)[1]!=0){
-          selectedSoups[soup2.keys.elementAt(0)] = soup2.values.elementAt(0);
-        }
+    if(soup1.values.elementAt(0)[0]!=0||soup1.values.elementAt(0)[1]!=0){
+      selectedSoups[soup1.keys.elementAt(0)] = soup1.values.elementAt(0);
+    }
+    if(soup2.values.elementAt(0)[0]!=0||soup2.values.elementAt(0)[1]!=0){
+      selectedSoups[soup2.keys.elementAt(0)] = soup2.values.elementAt(0);
+    }
 
 
-        print(selected.toString());
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Cart()));
-      },
-      style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1f5d39)),
-      child: const Text("continue"),
-    );
+    log(selected.toString());
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => Cart()));
   }
 }
 
@@ -486,22 +514,36 @@ class _CounterButton extends State<CounterButton> {
   }
 
   void subtract(String s) {
-    selected[s][0]--;
-    if (selected[s][0] == 0) {
-      selected.remove(s);
-    }
-    print(selected.toString());
-    setState(() {});
+
+    setState(() {
+      selected[s][0]--;
+      if (selected[s][0] == 0) {
+        selected.remove(s);
+      }
+      _counter.value = selected.length + soup1.values.elementAt(0)[0] as int;
+      _counter.value += soup1.values.elementAt(0)[1] as int;
+      _counter.value += soup2.values.elementAt(0)[0] as int;
+      _counter.value += soup2.values.elementAt(0)[1] as int;
+      log(selected.toString());
+
+    });
   }
 
   void add(String s, var i) {
-    if (selected[s] != null) {
-      selected[s][0]++;
-    } else {
-      selected[s] = [1, i];
-    }
 
-    setState(() {});
+
+    setState(() {
+      if (selected[s] != null) {
+        selected[s][0]++;
+      } else {
+        selected[s] = [1, i];
+      }
+      _counter.value = selected.length + soup1.values.elementAt(0)[0] as int;
+      _counter.value += soup1.values.elementAt(0)[1] as int;
+      _counter.value += soup2.values.elementAt(0)[0] as int;
+      _counter.value += soup2.values.elementAt(0)[1] as int;
+      log(selected.toString());
+    });
   }
 }
 
@@ -532,17 +574,16 @@ class _SoupTrailer extends State<SoupTrailer> {
   @override
   void initState(){
     if(!initDone){
-      print("in initstate");
+
       soup1 = {weeklyItems['Soup'].keys.elementAt(0):[0,0]};
-      print("soup 1");
-      print(soup1.values.elementAt(0)[0]);
+
 
       soup2 = {weeklyItems['Soup'].keys.elementAt(1):[0,0]};
       initDone = true;
     }
 
 
-    print(soup2.toString());
+
   }
 
   _SoupTrailer(this.index, this.items);
@@ -569,12 +610,17 @@ class _SoupTrailer extends State<SoupTrailer> {
                 setState(() {
                   if (checkSoup()){
                     soup1[soup1.keys.elementAt(0)][0] = int.parse(value!);
+
                   }
                   else{
                     soup2[soup2.keys.elementAt(0)][0] = int.parse(value!);
                   }
-                  print("soup 1: ${soup1.toString()}");
-                  print("soup 2: ${soup2.toString()}");
+                  _counter.value = selected.length + soup1.values.elementAt(0)[0] as int;
+                  _counter.value += soup1.values.elementAt(0)[1] as int;
+                  _counter.value += soup2.values.elementAt(0)[0] as int;
+                  _counter.value += soup2.values.elementAt(0)[1] as int;
+                  log("soup 1: ${soup1.toString()}");
+                  log("soup 2: ${soup2.toString()}");
                 });
               },
               items: count.map<DropdownMenuItem<String>>((var value) {
@@ -605,8 +651,12 @@ class _SoupTrailer extends State<SoupTrailer> {
                     else{
                       soup2[soup2.keys.first][1] = int.parse(value!);
                     }
-                    print("soup 1: ${soup1.toString()}");
-                    print("soup 2: ${soup2.toString()}");
+                    _counter.value = selected.length + soup1.values.elementAt(0)[0] as int;
+                    _counter.value += soup1.values.elementAt(0)[1] as int;
+                    _counter.value += soup2.values.elementAt(0)[0] as int;
+                    _counter.value += soup2.values.elementAt(0)[1] as int;
+                    log("soup 1: ${soup1.toString()}");
+                    log("soup 2: ${soup2.toString()}");
                   });
                 },
                 items: count.map<DropdownMenuItem<String>>((var value) {

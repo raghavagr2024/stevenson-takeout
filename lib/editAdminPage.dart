@@ -1,10 +1,18 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:stevensontakeout/cart.dart';
+import 'package:stevensontakeout/main.dart';
 
 //TODO: add search ability
+Map temp = {};
 Map allItems = {};
+Map displayItems = {};
 var _search = TextEditingController();
+
+
 var documents = [
   'IppA94yUj2wrIzawr5Al',
   'GoeTLas8A4sj29bRuyw2',
@@ -18,76 +26,254 @@ var collections = ['everyday', 'week 1', 'week 2', 'week 3', 'week 4'];
 var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
 Future<void> getAllItems() async {
-  FirebaseFirestore.instance
+
+  print("in getAllItems");
+  await FirebaseFirestore.instance
       .collection('everyday')
       .doc("IppA94yUj2wrIzawr5Al")
       .get()
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
-      allItems['everyday'] = documentSnapshot.data() as Map<dynamic, dynamic>;
-      print(allItems.toString());
+      temp = documentSnapshot.data() as Map<dynamic, dynamic>;
+      for(int i = 0; i<temp.length;i++){
+        Map currentCategory = temp.values.elementAt(i);
+        for(int j = 0; j<currentCategory.length;j++){
+
+          String key = currentCategory.keys.elementAt(j);
+          String collection = "everyday";
+          String category = temp.keys.elementAt(i);
+          var price = currentCategory.values.elementAt(j);
+          var data = [collection,category,price];
+          allItems[key] = data;
+        }
+      }
     } else {
       print('Document does not exist on the database');
     }
 
-    print("done with getallItems");
   });
-  FirebaseFirestore.instance
+  await FirebaseFirestore.instance
       .collection('week 1')
       .doc("GoeTLas8A4sj29bRuyw2")
       .get()
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
-      allItems['week 1'] = documentSnapshot.data() as Map<dynamic, dynamic>;
-      print(allItems.toString());
+      temp = documentSnapshot.data() as Map<dynamic, dynamic>;
+      for(int i = 0; i<temp.length;i++){
+        var currentCategory = temp.values.elementAt(i);
+
+        if(temp.keys.elementAt(i)=='Panini'){
+          String key = currentCategory.keys.elementAt(0);
+          String collection = 'week 1';
+          String category = 'Panini';
+          var price = currentCategory.values.elementAt(0);
+          allItems[key] = [collection,category,price];
+        }
+        else if(temp.keys.elementAt(i)=='Soup'){
+
+          for(int j = 0; j<currentCategory.length;j++){
+            Map soup = currentCategory.values.elementAt(j);
+            String key = currentCategory.keys.elementAt(j);
+            String collection = 'week 1';
+            String category = 'Soup';
+            var data = [];
+            data.add(collection);
+            data.add(category);
+            for(int k = 0; k<soup.length;k++ ){
+              data.add(soup.keys.elementAt(k));
+              data.add(soup.values.elementAt(k));
+            }
+            allItems[key] = data;
+          }
+        }
+        else{
+          for(int j = 0; j<currentCategory.length;j++){
+            String collection = 'week 1';
+            String category = temp.keys.elementAt(i);
+            int tag = j;
+            for(int k = 0; k<currentCategory[j].length;k++){
+              String key = currentCategory[j].keys.elementAt(k);
+              var price = currentCategory[j].values.elementAt(k);
+              allItems[key] = [collection,category,tag,price];
+            }
+          }
+        }
+      }
+
     } else {
       print('Document does not exist on the database');
     }
 
-    print("done with getallItems");
+    print("week 1");
   });
-  FirebaseFirestore.instance
+  await FirebaseFirestore.instance
       .collection('week 2')
       .doc("JypyeLKmIyhEXlLebvHk")
       .get()
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
-      allItems['week 2'] = documentSnapshot.data() as Map<dynamic, dynamic>;
-      print(allItems.toString());
+      temp = documentSnapshot.data() as Map<dynamic, dynamic>;
+      for(int i = 0; i<temp.length;i++){
+        var currentCategory = temp.values.elementAt(i);
+        if(temp.keys.elementAt(i)=='Panini'){
+          String key = currentCategory.keys.elementAt(0);
+          String collection = 'week 2';
+          String category = 'Panini';
+          var price = currentCategory.values.elementAt(0);
+          allItems[key] = [collection,category,price];
+        }
+        else if(temp.keys.elementAt(i)=='Soup'){
+
+          for(int j = 0; j<currentCategory.length;j++){
+            Map soup = currentCategory.values.elementAt(j);
+            String key = currentCategory.keys.elementAt(j);
+            String collection = 'week 2';
+            String category = 'Soup';
+            var data = [];
+            data.add(collection);
+            data.add(category);
+            for(int k = 0; k<soup.length;k++ ){
+              data.add(soup.keys.elementAt(k));
+              data.add(soup.values.elementAt(k));
+            }
+            allItems[key] = data;
+          }
+        }
+        else{
+          for(int j = 0; j<currentCategory.length;j++){
+            String collection = 'week 2';
+            String category = temp.keys.elementAt(i);
+            int tag = j;
+            for(int k = 0; k<currentCategory[j].length;k++){
+              String key = currentCategory[j].keys.elementAt(k);
+              var price = currentCategory[j].values.elementAt(k);
+              allItems[key] = [collection,category,tag,price];
+            }
+          }
+        }
+      }
+
+
     } else {
       print('Document does not exist on the database');
     }
 
-    print("done with getallItems");
+    print("done with 2");
   });
-  FirebaseFirestore.instance
+  await FirebaseFirestore.instance
       .collection('week 3')
       .doc("NvUFdn08oieSPYfLQkU9")
       .get()
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
-      allItems['week 3'] = documentSnapshot.data() as Map<dynamic, dynamic>;
-      print(allItems.toString());
+      temp = documentSnapshot.data() as Map<dynamic, dynamic>;
+      for(int i = 0; i<temp.length;i++){
+        var currentCategory = temp.values.elementAt(i);
+
+        if(temp.keys.elementAt(i)=='Panini'){
+          String key = currentCategory.keys.elementAt(0);
+          String collection = 'week 3';
+          String category = 'Panini';
+          var price = currentCategory.values.elementAt(0);
+          allItems[key] = [collection,category,price];
+        }
+        else if(temp.keys.elementAt(i)=='Soup'){
+
+          for(int j = 0; j<currentCategory.length;j++){
+            Map soup = currentCategory.values.elementAt(j);
+            String key = currentCategory.keys.elementAt(j);
+            String collection = 'week 3';
+            String category = 'Soup';
+            var data = [];
+            data.add(collection);
+            data.add(category);
+            for(int k = 0; k<soup.length;k++ ){
+              data.add(soup.keys.elementAt(k));
+              data.add(soup.values.elementAt(k));
+            }
+            allItems[key] = data;
+          }
+        }
+        else{
+          for(int j = 0; j<currentCategory.length;j++){
+            String collection = 'week 3';
+            String category = temp.keys.elementAt(i);
+            int tag = j;
+            for(int k = 0; k<currentCategory[j].length;k++){
+              String key = currentCategory[j].keys.elementAt(k);
+              var price = currentCategory[j].values.elementAt(k);
+              allItems[key] = [collection,category,tag,price];
+            }
+          }
+        }
+      }
+
     } else {
       print('Document does not exist on the database');
     }
 
-    print("done with getallItems");
+    print("done with 3");
   });
-  FirebaseFirestore.instance
+  await FirebaseFirestore.instance
       .collection('week 4')
       .doc("YToUal6YkEc8XWndizBU")
       .get()
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
-      allItems['week 4'] = documentSnapshot.data() as Map<dynamic, dynamic>;
-      print(allItems.toString());
+      temp = documentSnapshot.data() as Map<dynamic, dynamic>;
+      for(int i = 0; i<temp.length;i++){
+        var currentCategory = temp.values.elementAt(i);
+
+        if(temp.keys.elementAt(i)=='Panini'){
+          String key = currentCategory.keys.elementAt(0);
+          String collection = 'week 4';
+          String category = 'Panini';
+          var price = currentCategory.values.elementAt(0);
+          allItems[key] = [collection,category,price];
+        }
+        else if(temp.keys.elementAt(i)=='Soup'){
+
+          for(int j = 0; j<currentCategory.length;j++){
+            Map soup = currentCategory.values.elementAt(j);
+            String key = currentCategory.keys.elementAt(j);
+            String collection = 'week 4';
+            String category = 'Soup';
+            var data = [];
+            data.add(collection);
+            data.add(category);
+            for(int k = 0; k<soup.length;k++ ){
+              data.add(soup.keys.elementAt(k));
+              data.add(soup.values.elementAt(k));
+            }
+            allItems[key] = data;
+          }
+        }
+        else{
+          for(int j = 0; j<currentCategory.length;j++){
+            String collection = 'week 4';
+            String category = temp.keys.elementAt(i);
+            int tag = j;
+            for(int k = 0; k<currentCategory[j].length;k++){
+              String key = currentCategory[j].keys.elementAt(k);
+              var price = currentCategory[j].values.elementAt(k);
+              allItems[key] = [collection,category,tag,price];
+            }
+          }
+        }
+      }
+    print('week 4');
     } else {
       print('Document does not exist on the database');
     }
 
-    print("done with getallItems");
+
+    displayItems = allItems;
+
   });
+
+
+
+
 }
 
 class EditPage extends StatefulWidget {
@@ -122,6 +308,11 @@ class _EditPage extends State<EditPage> {
                   onFieldSubmitted: (_search) {
                     print(_search.toString());
                   },
+                  onChanged: (_search){
+                    setState(() {
+                      _getSearchedList(_search);
+                    });
+                  },
                   decoration: const InputDecoration(
                     hintText: 'Search for an item',
                     labelStyle: TextStyle(color: Colors.greenAccent),
@@ -132,95 +323,104 @@ class _EditPage extends State<EditPage> {
                 ),
               )),
         ),
+
         Expanded(
-          child: ListView.builder(
-            itemBuilder: _getEveryDayItems,
-            itemCount: allItems['everyday'].length,
-          ),
+            child: ListView.builder(
+              itemBuilder: getItemCard,
+              itemCount: displayItems.length,
+            )
+
         )
+
       ],
     );
   }
 
-  Widget _getMajorListViews(BuildContext context, index) {
-    return MajorListView(context, index);
+  Widget getItemCard(BuildContext context, int index){
+    print("in get itemCard");
+    return ItemCard(context,index);
   }
 
-  Widget _getEveryDayItems(BuildContext context, int index) {
-    return EveryDayItems(context, index);
+
+
+  void _getSearchedList(String s){
+    displayItems = {};
+    for(int i = 0; i<allItems.length;i++){
+      if(allItems.keys.elementAt(i).toUpperCase().contains(s.toUpperCase())){
+        displayItems[allItems.keys.elementAt(i)] = allItems.values.elementAt(i);
+      }
+    }
+
+    print(displayItems.toString());
+
+
+
   }
 }
 
-class EveryDayItems extends StatefulWidget {
-  BuildContext context;
-  int category;
+class ItemCard extends StatefulWidget{
 
-  EveryDayItems(this.context, this.category);
+  BuildContext context;
+  int index;
+
+
+  ItemCard(this.context,this.index);
 
   @override
   State<StatefulWidget> createState() {
-    return _EveryDayItems(this.context, this.category);
+    // TODO: implement createState
+    return _ItemCard(context, index);
   }
+
 }
 
-class _EveryDayItems extends State<EveryDayItems> {
+class _ItemCard extends State<ItemCard>{
+
   BuildContext context;
-  int category;
+  int index;
 
-  _EveryDayItems(this.context, this.category);
-
-  Map foods = allItems['everyday'];
-
-
+  _ItemCard(this.context,this.index);
   @override
-  Widget build(context) {
+  Widget build(BuildContext context) {
     var format = NumberFormat.currency(symbol: "\$", decimalDigits: 2);
-    Map currentCategory = foods.values.elementAt(category);
-    print(currentCategory.toString());
-    print("current category");
-
-    return Container(
-      height: currentCategory.length * 100,
-      child: ListView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        scrollDirection: Axis.vertical,
-        itemBuilder: (BuildContext context, int index) {
-          return ListTile(
-              title: Text(currentCategory.keys.elementAt(index)),
-              subtitle:
-                  Text(format.format(currentCategory.values.elementAt(index))),
-              trailing: Container(
-                width: 100,
-                child: Row(
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          _editItemDialog(
-                              currentCategory.keys.elementAt(index));
-                        },
-                        icon: Icon(Icons.edit)),
-                    IconButton(
-                        onPressed: () {
-                          _deleteItemDialog(
-                              currentCategory.keys.elementAt(index));
-                        },
-                        icon: Icon(Icons.delete))
-                  ],
+    List itemData = displayItems.values.elementAt(index);
+      return Card(
+        child: ListTile(
+          title: Text(displayItems.keys.elementAt(index)),
+          subtitle: Text(itemData[0]),
+          trailing: Container(
+            width: 100,
+            child: Row(
+              children: [
+                IconButton(
+                    onPressed: (){
+                      _editItemDialog(index);
+                    },
+                    icon: Icon(Icons.edit)
                 ),
-              ));
-        },
-        itemCount: currentCategory.length,
-      ),
-    );
+                IconButton(
+                    onPressed: (){
+                      _deleteItemDialog(index);
+                    },
+                    icon: Icon(Icons.delete)
+                )
+              ],
+            ),
+          ),
+        )
+      );
+
+
+
   }
 
-  Future<void> _deleteItemDialog(String s) async {
+  Future<void> _deleteItemDialog(int i) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Delete item ${s}?"),
+          title: Text("Delete item ${displayItems.keys.elementAt(i)}?"),
           content: SingleChildScrollView(
             child: ListBody(
               children: const <Widget>[
@@ -242,20 +442,65 @@ class _EveryDayItems extends State<EveryDayItems> {
               ),
               onPressed: () {
                 print("in approve for delete");
-                // Deletes item for everyday permanently from database
-                // FirebaseFirestore.instance
-                //     .collection('everyday')
-                //     .doc('IppA94yUj2wrIzawr5Al')
-                //     .update({
-                //   '${foods.keys.elementAt(category)}.$s': FieldValue.delete()
-                // }).whenComplete(() {
-                //   print('Field Deleted');
-                // });
-                print("done with delete");
-                setState(() {
-                  Map currentFoods = allItems['everyday'].values.elementAt(category);
-                  currentFoods.remove(s);
-                });
+                List itemData = displayItems.values.elementAt(i);
+                int docIndex = 0;
+                for(int j = 0 ;j<collections.length;j++){
+                  if(collections[j]==itemData[0]){
+                    docIndex = j;
+                    break;
+                  }
+                }
+                if(itemData.length == 3){
+                  FirebaseFirestore.instance
+                      .collection(displayItems.values.elementAt(i)[0])
+                      .doc(documents[docIndex])
+                      .update({
+                    '${itemData[1]}.${displayItems.keys.elementAt(i)}': FieldValue.delete()
+                  }).whenComplete(() {
+                    print('Field Deleted');
+
+                  });
+                  print("done with delete");
+                  setState(() {
+                    allItems.remove(displayItems.keys.elementAt(i));
+                    displayItems.remove(displayItems.keys.elementAt(i));
+                  });
+                }
+
+                else if(itemData.length ==4){
+                  print(displayItems.keys.elementAt(i));
+                  var currentDayItems = {};
+
+                  for(int j = 0;j<allItems.length;j++){
+                    if(allItems.values.elementAt(j)[0]==itemData[0]&&allItems.values.elementAt(j)[1]==itemData[1]){
+                      currentDayItems[{allItems.keys.elementAt(j):allItems.values.elementAt(j)[3]}] = allItems.values.elementAt(j)[2];
+                    }
+                  }
+
+                  var addingItems = sortList(currentDayItems);
+                  for (int j = 0; j<addingItems.length;j++){
+                    if(addingItems[j].keys.elementAt(0)==displayItems.keys.elementAt(i)){
+                      addingItems[j] = {"No item": addingItems[j].values.elementAt(0)};
+                    }
+                  }
+                  print(addingItems.toString());
+                  FirebaseFirestore.instance
+                      .collection(displayItems.values.elementAt(i)[0])
+                      .doc(documents[docIndex])
+                      .update({
+                    '${itemData[1]}': addingItems
+                  }).whenComplete(() {
+                    print('Field Deleted');
+                  });
+                  print("done with delete");
+                  setState(() {
+
+                    allItems.remove(displayItems.keys.elementAt(i));
+                    displayItems.remove(displayItems.keys.elementAt(i));
+                  });
+
+                }
+
                 Navigator.of(context).pop();
               },
             ),
@@ -264,161 +509,22 @@ class _EveryDayItems extends State<EveryDayItems> {
       },
     );
   }
+  Future<void> _editItemDialog(int index) async{
 
-  Future<void> _editItemDialog(String s) async {
-    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-    return await showDialog<void>(
-        context: context,
-        builder: (BuildContext context) {
-          TextEditingController _nameController = TextEditingController();
-          TextEditingController _priceController = TextEditingController();
-          _nameController.text = s;
-          _priceController.text = allItems['everyday'].values.elementAt(category)[s].toString();
-          String value = 'everyday';
-          return StatefulBuilder(builder: (context, setStateDialog) {
-            return AlertDialog(
-              title: Text("Edit item ${s}?"),
-              content: SingleChildScrollView(
-                child: ListBody(
-                  children: [
-                    Form(
-                      key: _formKey,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          TextFormField(
-                            controller: _nameController,
-                            decoration:
-                                const InputDecoration(icon: Icon(Icons.abc)),
-                            validator: (text) {
-                              if (text == null || text.trim().isEmpty) {
-                                return "Please enter a valid item name";
-                              }
-                              return null;
-                            },
-                          ),
-                          TextFormField(
-                            controller: _priceController,
-                            decoration: const InputDecoration(
-                                icon: Icon(Icons.attach_money)),
-                            validator: (text) {
-                              if (text == null) {
-                                return "Empty field";
-                              }
-                              if (double.tryParse(text!.trim()) != null) {
-                                return null;
-                              }
-                              return "Please enter a valid price";
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                    DropdownButton(
-                      value: value,
-                      onChanged: (String? v) {
-                        setStateDialog(() {
-                          value = v!;
-                        });
-                      },
-                      items:
-                          collections.map<DropdownMenuItem<String>>((String v) {
-                        return DropdownMenuItem<String>(
-                          value: v,
-                          child: Text(v),
-                        );
-                      }).toList(),
-                    )
-                  ],
-                ),
-              ),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('Deny'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                TextButton(
-                  child: const Text(
-                    'Approve',
-                    style: TextStyle(color: Colors.red),
-                  ),
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      print("done");
-                      if(s==_nameController.text&& allItems['everyday'].values.elementAt(category)[s].toString()==_priceController.text&& value == 'everyday'){
-                        Navigator.of(context).pop();
-                      }
-                      else if(allItems['everyday'].values.elementAt(category)[s].toString()!=_priceController.text){
-                        CollectionReference db = FirebaseFirestore.instance.collection('everyday');
-                        db
-                            .doc('IppA94yUj2wrIzawr5Al')
-                            .update({'${allItems['everyday'].keys.elementAt(category)}.$s': double.parse(_priceController.text)})
-                            .then((value) => print("Price changed"))
-                            .catchError((error) => print("Failed to change price: $error"));
-                        setState(() {
-                          print("in setstate");
-                          allItems['everyday'].values.elementAt(category)[s] = double.parse(_priceController.text);
-                          print(allItems['everyday'].values.elementAt(category)[s].toString());
-                        });
-                        Navigator.of(context).pop();
-                      }
-                      return;
-                    }
-                  },
-                ),
-              ],
-            );
-          });
-        });
+  }
+
+  List sortList(Map items){
+    List ans = [];
+    while(ans.length<items.length){
+      for(int i = 0; i<items.length;i++){
+        if(items.values.elementAt(i)==ans.length || items.values.elementAt(i)==2){
+          ans.add(items.keys.elementAt(i));
+        }
+      }
+
+
+    }
+    return ans;
   }
 }
 
-
-
-
-class MajorListView extends StatefulWidget {
-  //collection part of database
-  BuildContext context;
-  int index;
-
-  MajorListView(this.context, this.index);
-
-  @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return _MajorListView(context, index);
-  }
-}
-
-class _MajorListView extends State<MajorListView> {
-  BuildContext context;
-  int parent;
-
-  _MajorListView(this.context, this.parent);
-
-  @override
-  Widget build(BuildContext context) {
-    Map currentView = allItems[allItems.keys.elementAt(parent)];
-
-    print("length " + currentView.length.toString());
-    return Container(
-        height: 200,
-        child: ListView.builder(
-          itemCount: currentView.length,
-          itemBuilder: (context, index) {
-            Map currentItems = currentView[currentView.keys.elementAt(index)];
-            return ListView.builder(
-              itemCount: currentItems.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(currentItems.keys.elementAt(index)),
-                );
-              },
-            );
-          },
-        ));
-
-  }
-}
