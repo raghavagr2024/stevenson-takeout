@@ -400,7 +400,13 @@ class _ItemCard extends State<ItemCard>{
                 ),
                 IconButton(
                     onPressed: (){
-                      _deleteItemDialog(index);
+                      if(itemData[1]=='Soup'){
+                        _deleteSoupDialog(index);
+                      }
+                      else{
+                        _deleteItemDialog(index);
+                      }
+
                     },
                     icon: Icon(Icons.delete)
                 )
@@ -485,6 +491,9 @@ class _ItemCard extends State<ItemCard>{
                   });
 
                 }
+                else{
+
+                }
 
 
 
@@ -496,9 +505,169 @@ class _ItemCard extends State<ItemCard>{
       },
     );
   }
-  Future<void> _editItemDialog(int index) async{
+  Future<void> _editItemDialog(int i) async{
 
   }
+
+  Future<void> _deleteSoupDialog(int i) async{
+    Map sizes = {};
+    print("sizes in dialog");
+    for(int j = 2; j<displayItems.values.elementAt(i).length;j+=2){
+      sizes[displayItems.values.elementAt(i)[j]] = false;
+    }
+    print(sizes.toString());
+
+    return await showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, s){
+            return Container(
+              height: 200,
+              width: 300,
+              child: AlertDialog(
+                title: Text("Delete item ${displayItems.keys.elementAt(i)}?"),
+                content: SingleChildScrollView(
+                  child: ListBody(
+                    children: <Widget>[
+                      Text('Deleting this item will remove it permanently'),
+                      Container(
+                          height: 200,
+                          width: 300,
+                          child:  ListView.builder(
+                            itemBuilder: (BuildContext context, int index){
+                              return ListTile(
+                                title: Text(sizes.keys.elementAt(index)),
+                                trailing: IconButton(
+                                  onPressed: () {
+                                    s((){
+                                      sizes[sizes.keys.elementAt(index)] = !sizes.values.elementAt(index);
+                                    });
+
+                                  },
+                                  icon: sizes.values.elementAt(index) ? const Icon(Icons.check_circle):const Icon(Icons.circle_outlined),
+
+                                ),
+                              );
+                            },
+                            itemCount: sizes.length,
+                          )
+                      )
+
+                    ],
+                  ),
+                ),
+                actions: <Widget>[
+                  Flex(
+                    direction: Axis.horizontal,
+                    children: [
+                      TextButton(
+                        child: const Text('Cancel'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      SizedBox(width: 10,),
+                      TextButton(
+                        child: const Text(
+                          'Delete Soup Sizes',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                        onPressed: () {
+                          print("in approve for delete");
+                          List itemData = displayItems.values.elementAt(i);
+                          int docIndex = 0;
+                          for(int j = 0 ;j<collections.length;j++){
+                            if(collections[j]==itemData[0]){
+                              docIndex = j;
+                              break;
+                            }
+                          }
+                          
+                          for(int j = 0; j<sizes.length;j++){
+                            if(sizes.values.elementAt(j)){
+                              FirebaseFirestore.instance
+                                  .collection(displayItems.values.elementAt(i)[0])
+                                  .doc(documents[docIndex])
+                                  .update({
+                                '${itemData[1]}.${displayItems.keys.elementAt(i)}.${sizes.keys.elementAt(j)}': FieldValue.delete()
+                              }).whenComplete(() {
+                                print('Field Deleted');
+
+                              });
+                              print("done with delete");
+                              setState(() {
+                                var currentIndex = displayItems[displayItems.keys.elementAt(i)].indexOf(sizes.keys.elementAt(j));
+
+
+                                displayItems[displayItems.keys.elementAt(i)].removeAt(currentIndex);
+                                displayItems[displayItems.keys.elementAt(i)].removeAt(currentIndex);
+
+
+
+                                allItems[displayItems.keys.elementAt(i)].remove(currentIndex+1);
+                                allItems[displayItems.keys.elementAt(i)].remove(currentIndex);
+
+                              });
+                            }
+                          }
+
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      SizedBox(width: 10,),
+                      TextButton(
+                        child: Text(
+                          'Delete Soup',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                        onPressed: () {
+                          print("in approve for delete");
+                          List itemData = displayItems.values.elementAt(i);
+                          int docIndex = 0;
+                          for(int j = 0 ;j<collections.length;j++){
+                            if(collections[j]==itemData[0]){
+                              docIndex = j;
+                              break;
+                            }
+                          }
+
+                          FirebaseFirestore.instance
+                              .collection(displayItems.values.elementAt(i)[0])
+                              .doc(documents[docIndex])
+                              .update({
+                            '${itemData[1]}.${displayItems.keys.elementAt(i)}': FieldValue.delete()
+                          }).whenComplete(() {
+                            print('Field Deleted');
+
+                          });
+                          print("done with delete");
+                          setState(() {
+                            allItems.remove(displayItems.keys.elementAt(i));
+                            displayItems.remove(displayItems.keys.elementAt(i));
+                          });
+
+
+
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  )
+
+
+                ],
+              ),
+            );
+          });
+        }
+    );
+
+  }
+
+  Future<void> _editSoupDialog(int i) async{
+
+  }
+
 
 
 }
