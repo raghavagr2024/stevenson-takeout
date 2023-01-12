@@ -378,7 +378,7 @@ class _ItemCard extends State<ItemCard>{
 
   BuildContext context;
   int index;
-
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   _ItemCard(this.context,this.index);
   @override
   Widget build(BuildContext context) {
@@ -505,7 +505,7 @@ class _ItemCard extends State<ItemCard>{
       },
     );
   }
-  Future<void> _editItemDialog(int i) async{
+  Future<void> _editSoupDialog(int i) async{
 
   }
 
@@ -664,8 +664,56 @@ class _ItemCard extends State<ItemCard>{
 
   }
 
-  Future<void> _editSoupDialog(int i) async{
+  Future<void> _editItemDialog(int i) async{
+    TextEditingController _nameController = TextEditingController();
+    _nameController.text = displayItems.keys.elementAt(i);
+     TextEditingController _priceController = TextEditingController();
+     _priceController.text = displayItems.values.elementAt(i).last.toString();
+     return await showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, s){
+            return Container(
+              height: 200,
+              width: 300,
+              child: AlertDialog(
+                title: Text("Editing ${displayItems.keys.elementAt(i)}?"),
+                content: SingleChildScrollView(
+                  child: ListBody(
+                    children: <Widget>[
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            TextFormField(
+                              controller: _nameController,
+                              decoration: InputDecoration(
+                                labelText: "Name"
+                              )
+                            ),
+                          TextFormField(
+                              controller: _priceController,
+                              decoration: InputDecoration(
+                                  labelText: "Price"
+                              )
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                actions: <Widget>[
 
+
+
+                ],
+              ),
+            );
+          });
+        }
+    );
   }
 
 
