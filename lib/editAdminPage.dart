@@ -12,7 +12,6 @@ Map allItems = {};
 Map displayItems = {};
 var _search = TextEditingController();
 
-
 var documents = [
   'IppA94yUj2wrIzawr5Al',
   'GoeTLas8A4sj29bRuyw2',
@@ -23,10 +22,22 @@ var documents = [
 
 var collections = ['everyday', 'week 1', 'week 2', 'week 3', 'week 4'];
 
+var everydayCategories = ['Grille', 'Panini', 'Slice of Life'];
+
+var weekCategories = [
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Panini'
+];
+
+var dayCategories = ['Comfort Food', 'Mindful', 'Sides'];
+
 var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
 Future<void> getAllItems() async {
-
   print("in getAllItems");
   await FirebaseFirestore.instance
       .collection('everyday')
@@ -35,22 +46,20 @@ Future<void> getAllItems() async {
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
       temp = documentSnapshot.data() as Map<dynamic, dynamic>;
-      for(int i = 0; i<temp.length;i++){
+      for (int i = 0; i < temp.length; i++) {
         Map currentCategory = temp.values.elementAt(i);
-        for(int j = 0; j<currentCategory.length;j++){
-
+        for (int j = 0; j < currentCategory.length; j++) {
           String key = currentCategory.keys.elementAt(j);
           String collection = "everyday";
           String category = temp.keys.elementAt(i);
           var price = currentCategory.values.elementAt(j);
-          var data = [collection,category,price];
+          var data = [collection, category, price];
           allItems[key] = data;
         }
       }
     } else {
       print('Document does not exist on the database');
     }
-
   });
   await FirebaseFirestore.instance
       .collection('week 1')
@@ -59,19 +68,17 @@ Future<void> getAllItems() async {
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
       temp = documentSnapshot.data() as Map<dynamic, dynamic>;
-      for(int i = 0; i<temp.length;i++){
+      for (int i = 0; i < temp.length; i++) {
         var currentCategory = temp.values.elementAt(i);
 
-        if(temp.keys.elementAt(i)=='Panini'){
+        if (temp.keys.elementAt(i) == 'Panini') {
           String key = currentCategory.keys.elementAt(0);
           String collection = 'week 1';
           String category = 'Panini';
           var price = currentCategory.values.elementAt(0);
-          allItems[key] = [collection,category,price];
-        }
-        else if(temp.keys.elementAt(i)=='Soup'){
-
-          for(int j = 0; j<currentCategory.length;j++){
+          allItems[key] = [collection, category, price];
+        } else if (temp.keys.elementAt(i) == 'Soup') {
+          for (int j = 0; j < currentCategory.length; j++) {
             Map soup = currentCategory.values.elementAt(j);
             String key = currentCategory.keys.elementAt(j);
             String collection = 'week 1';
@@ -79,27 +86,29 @@ Future<void> getAllItems() async {
             var data = [];
             data.add(collection);
             data.add(category);
-            for(int k = 0; k<soup.length;k++ ){
+            for (int k = 0; k < soup.length; k++) {
               data.add(soup.keys.elementAt(k));
               data.add(soup.values.elementAt(k));
             }
             allItems[key] = data;
           }
-        }
-        else{
-          for(int j = 0; j<currentCategory.length;j++){
+        } else {
+          for (int j = 0; j < currentCategory.length; j++) {
             String collection = 'week 1';
             String category = temp.keys.elementAt(i);
             String tag = currentCategory.keys.elementAt(j);
-            for(int k = 0; k<currentCategory.values.elementAt(j).length;k++){
-              String key = currentCategory.values.elementAt(j).keys.elementAt(k);
-              var price = currentCategory.values.elementAt(j).values.elementAt(k);
-              allItems[key] = [collection,category,tag,price];
+            for (int k = 0;
+                k < currentCategory.values.elementAt(j).length;
+                k++) {
+              String key =
+                  currentCategory.values.elementAt(j).keys.elementAt(k);
+              var price =
+                  currentCategory.values.elementAt(j).values.elementAt(k);
+              allItems[key] = [collection, category, tag, price];
             }
           }
         }
       }
-
     } else {
       print('Document does not exist on the database');
     }
@@ -113,18 +122,16 @@ Future<void> getAllItems() async {
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
       temp = documentSnapshot.data() as Map<dynamic, dynamic>;
-      for(int i = 0; i<temp.length;i++){
+      for (int i = 0; i < temp.length; i++) {
         var currentCategory = temp.values.elementAt(i);
-        if(temp.keys.elementAt(i)=='Panini'){
+        if (temp.keys.elementAt(i) == 'Panini') {
           String key = currentCategory.keys.elementAt(0);
           String collection = 'week 2';
           String category = 'Panini';
           var price = currentCategory.values.elementAt(0);
-          allItems[key] = [collection,category,price];
-        }
-        else if(temp.keys.elementAt(i)=='Soup'){
-
-          for(int j = 0; j<currentCategory.length;j++){
+          allItems[key] = [collection, category, price];
+        } else if (temp.keys.elementAt(i) == 'Soup') {
+          for (int j = 0; j < currentCategory.length; j++) {
             Map soup = currentCategory.values.elementAt(j);
             String key = currentCategory.keys.elementAt(j);
             String collection = 'week 2';
@@ -132,28 +139,29 @@ Future<void> getAllItems() async {
             var data = [];
             data.add(collection);
             data.add(category);
-            for(int k = 0; k<soup.length;k++ ){
+            for (int k = 0; k < soup.length; k++) {
               data.add(soup.keys.elementAt(k));
               data.add(soup.values.elementAt(k));
             }
             allItems[key] = data;
           }
-        }
-        else{
-          for(int j = 0; j<currentCategory.length;j++){
+        } else {
+          for (int j = 0; j < currentCategory.length; j++) {
             String collection = 'week 2';
             String category = temp.keys.elementAt(i);
             String tag = currentCategory.keys.elementAt(j);
-            for(int k = 0; k<currentCategory.values.elementAt(j).length;k++){
-              String key = currentCategory.values.elementAt(j).keys.elementAt(k);
-              var price = currentCategory.values.elementAt(j).values.elementAt(k);
-              allItems["$key "] = [collection,category,tag,price];
+            for (int k = 0;
+                k < currentCategory.values.elementAt(j).length;
+                k++) {
+              String key =
+                  currentCategory.values.elementAt(j).keys.elementAt(k);
+              var price =
+                  currentCategory.values.elementAt(j).values.elementAt(k);
+              allItems["$key "] = [collection, category, tag, price];
             }
           }
         }
       }
-
-
     } else {
       print('Document does not exist on the database');
     }
@@ -167,19 +175,17 @@ Future<void> getAllItems() async {
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
       temp = documentSnapshot.data() as Map<dynamic, dynamic>;
-      for(int i = 0; i<temp.length;i++){
+      for (int i = 0; i < temp.length; i++) {
         var currentCategory = temp.values.elementAt(i);
 
-        if(temp.keys.elementAt(i)=='Panini'){
+        if (temp.keys.elementAt(i) == 'Panini') {
           String key = currentCategory.keys.elementAt(0);
           String collection = 'week 3';
           String category = 'Panini';
           var price = currentCategory.values.elementAt(0);
-          allItems[key] = [collection,category,price];
-        }
-        else if(temp.keys.elementAt(i)=='Soup'){
-
-          for(int j = 0; j<currentCategory.length;j++){
+          allItems[key] = [collection, category, price];
+        } else if (temp.keys.elementAt(i) == 'Soup') {
+          for (int j = 0; j < currentCategory.length; j++) {
             Map soup = currentCategory.values.elementAt(j);
             String key = currentCategory.keys.elementAt(j);
             String collection = 'week 3';
@@ -187,27 +193,29 @@ Future<void> getAllItems() async {
             var data = [];
             data.add(collection);
             data.add(category);
-            for(int k = 0; k<soup.length;k++ ){
+            for (int k = 0; k < soup.length; k++) {
               data.add(soup.keys.elementAt(k));
               data.add(soup.values.elementAt(k));
             }
             allItems[key] = data;
           }
-        }
-        else{
-          for(int j = 0; j<currentCategory.length;j++){
+        } else {
+          for (int j = 0; j < currentCategory.length; j++) {
             String collection = 'week 3';
             String category = temp.keys.elementAt(i);
             String tag = currentCategory.keys.elementAt(j);
-            for(int k = 0; k<currentCategory.values.elementAt(j).length;k++){
-              String key = currentCategory.values.elementAt(j).keys.elementAt(k);
-              var price = currentCategory.values.elementAt(j).values.elementAt(k);
-              allItems["$key  "] = [collection,category,tag,price];
+            for (int k = 0;
+                k < currentCategory.values.elementAt(j).length;
+                k++) {
+              String key =
+                  currentCategory.values.elementAt(j).keys.elementAt(k);
+              var price =
+                  currentCategory.values.elementAt(j).values.elementAt(k);
+              allItems["$key  "] = [collection, category, tag, price];
             }
           }
         }
       }
-
     } else {
       print('Document does not exist on the database');
     }
@@ -221,19 +229,17 @@ Future<void> getAllItems() async {
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
       temp = documentSnapshot.data() as Map<dynamic, dynamic>;
-      for(int i = 0; i<temp.length;i++){
+      for (int i = 0; i < temp.length; i++) {
         var currentCategory = temp.values.elementAt(i);
 
-        if(temp.keys.elementAt(i)=='Panini'){
+        if (temp.keys.elementAt(i) == 'Panini') {
           String key = currentCategory.keys.elementAt(0);
           String collection = 'week 4';
           String category = 'Panini';
           var price = currentCategory.values.elementAt(0);
-          allItems[key] = [collection,category,price];
-        }
-        else if(temp.keys.elementAt(i)=='Soup'){
-
-          for(int j = 0; j<currentCategory.length;j++){
+          allItems[key] = [collection, category, price];
+        } else if (temp.keys.elementAt(i) == 'Soup') {
+          for (int j = 0; j < currentCategory.length; j++) {
             Map soup = currentCategory.values.elementAt(j);
             String key = currentCategory.keys.elementAt(j);
             String collection = 'week 4';
@@ -241,39 +247,36 @@ Future<void> getAllItems() async {
             var data = [];
             data.add(collection);
             data.add(category);
-            for(int k = 0; k<soup.length;k++ ){
+            for (int k = 0; k < soup.length; k++) {
               data.add(soup.keys.elementAt(k));
               data.add(soup.values.elementAt(k));
             }
             allItems[key] = data;
           }
-        }
-        else{
-          for(int j = 0; j<currentCategory.length;j++){
+        } else {
+          for (int j = 0; j < currentCategory.length; j++) {
             String collection = 'week 4';
             String category = temp.keys.elementAt(i);
             String tag = currentCategory.keys.elementAt(j);
-            for(int k = 0; k<currentCategory.values.elementAt(j).length;k++){
-              String key = currentCategory.values.elementAt(j).keys.elementAt(k);
-              var price = currentCategory.values.elementAt(j).values.elementAt(k);
-              allItems["$key   "] = [collection,category,tag,price];
+            for (int k = 0;
+                k < currentCategory.values.elementAt(j).length;
+                k++) {
+              String key =
+                  currentCategory.values.elementAt(j).keys.elementAt(k);
+              var price =
+                  currentCategory.values.elementAt(j).values.elementAt(k);
+              allItems["$key   "] = [collection, category, tag, price];
             }
           }
         }
       }
-    print('week 4');
+      print('week 4');
     } else {
       print('Document does not exist on the database');
     }
 
-
     displayItems = allItems;
-
   });
-
-
-
-
 }
 
 class EditPage extends StatefulWidget {
@@ -308,7 +311,7 @@ class _EditPage extends State<EditPage> {
                   onFieldSubmitted: (_search) {
                     print(_search.toString());
                   },
-                  onChanged: (_search){
+                  onChanged: (_search) {
                     setState(() {
                       _getSearchedList(_search);
                     });
@@ -323,101 +326,82 @@ class _EditPage extends State<EditPage> {
                 ),
               )),
         ),
-
         Expanded(
             child: ListView.builder(
-              itemBuilder: getItemCard,
-              itemCount: displayItems.length,
-            )
-
-        )
-
+          itemBuilder: getItemCard,
+          itemCount: displayItems.length,
+        ))
       ],
     );
   }
 
-  Widget getItemCard(BuildContext context, int index){
+  Widget getItemCard(BuildContext context, int index) {
     print("in get itemCard");
-    return ItemCard(context,index);
+    return ItemCard(context, index);
   }
 
-
-
-  void _getSearchedList(String s){
+  void _getSearchedList(String s) {
     displayItems = {};
-    for(int i = 0; i<allItems.length;i++){
-      if(allItems.keys.elementAt(i).toUpperCase().contains(s.toUpperCase())){
+    for (int i = 0; i < allItems.length; i++) {
+      if (allItems.keys.elementAt(i).toUpperCase().contains(s.toUpperCase())) {
         displayItems[allItems.keys.elementAt(i)] = allItems.values.elementAt(i);
       }
     }
 
     print(displayItems.toString());
-
-
-
   }
 }
 
-class ItemCard extends StatefulWidget{
-
+class ItemCard extends StatefulWidget {
   BuildContext context;
   int index;
 
-
-  ItemCard(this.context,this.index);
+  ItemCard(this.context, this.index);
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
     return _ItemCard(context, index);
   }
-
 }
 
-class _ItemCard extends State<ItemCard>{
-
+class _ItemCard extends State<ItemCard> {
   BuildContext context;
   int index;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  _ItemCard(this.context,this.index);
+
+  _ItemCard(this.context, this.index);
+
   @override
   Widget build(BuildContext context) {
     var format = NumberFormat.currency(symbol: "\$", decimalDigits: 2);
     List itemData = displayItems.values.elementAt(index);
-      return Card(
+    return Card(
         child: ListTile(
-          title: Text(displayItems.keys.elementAt(index)),
-          subtitle: Text(itemData[0]),
-          trailing: Container(
-            width: 100,
-            child: Row(
-              children: [
-                IconButton(
-                    onPressed: (){
-                      _editItemDialog(index);
-                    },
-                    icon: Icon(Icons.edit)
-                ),
-                IconButton(
-                    onPressed: (){
-                      if(itemData[1]=='Soup'){
-                        _deleteSoupDialog(index);
-                      }
-                      else{
-                        _deleteItemDialog(index);
-                      }
-
-                    },
-                    icon: Icon(Icons.delete)
-                )
-              ],
-            ),
-          ),
-        )
-      );
-
-
-
+      title: Text(displayItems.keys.elementAt(index)),
+      subtitle: Text(itemData[0]),
+      trailing: Container(
+        width: 100,
+        child: Row(
+          children: [
+            IconButton(
+                onPressed: () {
+                  _editItemDialog(index);
+                },
+                icon: Icon(Icons.edit)),
+            IconButton(
+                onPressed: () {
+                  if (itemData[1] == 'Soup') {
+                    _deleteSoupDialog(index);
+                  } else {
+                    _deleteItemDialog(index);
+                  }
+                },
+                icon: Icon(Icons.delete))
+          ],
+        ),
+      ),
+    ));
   }
 
   Future<void> _deleteItemDialog(int i) async {
@@ -450,29 +434,28 @@ class _ItemCard extends State<ItemCard>{
                 print("in approve for delete");
                 List itemData = displayItems.values.elementAt(i);
                 int docIndex = 0;
-                for(int j = 0 ;j<collections.length;j++){
-                  if(collections[j]==itemData[0]){
+                for (int j = 0; j < collections.length; j++) {
+                  if (collections[j] == itemData[0]) {
                     docIndex = j;
                     break;
                   }
                 }
-                if(itemData.length == 3){
+                if (itemData.length == 3) {
                   FirebaseFirestore.instance
                       .collection(displayItems.values.elementAt(i)[0])
                       .doc(documents[docIndex])
                       .update({
-                    '${itemData[1]}.${displayItems.keys.elementAt(i)}': FieldValue.delete()
+                    '${itemData[1]}.${displayItems.keys.elementAt(i)}':
+                        FieldValue.delete()
                   }).whenComplete(() {
                     print('Field Deleted');
-
                   });
                   print("done with delete");
                   setState(() {
                     allItems.remove(displayItems.keys.elementAt(i));
                     displayItems.remove(displayItems.keys.elementAt(i));
                   });
-                }
-                else if(itemData.length == 4){
+                } else if (itemData.length == 4) {
                   String key = displayItems.keys.elementAt(i).trim();
                   print("key");
                   FirebaseFirestore.instance
@@ -482,20 +465,13 @@ class _ItemCard extends State<ItemCard>{
                     '${itemData[1]}.${itemData[2]}.$key': FieldValue.delete()
                   }).whenComplete(() {
                     print('Field Deleted');
-
                   });
                   print("done with delete");
                   setState(() {
                     allItems.remove(displayItems.keys.elementAt(i));
                     displayItems.remove(displayItems.keys.elementAt(i));
                   });
-
-                }
-                else{
-
-                }
-
-
+                } else {}
 
                 Navigator.of(context).pop();
               },
@@ -505,14 +481,13 @@ class _ItemCard extends State<ItemCard>{
       },
     );
   }
-  Future<void> _editSoupDialog(int i) async{
 
-  }
+  Future<void> _editSoupDialog(int i) async {}
 
-  Future<void> _deleteSoupDialog(int i) async{
+  Future<void> _deleteSoupDialog(int i) async {
     Map sizes = {};
     print("sizes in dialog");
-    for(int j = 2; j<displayItems.values.elementAt(i).length;j+=2){
+    for (int j = 2; j < displayItems.values.elementAt(i).length; j += 2) {
       sizes[displayItems.values.elementAt(i)[j]] = false;
     }
     print(sizes.toString());
@@ -520,7 +495,7 @@ class _ItemCard extends State<ItemCard>{
     return await showDialog(
         context: context,
         builder: (context) {
-          return StatefulBuilder(builder: (context, s){
+          return StatefulBuilder(builder: (context, s) {
             return Container(
               height: 200,
               width: 300,
@@ -533,26 +508,25 @@ class _ItemCard extends State<ItemCard>{
                       Container(
                           height: 200,
                           width: 300,
-                          child:  ListView.builder(
-                            itemBuilder: (BuildContext context, int index){
+                          child: ListView.builder(
+                            itemBuilder: (BuildContext context, int index) {
                               return ListTile(
                                 title: Text(sizes.keys.elementAt(index)),
                                 trailing: IconButton(
                                   onPressed: () {
-                                    s((){
-                                      sizes[sizes.keys.elementAt(index)] = !sizes.values.elementAt(index);
+                                    s(() {
+                                      sizes[sizes.keys.elementAt(index)] =
+                                          !sizes.values.elementAt(index);
                                     });
-
                                   },
-                                  icon: sizes.values.elementAt(index) ? const Icon(Icons.check_circle):const Icon(Icons.circle_outlined),
-
+                                  icon: sizes.values.elementAt(index)
+                                      ? const Icon(Icons.check_circle)
+                                      : const Icon(Icons.circle_outlined),
                                 ),
                               );
                             },
                             itemCount: sizes.length,
-                          )
-                      )
-
+                          ))
                     ],
                   ),
                 ),
@@ -566,7 +540,9 @@ class _ItemCard extends State<ItemCard>{
                           Navigator.of(context).pop();
                         },
                       ),
-                      SizedBox(width: 10,),
+                      SizedBox(
+                        width: 10,
+                      ),
                       TextButton(
                         child: const Text(
                           'Delete Soup Sizes',
@@ -576,37 +552,40 @@ class _ItemCard extends State<ItemCard>{
                           print("in approve for delete");
                           List itemData = displayItems.values.elementAt(i);
                           int docIndex = 0;
-                          for(int j = 0 ;j<collections.length;j++){
-                            if(collections[j]==itemData[0]){
+                          for (int j = 0; j < collections.length; j++) {
+                            if (collections[j] == itemData[0]) {
                               docIndex = j;
                               break;
                             }
                           }
-                          
-                          for(int j = 0; j<sizes.length;j++){
-                            if(sizes.values.elementAt(j)){
+
+                          for (int j = 0; j < sizes.length; j++) {
+                            if (sizes.values.elementAt(j)) {
                               FirebaseFirestore.instance
-                                  .collection(displayItems.values.elementAt(i)[0])
+                                  .collection(
+                                      displayItems.values.elementAt(i)[0])
                                   .doc(documents[docIndex])
                                   .update({
-                                '${itemData[1]}.${displayItems.keys.elementAt(i)}.${sizes.keys.elementAt(j)}': FieldValue.delete()
+                                '${itemData[1]}.${displayItems.keys.elementAt(i)}.${sizes.keys.elementAt(j)}':
+                                    FieldValue.delete()
                               }).whenComplete(() {
                                 print('Field Deleted');
-
                               });
                               print("done with delete");
                               setState(() {
-                                var currentIndex = displayItems[displayItems.keys.elementAt(i)].indexOf(sizes.keys.elementAt(j));
+                                var currentIndex =
+                                    displayItems[displayItems.keys.elementAt(i)]
+                                        .indexOf(sizes.keys.elementAt(j));
 
+                                displayItems[displayItems.keys.elementAt(i)]
+                                    .removeAt(currentIndex);
+                                displayItems[displayItems.keys.elementAt(i)]
+                                    .removeAt(currentIndex);
 
-                                displayItems[displayItems.keys.elementAt(i)].removeAt(currentIndex);
-                                displayItems[displayItems.keys.elementAt(i)].removeAt(currentIndex);
-
-
-
-                                allItems[displayItems.keys.elementAt(i)].remove(currentIndex+1);
-                                allItems[displayItems.keys.elementAt(i)].remove(currentIndex);
-
+                                allItems[displayItems.keys.elementAt(i)]
+                                    .remove(currentIndex + 1);
+                                allItems[displayItems.keys.elementAt(i)]
+                                    .remove(currentIndex);
                               });
                             }
                           }
@@ -614,7 +593,9 @@ class _ItemCard extends State<ItemCard>{
                           Navigator.of(context).pop();
                         },
                       ),
-                      SizedBox(width: 10,),
+                      SizedBox(
+                        width: 10,
+                      ),
                       TextButton(
                         child: Text(
                           'Delete Soup',
@@ -624,8 +605,8 @@ class _ItemCard extends State<ItemCard>{
                           print("in approve for delete");
                           List itemData = displayItems.values.elementAt(i);
                           int docIndex = 0;
-                          for(int j = 0 ;j<collections.length;j++){
-                            if(collections[j]==itemData[0]){
+                          for (int j = 0; j < collections.length; j++) {
+                            if (collections[j] == itemData[0]) {
                               docIndex = j;
                               break;
                             }
@@ -635,10 +616,10 @@ class _ItemCard extends State<ItemCard>{
                               .collection(displayItems.values.elementAt(i)[0])
                               .doc(documents[docIndex])
                               .update({
-                            '${itemData[1]}.${displayItems.keys.elementAt(i)}': FieldValue.delete()
+                            '${itemData[1]}.${displayItems.keys.elementAt(i)}':
+                                FieldValue.delete()
                           }).whenComplete(() {
                             print('Field Deleted');
-
                           });
                           print("done with delete");
                           setState(() {
@@ -646,35 +627,31 @@ class _ItemCard extends State<ItemCard>{
                             displayItems.remove(displayItems.keys.elementAt(i));
                           });
 
-
-
                           Navigator.of(context).pop();
                         },
                       ),
                     ],
                   )
-
-
                 ],
               ),
             );
           });
-        }
-    );
-
+        });
   }
 
-  Future<void> _editItemDialog(int i) async{
+  Future<void> _editItemDialog(int i) async {
+    String collectionsValue = displayItems.values.elementAt(i)[0];
     TextEditingController _nameController = TextEditingController();
     _nameController.text = displayItems.keys.elementAt(i);
-     TextEditingController _priceController = TextEditingController();
-     _priceController.text = displayItems.values.elementAt(i).last.toString();
-     return await showDialog(
+    TextEditingController _priceController = TextEditingController();
+    _priceController.text = displayItems.values.elementAt(i).last.toString();
+    String everydayCategoryValue = displayItems.values.elementAt(i)[1];
+    return await showDialog(
         context: context,
         builder: (context) {
-          return StatefulBuilder(builder: (context, s){
+          return StatefulBuilder(builder: (context, s) {
             return Container(
-              height: 200,
+              height: 300,
               width: 300,
               child: AlertDialog(
                 title: Text("Editing ${displayItems.keys.elementAt(i)}?"),
@@ -686,37 +663,100 @@ class _ItemCard extends State<ItemCard>{
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
+
                             TextFormField(
-                              controller: _nameController,
-                              decoration: InputDecoration(
-                                labelText: "Name"
-                              )
+
+                                controller: _nameController,
+                                decoration: InputDecoration(labelText: "Item name: ",prefixIcon: Icon(Icons.abc)),
+
+
                             ),
-                          TextFormField(
-                              controller: _priceController,
-                              decoration: InputDecoration(
-                                  labelText: "Price"
-                              )
-                            )
+                            TextFormField(
+                                controller: _priceController,
+                                decoration:
+                                    InputDecoration(labelText: "Item price",prefixIcon: Icon(Icons.monetization_on_rounded))),
+
                           ],
                         ),
-                      )
+                      ),
+
+                      Row(
+                        children: [
+                          const Expanded(child: Text('Availability')),
+                          Expanded(
+                              child: DropdownButton<String>(
+                                value: collectionsValue,
+                                elevation: 16,
+                                onChanged: (String? value) {
+                                  // This is called when the user selects an item.
+
+                                  s(() {
+                                    collectionsValue = value!;
+                                  });
+                                },
+                                items: collections.map<DropdownMenuItem<String>>(
+                                        (String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                              ),
+
+                          )
+                        ],
+                      ),
+                      if(collectionsValue=='everyday')
+                        Row(
+                          children: [
+                            Expanded(child: Text("Category")),
+                            Expanded(
+                              child: DropdownButton<String>(
+                              value: everydayCategoryValue,
+                              elevation: 16,
+                              onChanged: (String? value) {
+                                // This is called when the user selects an item.
+
+                                s(() {
+                                  everydayCategoryValue = value!;
+                                });
+                              },
+                              items: everydayCategories.map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                            ),)
+                          ],
+                        )
                     ],
                   ),
                 ),
                 actions: <Widget>[
+                  TextButton(
+                      onPressed: (){
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('Cancel')
+                  ),
+                  TextButton(
+                      onPressed: (){
+                        if(collectionsValue=='everyday'){
+                          FirebaseFirestore.instance.collection('everyday').doc('IppA94yUj2wrIzawr5Al').update({
+                            '$everydayCategoryValue.${displayItems.keys.elementAt(i)}': displayItems.values.elementAt(i).last
+                          }).then((value) => null);
 
-
-
+                          Navigator.of(context).pop();
+                        }
+                      },
+                      child: Text('Confirm')
+                  )
                 ],
               ),
             );
           });
-        }
-    );
+        });
   }
-
-
-
 }
-
