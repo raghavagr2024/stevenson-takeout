@@ -605,7 +605,22 @@ class _ItemCard extends State<ItemCard> {
     _nameController.text = displayItems.keys.elementAt(i);
     TextEditingController _priceController = TextEditingController();
     _priceController.text = displayItems.values.elementAt(i).last.toString();
-    String everydayCategoryValue = displayItems.values.elementAt(i)[1];
+    String everydayCategoryValue;
+    String weeklyCategoryValue;
+    String dayCategoryValue;
+    if(collectionsValue == 'everyday'){
+      everydayCategoryValue = displayItems.values.elementAt(i)[1];
+       weeklyCategoryValue = weekCategories.first;
+       dayCategoryValue = dayCategories.first;
+    }
+    else{
+      weeklyCategoryValue = displayItems.values.elementAt(i)[1];
+      everydayCategoryValue = everydayCategories.first;
+      dayCategoryValue = displayItems.values.elementAt(i)[2];
+    }
+
+
+
     return await showDialog(
         context: context,
         builder: (context) {
@@ -690,7 +705,66 @@ class _ItemCard extends State<ItemCard> {
                                     }).toList(),
                               ),)
                           ],
+                        ),
+                      if(collectionsValue!='everyday')
+                        Row(
+                          children: [
+                            Expanded(child: Text('Day: ')),
+                            Expanded(
+                                child: DropdownButton<String>(
+                                  value: weeklyCategoryValue,
+                                  elevation: 16,
+                                  onChanged: (String? value) {
+                                    // This is called when the user selects an item.
+
+                                    s(() {
+                                      weeklyCategoryValue = value!;
+                                    });
+                                  },
+                                  items: weekCategories.map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                ),
+                            )
+                          ],
+                        ),
+                      if(weeklyCategoryValue != 'Panini' && collectionsValue != 'everyday')
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text('Category: '),
+                            ),
+                            Expanded(
+                                child: DropdownButton<String>(
+                                  value: dayCategoryValue,
+                                  elevation: 16,
+                                  onChanged: (String? value) {
+                                    // This is called when the user selects an item.
+
+                                    s(() {
+                                      dayCategoryValue = value!;
+                                    });
+                                  },
+                                  items: dayCategories.map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                ),
+                            )
+
+                          ],
                         )
+
+
+
+
                     ],
                   ),
                 ),
@@ -708,7 +782,7 @@ class _ItemCard extends State<ItemCard> {
                             '$everydayCategoryValue.${_nameController.text.toString()}': double.parse(_priceController.text.toString())
                           }).then((value) => null);
 
-                          await _deleteItemDialog(i);
+                          await _deleteItemLogic(i);
 
                           String newKey = _nameController.text.toString();
                           double newPrice = double.parse(_priceController.text.toString());
@@ -732,7 +806,7 @@ class _ItemCard extends State<ItemCard> {
         });
   }
 
-  void _deleteItemLogic(int i){
+  Future<void> _deleteItemLogic(int i) async {
     List itemData = displayItems.values.elementAt(i);
     int docIndex = 0;
     for (int j = 0; j < collections.length; j++) {
@@ -742,7 +816,7 @@ class _ItemCard extends State<ItemCard> {
       }
     }
     if (itemData.length == 3) {
-      FirebaseFirestore.instance
+      await FirebaseFirestore.instance
           .collection(displayItems.values.elementAt(i)[0])
           .doc(documents[docIndex])
           .update({
@@ -759,7 +833,7 @@ class _ItemCard extends State<ItemCard> {
     } else if (itemData.length == 4) {
       String key = displayItems.keys.elementAt(i).trim();
       print("key");
-      FirebaseFirestore.instance
+      await FirebaseFirestore.instance
           .collection(displayItems.values.elementAt(i)[0])
           .doc(documents[docIndex])
           .update({
