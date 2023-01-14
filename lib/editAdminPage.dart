@@ -98,12 +98,12 @@ Future<void> getAllItems() async {
             String category = temp.keys.elementAt(i);
             String tag = currentCategory.keys.elementAt(j);
             for (int k = 0;
-                k < currentCategory.values.elementAt(j).length;
-                k++) {
+            k < currentCategory.values.elementAt(j).length;
+            k++) {
               String key =
-                  currentCategory.values.elementAt(j).keys.elementAt(k);
+              currentCategory.values.elementAt(j).keys.elementAt(k);
               var price =
-                  currentCategory.values.elementAt(j).values.elementAt(k);
+              currentCategory.values.elementAt(j).values.elementAt(k);
               allItems[key] = [collection, category, tag, price];
             }
           }
@@ -151,12 +151,12 @@ Future<void> getAllItems() async {
             String category = temp.keys.elementAt(i);
             String tag = currentCategory.keys.elementAt(j);
             for (int k = 0;
-                k < currentCategory.values.elementAt(j).length;
-                k++) {
+            k < currentCategory.values.elementAt(j).length;
+            k++) {
               String key =
-                  currentCategory.values.elementAt(j).keys.elementAt(k);
+              currentCategory.values.elementAt(j).keys.elementAt(k);
               var price =
-                  currentCategory.values.elementAt(j).values.elementAt(k);
+              currentCategory.values.elementAt(j).values.elementAt(k);
               allItems["$key "] = [collection, category, tag, price];
             }
           }
@@ -205,12 +205,12 @@ Future<void> getAllItems() async {
             String category = temp.keys.elementAt(i);
             String tag = currentCategory.keys.elementAt(j);
             for (int k = 0;
-                k < currentCategory.values.elementAt(j).length;
-                k++) {
+            k < currentCategory.values.elementAt(j).length;
+            k++) {
               String key =
-                  currentCategory.values.elementAt(j).keys.elementAt(k);
+              currentCategory.values.elementAt(j).keys.elementAt(k);
               var price =
-                  currentCategory.values.elementAt(j).values.elementAt(k);
+              currentCategory.values.elementAt(j).values.elementAt(k);
               allItems["$key  "] = [collection, category, tag, price];
             }
           }
@@ -259,12 +259,12 @@ Future<void> getAllItems() async {
             String category = temp.keys.elementAt(i);
             String tag = currentCategory.keys.elementAt(j);
             for (int k = 0;
-                k < currentCategory.values.elementAt(j).length;
-                k++) {
+            k < currentCategory.values.elementAt(j).length;
+            k++) {
               String key =
-                  currentCategory.values.elementAt(j).keys.elementAt(k);
+              currentCategory.values.elementAt(j).keys.elementAt(k);
               var price =
-                  currentCategory.values.elementAt(j).values.elementAt(k);
+              currentCategory.values.elementAt(j).values.elementAt(k);
               allItems["$key   "] = [collection, category, tag, price];
             }
           }
@@ -328,9 +328,9 @@ class _EditPage extends State<EditPage> {
         ),
         Expanded(
             child: ListView.builder(
-          itemBuilder: getItemCard,
-          itemCount: displayItems.length,
-        ))
+              itemBuilder: getItemCard,
+              itemCount: displayItems.length,
+            ))
       ],
     );
   }
@@ -378,30 +378,30 @@ class _ItemCard extends State<ItemCard> {
     List itemData = displayItems.values.elementAt(index);
     return Card(
         child: ListTile(
-      title: Text(displayItems.keys.elementAt(index)),
-      subtitle: Text(itemData[0]),
-      trailing: Container(
-        width: 100,
-        child: Row(
-          children: [
-            IconButton(
-                onPressed: () {
-                  _editItemDialog(index);
-                },
-                icon: Icon(Icons.edit)),
-            IconButton(
-                onPressed: () {
-                  if (itemData[1] == 'Soup') {
-                    _deleteSoupDialog(index);
-                  } else {
-                    _deleteItemDialog(index);
-                  }
-                },
-                icon: Icon(Icons.delete))
-          ],
-        ),
-      ),
-    ));
+          title: Text(displayItems.keys.elementAt(index)),
+          subtitle: Text(itemData[0]),
+          trailing: Container(
+            width: 100,
+            child: Row(
+              children: [
+                IconButton(
+                    onPressed: () {
+                      _editItemDialog(index);
+                    },
+                    icon: Icon(Icons.edit)),
+                IconButton(
+                    onPressed: () {
+                      if (itemData[1] == 'Soup') {
+                        _deleteSoupDialog(index);
+                      } else {
+                        _deleteItemDialog(index);
+                      }
+                    },
+                    icon: Icon(Icons.delete))
+              ],
+            ),
+          ),
+        ));
   }
 
   Future<void> _deleteItemDialog(int i) async {
@@ -432,47 +432,7 @@ class _ItemCard extends State<ItemCard> {
               ),
               onPressed: () {
                 print("in approve for delete");
-                List itemData = displayItems.values.elementAt(i);
-                int docIndex = 0;
-                for (int j = 0; j < collections.length; j++) {
-                  if (collections[j] == itemData[0]) {
-                    docIndex = j;
-                    break;
-                  }
-                }
-                if (itemData.length == 3) {
-                  FirebaseFirestore.instance
-                      .collection(displayItems.values.elementAt(i)[0])
-                      .doc(documents[docIndex])
-                      .update({
-                    '${itemData[1]}.${displayItems.keys.elementAt(i)}':
-                        FieldValue.delete()
-                  }).whenComplete(() {
-                    print('Field Deleted');
-                  });
-                  print("done with delete");
-                  setState(() {
-                    allItems.remove(displayItems.keys.elementAt(i));
-                    displayItems.remove(displayItems.keys.elementAt(i));
-                  });
-                } else if (itemData.length == 4) {
-                  String key = displayItems.keys.elementAt(i).trim();
-                  print("key");
-                  FirebaseFirestore.instance
-                      .collection(displayItems.values.elementAt(i)[0])
-                      .doc(documents[docIndex])
-                      .update({
-                    '${itemData[1]}.${itemData[2]}.$key': FieldValue.delete()
-                  }).whenComplete(() {
-                    print('Field Deleted');
-                  });
-                  print("done with delete");
-                  setState(() {
-                    allItems.remove(displayItems.keys.elementAt(i));
-                    displayItems.remove(displayItems.keys.elementAt(i));
-                  });
-                } else {}
-
+                _deleteItemLogic(i);
                 Navigator.of(context).pop();
               },
             ),
@@ -516,7 +476,7 @@ class _ItemCard extends State<ItemCard> {
                                   onPressed: () {
                                     s(() {
                                       sizes[sizes.keys.elementAt(index)] =
-                                          !sizes.values.elementAt(index);
+                                      !sizes.values.elementAt(index);
                                     });
                                   },
                                   icon: sizes.values.elementAt(index)
@@ -563,19 +523,19 @@ class _ItemCard extends State<ItemCard> {
                             if (sizes.values.elementAt(j)) {
                               FirebaseFirestore.instance
                                   .collection(
-                                      displayItems.values.elementAt(i)[0])
+                                  displayItems.values.elementAt(i)[0])
                                   .doc(documents[docIndex])
                                   .update({
                                 '${itemData[1]}.${displayItems.keys.elementAt(i)}.${sizes.keys.elementAt(j)}':
-                                    FieldValue.delete()
+                                FieldValue.delete()
                               }).whenComplete(() {
                                 print('Field Deleted');
                               });
                               print("done with delete");
                               setState(() {
                                 var currentIndex =
-                                    displayItems[displayItems.keys.elementAt(i)]
-                                        .indexOf(sizes.keys.elementAt(j));
+                                displayItems[displayItems.keys.elementAt(i)]
+                                    .indexOf(sizes.keys.elementAt(j));
 
                                 displayItems[displayItems.keys.elementAt(i)]
                                     .removeAt(currentIndex);
@@ -617,7 +577,7 @@ class _ItemCard extends State<ItemCard> {
                               .doc(documents[docIndex])
                               .update({
                             '${itemData[1]}.${displayItems.keys.elementAt(i)}':
-                                FieldValue.delete()
+                            FieldValue.delete()
                           }).whenComplete(() {
                             print('Field Deleted');
                           });
@@ -666,15 +626,15 @@ class _ItemCard extends State<ItemCard> {
 
                             TextFormField(
 
-                                controller: _nameController,
-                                decoration: InputDecoration(labelText: "Item name: ",prefixIcon: Icon(Icons.abc)),
+                              controller: _nameController,
+                              decoration: InputDecoration(labelText: "Item name: ",prefixIcon: Icon(Icons.abc)),
 
 
                             ),
                             TextFormField(
                                 controller: _priceController,
                                 decoration:
-                                    InputDecoration(labelText: "Item price",prefixIcon: Icon(Icons.monetization_on_rounded))),
+                                InputDecoration(labelText: "Item price",prefixIcon: Icon(Icons.monetization_on_rounded))),
 
                           ],
                         ),
@@ -684,24 +644,24 @@ class _ItemCard extends State<ItemCard> {
                         children: [
                           const Expanded(child: Text('Availability')),
                           Expanded(
-                              child: DropdownButton<String>(
-                                value: collectionsValue,
-                                elevation: 16,
-                                onChanged: (String? value) {
-                                  // This is called when the user selects an item.
+                            child: DropdownButton<String>(
+                              value: collectionsValue,
+                              elevation: 16,
+                              onChanged: (String? value) {
+                                // This is called when the user selects an item.
 
-                                  s(() {
-                                    collectionsValue = value!;
-                                  });
-                                },
-                                items: collections.map<DropdownMenuItem<String>>(
-                                        (String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList(),
-                              ),
+                                s(() {
+                                  collectionsValue = value!;
+                                });
+                              },
+                              items: collections.map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                            ),
 
                           )
                         ],
@@ -712,23 +672,23 @@ class _ItemCard extends State<ItemCard> {
                             Expanded(child: Text("Category")),
                             Expanded(
                               child: DropdownButton<String>(
-                              value: everydayCategoryValue,
-                              elevation: 16,
-                              onChanged: (String? value) {
-                                // This is called when the user selects an item.
+                                value: everydayCategoryValue,
+                                elevation: 16,
+                                onChanged: (String? value) {
+                                  // This is called when the user selects an item.
 
-                                s(() {
-                                  everydayCategoryValue = value!;
-                                });
-                              },
-                              items: everydayCategories.map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
-                            ),)
+                                  s(() {
+                                    everydayCategoryValue = value!;
+                                  });
+                                },
+                                items: everydayCategories.map<DropdownMenuItem<String>>(
+                                        (String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                              ),)
                           ],
                         )
                     ],
@@ -742,11 +702,23 @@ class _ItemCard extends State<ItemCard> {
                       child: Text('Cancel')
                   ),
                   TextButton(
-                      onPressed: (){
+                      onPressed: () async {
                         if(collectionsValue=='everyday'){
                           FirebaseFirestore.instance.collection('everyday').doc('IppA94yUj2wrIzawr5Al').update({
-                            '$everydayCategoryValue.${displayItems.keys.elementAt(i)}': displayItems.values.elementAt(i).last
+                            '$everydayCategoryValue.${_nameController.text.toString()}': double.parse(_priceController.text.toString())
                           }).then((value) => null);
+
+                          await _deleteItemDialog(i);
+
+                          String newKey = _nameController.text.toString();
+                          double newPrice = double.parse(_priceController.text.toString());
+
+
+
+                          allItems.remove(displayItems.keys.elementAt(i));
+                          displayItems.remove(displayItems.keys.elementAt(i));
+                          allItems[newKey] = [collectionsValue,everydayCategoryValue,newPrice];
+
 
                           Navigator.of(context).pop();
                         }
@@ -758,5 +730,53 @@ class _ItemCard extends State<ItemCard> {
             );
           });
         });
+  }
+
+  void _deleteItemLogic(int i){
+    List itemData = displayItems.values.elementAt(i);
+    int docIndex = 0;
+    for (int j = 0; j < collections.length; j++) {
+      if (collections[j] == itemData[0]) {
+        docIndex = j;
+        break;
+      }
+    }
+    if (itemData.length == 3) {
+      FirebaseFirestore.instance
+          .collection(displayItems.values.elementAt(i)[0])
+          .doc(documents[docIndex])
+          .update({
+        '${itemData[1]}.${displayItems.keys.elementAt(i)}':
+        FieldValue.delete()
+      }).whenComplete(() {
+        print('Field Deleted');
+      });
+      print("done with delete");
+      setState(() {
+        allItems.remove(displayItems.keys.elementAt(i));
+        displayItems.remove(displayItems.keys.elementAt(i));
+      });
+    } else if (itemData.length == 4) {
+      String key = displayItems.keys.elementAt(i).trim();
+      print("key");
+      FirebaseFirestore.instance
+          .collection(displayItems.values.elementAt(i)[0])
+          .doc(documents[docIndex])
+          .update({
+        '${itemData[1]}.${itemData[2]}.$key': FieldValue.delete()
+      }).whenComplete(() {
+        print('Field Deleted');
+      });
+      print("done with delete");
+      setState(() {
+        allItems.remove(displayItems.keys.elementAt(i));
+        displayItems.remove(displayItems.keys.elementAt(i));
+      });
+    } else {}
+
+  }
+
+  void _editItemLogic(int i){
+
   }
 }
