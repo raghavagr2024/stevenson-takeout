@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:stevensontakeout/home_page.dart';
 import 'package:stevensontakeout/sign_up_page.dart';
 
+import 'first_page.dart';
 import 'verification_page.dart';
 
 late TextEditingController _email, _password;
@@ -16,6 +17,12 @@ class LoginPage extends StatelessWidget{
     return Scaffold(
       body: Column(
         children: <Widget>[
+          SizedBox(height: 50,),
+          Row(
+            children: [
+              BackButton(),
+            ],
+          ),
           const SizedBox(height: 50),
           EmailTextField(),
           const SizedBox(height: 30),
@@ -163,6 +170,21 @@ class SignUpNavigator extends StatelessWidget{
       },
       child: const Text("Don't have an account? Sign up Instead"),
 
+    );
+  }
+
+}
+
+class BackButton extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+        onPressed: (){
+          Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => FirstPage()));
+        },
+        icon: Icon(Icons.arrow_back_ios_new)
     );
   }
 

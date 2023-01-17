@@ -1,4 +1,5 @@
 import 'dart:ffi';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -98,12 +99,12 @@ Future<void> getAllItems() async {
             String category = temp.keys.elementAt(i);
             String tag = currentCategory.keys.elementAt(j);
             for (int k = 0;
-            k < currentCategory.values.elementAt(j).length;
-            k++) {
+                k < currentCategory.values.elementAt(j).length;
+                k++) {
               String key =
-              currentCategory.values.elementAt(j).keys.elementAt(k);
+                  currentCategory.values.elementAt(j).keys.elementAt(k);
               var price =
-              currentCategory.values.elementAt(j).values.elementAt(k);
+                  currentCategory.values.elementAt(j).values.elementAt(k);
               allItems[key] = [collection, category, tag, price];
             }
           }
@@ -151,12 +152,12 @@ Future<void> getAllItems() async {
             String category = temp.keys.elementAt(i);
             String tag = currentCategory.keys.elementAt(j);
             for (int k = 0;
-            k < currentCategory.values.elementAt(j).length;
-            k++) {
+                k < currentCategory.values.elementAt(j).length;
+                k++) {
               String key =
-              currentCategory.values.elementAt(j).keys.elementAt(k);
+                  currentCategory.values.elementAt(j).keys.elementAt(k);
               var price =
-              currentCategory.values.elementAt(j).values.elementAt(k);
+                  currentCategory.values.elementAt(j).values.elementAt(k);
               allItems["$key "] = [collection, category, tag, price];
             }
           }
@@ -205,12 +206,12 @@ Future<void> getAllItems() async {
             String category = temp.keys.elementAt(i);
             String tag = currentCategory.keys.elementAt(j);
             for (int k = 0;
-            k < currentCategory.values.elementAt(j).length;
-            k++) {
+                k < currentCategory.values.elementAt(j).length;
+                k++) {
               String key =
-              currentCategory.values.elementAt(j).keys.elementAt(k);
+                  currentCategory.values.elementAt(j).keys.elementAt(k);
               var price =
-              currentCategory.values.elementAt(j).values.elementAt(k);
+                  currentCategory.values.elementAt(j).values.elementAt(k);
               allItems["$key  "] = [collection, category, tag, price];
             }
           }
@@ -259,12 +260,12 @@ Future<void> getAllItems() async {
             String category = temp.keys.elementAt(i);
             String tag = currentCategory.keys.elementAt(j);
             for (int k = 0;
-            k < currentCategory.values.elementAt(j).length;
-            k++) {
+                k < currentCategory.values.elementAt(j).length;
+                k++) {
               String key =
-              currentCategory.values.elementAt(j).keys.elementAt(k);
+                  currentCategory.values.elementAt(j).keys.elementAt(k);
               var price =
-              currentCategory.values.elementAt(j).values.elementAt(k);
+                  currentCategory.values.elementAt(j).values.elementAt(k);
               allItems["$key   "] = [collection, category, tag, price];
             }
           }
@@ -328,9 +329,9 @@ class _EditPage extends State<EditPage> {
         ),
         Expanded(
             child: ListView.builder(
-              itemBuilder: getItemCard,
-              itemCount: displayItems.length,
-            ))
+          itemBuilder: getItemCard,
+          itemCount: displayItems.length,
+        ))
       ],
     );
   }
@@ -378,30 +379,34 @@ class _ItemCard extends State<ItemCard> {
     List itemData = displayItems.values.elementAt(index);
     return Card(
         child: ListTile(
-          title: Text(displayItems.keys.elementAt(index)),
-          subtitle: Text(itemData[0]),
-          trailing: Container(
-            width: 100,
-            child: Row(
-              children: [
-                IconButton(
-                    onPressed: () {
-                      _editItemDialog(index);
-                    },
-                    icon: Icon(Icons.edit)),
-                IconButton(
-                    onPressed: () {
-                      if (itemData[1] == 'Soup') {
-                        _deleteSoupDialog(index);
-                      } else {
-                        _deleteItemDialog(index);
-                      }
-                    },
-                    icon: Icon(Icons.delete))
-              ],
-            ),
-          ),
-        ));
+      title: Text(displayItems.keys.elementAt(index)),
+      subtitle: Text(itemData[0]),
+      trailing: Container(
+        width: 100,
+        child: Row(
+          children: [
+            IconButton(
+                onPressed: () {
+                  if (itemData[1] == 'Soup') {
+                    _editSoupDialog(index);
+                  } else {
+                    _editItemDialog(index);
+                  }
+                },
+                icon: Icon(Icons.edit)),
+            IconButton(
+                onPressed: () {
+                  if (itemData[1] == 'Soup') {
+                    _deleteItemDialog(index);
+                  } else {
+                    _deleteItemDialog(index);
+                  }
+                },
+                icon: Icon(Icons.delete))
+          ],
+        ),
+      ),
+    ));
   }
 
   Future<void> _deleteItemDialog(int i) async {
@@ -442,156 +447,190 @@ class _ItemCard extends State<ItemCard> {
     );
   }
 
-  Future<void> _editSoupDialog(int i) async {}
-
-  Future<void> _deleteSoupDialog(int i) async {
+  Future<void> _editSoupDialog(int i) async {
+    TextEditingController _nameController = TextEditingController();
+    _nameController.text = displayItems.keys.elementAt(i);
+    TextEditingController _priceController = TextEditingController();
+    _priceController.text = displayItems.values.elementAt(i).last.toStringAsFixed(2);
     Map sizes = {};
+    String collectionsValue = displayItems.values.elementAt(i)[0];
     print("sizes in dialog");
-    for (int j = 2; j < displayItems.values.elementAt(i).length; j += 2) {
-      sizes[displayItems.values.elementAt(i)[j]] = false;
+    for (int j = 2; j < displayItems.values.elementAt(i).length - 1; j += 2) {
+      TextEditingController key = TextEditingController();
+      TextEditingController value = TextEditingController();
+      value.text = displayItems.values.elementAt(i)[j + 1].toStringAsFixed(2);
+      key.text = int.parse(displayItems.values
+              .elementAt(i)[j]
+              .replaceAll(RegExp('[^0-9]'), ''))
+          .toString();
+
+      print(key.text.toString());
+      print(value.text.toString());
+      sizes[key] = value;
     }
     print(sizes.toString());
-
     return await showDialog(
         context: context,
         builder: (context) {
           return StatefulBuilder(builder: (context, s) {
             return Container(
               height: 200,
-              width: 300,
+              width: 400,
               child: AlertDialog(
-                title: Text("Delete item ${displayItems.keys.elementAt(i)}?"),
+                title: Text("Editing item"),
                 content: SingleChildScrollView(
                   child: ListBody(
                     children: <Widget>[
-                      Text('Deleting this item will remove it permanently'),
-                      Container(
-                          height: 200,
-                          width: 300,
-                          child: ListView.builder(
-                            itemBuilder: (BuildContext context, int index) {
-                              return ListTile(
-                                title: Text(sizes.keys.elementAt(index)),
-                                trailing: IconButton(
-                                  onPressed: () {
-                                    s(() {
-                                      sizes[sizes.keys.elementAt(index)] =
-                                      !sizes.values.elementAt(index);
-                                    });
-                                  },
-                                  icon: sizes.values.elementAt(index)
-                                      ? const Icon(Icons.check_circle)
-                                      : const Icon(Icons.circle_outlined),
-                                ),
-                              );
-                            },
-                            itemCount: sizes.length,
-                          ))
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            TextFormField(
+                              controller: _nameController,
+                              decoration: const InputDecoration(
+                                  labelText: "Item name: ",
+                                  prefixIcon: Icon(Icons.abc)),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return "Please enter a valid name";
+                                }
+                                return null;
+                              },
+                            ),
+
+                            Container(
+                              height: 100,
+                              width: 300,
+                              child: ListView.builder(
+                                  itemCount: 2,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return Flex(
+                                      direction: Axis.horizontal,
+                                      children: [
+                                        Text("size: "),
+                                        Expanded(
+                                          child: TextFormField(
+                                            controller:
+                                                sizes.keys.elementAt(index),
+                                            validator: (value) {
+                                              if (value == null || value.isEmpty) {
+                                                return "Empty field";
+                                              } else if (int.tryParse(value) == null) {
+                                                return "Not a size";
+                                              } else {
+                                                return null;
+                                              }
+                                            },
+                                          ),
+                                        ),
+                                        Text('oz.'),
+                                        SizedBox(
+                                          width: 20,
+                                        ),
+                                        Text("price: \$"),
+                                        Expanded(
+                                            child: TextFormField(
+                                          controller:
+                                              sizes.values.elementAt(index),
+                                              validator: (value){
+                                                if(value == null || value.isEmpty){
+                                                  return "Empty field";
+                                                }
+                                                else if(double.tryParse(value) == null){
+                                                  return "Not a price";
+                                                }
+                                                else{
+                                                  var priceNumber = double.parse(sizes.values.elementAt(index).text);
+                                                  print("price number");
+                                                  print(priceNumber.toString());
+                                                  priceNumber = ((priceNumber*100).round())/100;
+                                                  sizes.values.elementAt(index).text = priceNumber.toString();
+                                                  return null;
+                                                }
+                                              },
+                                        ))
+                                      ],
+                                    );
+                                  }),
+                            ),
+                            Row(
+                              children: [
+                                const Expanded(child: Text('Availability')),
+                                Expanded(
+                                  child: DropdownButton<String>(
+                                    value: collectionsValue,
+                                    elevation: 16,
+                                    onChanged: (String? value) {
+                                      // This is called when the user selects an item.
+
+                                      s(() {
+                                        collectionsValue = value!;
+                                      });
+                                    },
+                                    items: collections.map<DropdownMenuItem<String>>(
+                                            (String value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(value),
+                                          );
+                                        }).toList(),
+                                  ),
+                                )
+                              ],
+                            ),
+
+
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
                 actions: <Widget>[
-                  Flex(
-                    direction: Axis.horizontal,
-                    children: [
-                      TextButton(
-                        child: const Text('Cancel'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      TextButton(
-                        child: const Text(
-                          'Delete Soup Sizes',
-                          style: TextStyle(color: Colors.red),
-                        ),
-                        onPressed: () {
-                          print("in approve for delete");
-                          List itemData = displayItems.values.elementAt(i);
-                          int docIndex = 0;
-                          for (int j = 0; j < collections.length; j++) {
-                            if (collections[j] == itemData[0]) {
-                              docIndex = j;
-                              break;
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+
+                      },
+                      child: Text("Cancel")),
+                  TextButton(
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          String document = '';
+                          for(int j = 0; j<collections.length;j++){
+                            if(collectionsValue==collections[j]) {
+                              document = documents[j];
                             }
                           }
+                          for(int j = 0; j<sizes.length;j++){
+                            FirebaseFirestore.instance
+                                .collection(collectionsValue)
+                                .doc(document)
+                                .update({
+                              'Soup.${_nameController.text}.${sizes.keys.elementAt(j).text + " oz"}':
+                              double.parse(sizes.values.elementAt(j).text)
+                            }).then((value) => null);
+                            await _deleteItemLogic(i);
 
-                          for (int j = 0; j < sizes.length; j++) {
-                            if (sizes.values.elementAt(j)) {
-                              FirebaseFirestore.instance
-                                  .collection(
-                                  displayItems.values.elementAt(i)[0])
-                                  .doc(documents[docIndex])
-                                  .update({
-                                '${itemData[1]}.${displayItems.keys.elementAt(i)}.${sizes.keys.elementAt(j)}':
-                                FieldValue.delete()
-                              }).whenComplete(() {
-                                print('Field Deleted');
-                              });
-                              print("done with delete");
-                              setState(() {
-                                var currentIndex =
-                                displayItems[displayItems.keys.elementAt(i)]
-                                    .indexOf(sizes.keys.elementAt(j));
+                            String newKey = _nameController.text.toString();
 
-                                displayItems[displayItems.keys.elementAt(i)]
-                                    .removeAt(currentIndex);
-                                displayItems[displayItems.keys.elementAt(i)]
-                                    .removeAt(currentIndex);
+                            double.parse(_priceController.text.toString());
 
-                                allItems[displayItems.keys.elementAt(i)]
-                                    .remove(currentIndex + 1);
-                                allItems[displayItems.keys.elementAt(i)]
-                                    .remove(currentIndex);
-                              });
-                            }
-                          }
-
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      TextButton(
-                        child: Text(
-                          'Delete Soup',
-                          style: TextStyle(color: Colors.red),
-                        ),
-                        onPressed: () {
-                          print("in approve for delete");
-                          List itemData = displayItems.values.elementAt(i);
-                          int docIndex = 0;
-                          for (int j = 0; j < collections.length; j++) {
-                            if (collections[j] == itemData[0]) {
-                              docIndex = j;
-                              break;
-                            }
-                          }
-
-                          FirebaseFirestore.instance
-                              .collection(displayItems.values.elementAt(i)[0])
-                              .doc(documents[docIndex])
-                              .update({
-                            '${itemData[1]}.${displayItems.keys.elementAt(i)}':
-                            FieldValue.delete()
-                          }).whenComplete(() {
-                            print('Field Deleted');
-                          });
-                          print("done with delete");
-                          setState(() {
                             allItems.remove(displayItems.keys.elementAt(i));
                             displayItems.remove(displayItems.keys.elementAt(i));
-                          });
 
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  )
+                            List data = [collectionsValue,'Soup'];
+                            for(int j = 0; j<sizes.length;j++){
+                              data.add(sizes.keys.elementAt(j).text);
+                              data.add(sizes.values.elementAt(j).text);
+                            }
+                            allItems[newKey] = data;
+                          }
+                        }
+                      },
+                      child: Text('Confirm'))
                 ],
               ),
             );
@@ -604,22 +643,19 @@ class _ItemCard extends State<ItemCard> {
     TextEditingController _nameController = TextEditingController();
     _nameController.text = displayItems.keys.elementAt(i);
     TextEditingController _priceController = TextEditingController();
-    _priceController.text = displayItems.values.elementAt(i).last.toString();
+    _priceController.text = displayItems.values.elementAt(i).last.toStringAsFixed(2);
     String everydayCategoryValue;
     String weeklyCategoryValue;
     String dayCategoryValue;
-    if(collectionsValue == 'everyday'){
+    if (collectionsValue == 'everyday') {
       everydayCategoryValue = displayItems.values.elementAt(i)[1];
-       weeklyCategoryValue = weekCategories.first;
-       dayCategoryValue = dayCategories.first;
-    }
-    else{
+      weeklyCategoryValue = weekCategories.first;
+      dayCategoryValue = dayCategories.first;
+    } else {
       weeklyCategoryValue = displayItems.values.elementAt(i)[1];
       everydayCategoryValue = everydayCategories.first;
       dayCategoryValue = displayItems.values.elementAt(i)[2];
     }
-
-
 
     return await showDialog(
         context: context,
@@ -638,23 +674,43 @@ class _ItemCard extends State<ItemCard> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-
                             TextFormField(
-
                               controller: _nameController,
-                              decoration: InputDecoration(labelText: "Item name: ",prefixIcon: Icon(Icons.abc)),
-
-
+                              decoration: InputDecoration(
+                                  labelText: "Item name: ",
+                                  prefixIcon: Icon(Icons.abc)),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return "Please enter a valid name";
+                                }
+                                return null;
+                              },
                             ),
                             TextFormField(
                                 controller: _priceController,
-                                decoration:
-                                InputDecoration(labelText: "Item price",prefixIcon: Icon(Icons.monetization_on_rounded))),
-
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "Please enter a valid price";
+                                  } else if (double.tryParse(value) == null) {
+                                    return "Please make sure the price is a number";
+                                  } else {
+                                    var priceNumber =
+                                        double.parse(_priceController.text);
+                                    priceNumber =
+                                        (priceNumber * 100).round() / 100;
+                                    _priceController.text =
+                                        priceNumber.toString();
+                                    print(priceNumber);
+                                    return null;
+                                  }
+                                },
+                                decoration: const InputDecoration(
+                                    labelText: "Item price",
+                                    prefixIcon:
+                                        Icon(Icons.monetization_on_rounded))),
                           ],
                         ),
                       ),
-
                       Row(
                         children: [
                           const Expanded(child: Text('Availability')),
@@ -670,18 +726,17 @@ class _ItemCard extends State<ItemCard> {
                                 });
                               },
                               items: collections.map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
+                                  (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
                             ),
-
                           )
                         ],
                       ),
-                      if(collectionsValue=='everyday')
+                      if (collectionsValue == 'everyday')
                         Row(
                           children: [
                             Expanded(child: Text("Category")),
@@ -696,109 +751,168 @@ class _ItemCard extends State<ItemCard> {
                                     everydayCategoryValue = value!;
                                   });
                                 },
-                                items: everydayCategories.map<DropdownMenuItem<String>>(
+                                items: everydayCategories
+                                    .map<DropdownMenuItem<String>>(
                                         (String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList(),
-                              ),)
-                          ],
-                        ),
-                      if(collectionsValue!='everyday')
-                        Row(
-                          children: [
-                            Expanded(child: Text('Day: ')),
-                            Expanded(
-                                child: DropdownButton<String>(
-                                  value: weeklyCategoryValue,
-                                  elevation: 16,
-                                  onChanged: (String? value) {
-                                    // This is called when the user selects an item.
-
-                                    s(() {
-                                      weeklyCategoryValue = value!;
-                                    });
-                                  },
-                                  items: weekCategories.map<DropdownMenuItem<String>>(
-                                          (String value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value),
-                                        );
-                                      }).toList(),
-                                ),
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                              ),
                             )
                           ],
                         ),
-                      if(weeklyCategoryValue != 'Panini' && collectionsValue != 'everyday')
+                      if (collectionsValue != 'everyday')
+                        Row(
+                          children: [
+                            const Expanded(child: Text('Day: ')),
+                            Expanded(
+                              child: DropdownButton<String>(
+                                value: weeklyCategoryValue,
+                                elevation: 16,
+                                onChanged: (String? value) {
+                                  // This is called when the user selects an item.
+
+                                  s(() {
+                                    weeklyCategoryValue = value!;
+                                  });
+                                },
+                                items: weekCategories
+                                    .map<DropdownMenuItem<String>>(
+                                        (String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                              ),
+                            )
+                          ],
+                        ),
+                      if (weeklyCategoryValue != 'Panini' &&
+                          collectionsValue != 'everyday')
                         Row(
                           children: [
                             Expanded(
                               child: Text('Category: '),
                             ),
                             Expanded(
-                                child: DropdownButton<String>(
-                                  value: dayCategoryValue,
-                                  elevation: 16,
-                                  onChanged: (String? value) {
-                                    // This is called when the user selects an item.
+                              child: DropdownButton<String>(
+                                value: dayCategoryValue,
+                                elevation: 16,
+                                onChanged: (String? value) {
+                                  // This is called when the user selects an item.
 
-                                    s(() {
-                                      dayCategoryValue = value!;
-                                    });
-                                  },
-                                  items: dayCategories.map<DropdownMenuItem<String>>(
-                                          (String value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value),
-                                        );
-                                      }).toList(),
-                                ),
+                                  s(() {
+                                    dayCategoryValue = value!;
+                                  });
+                                },
+                                items: dayCategories
+                                    .map<DropdownMenuItem<String>>(
+                                        (String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
+                              ),
                             )
-
                           ],
                         )
-
-
-
-
                     ],
                   ),
                 ),
                 actions: <Widget>[
                   TextButton(
-                      onPressed: (){
+                      onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: Text('Cancel')
-                  ),
+                      child: Text('Cancel')),
                   TextButton(
                       onPressed: () async {
-                        if(collectionsValue=='everyday'){
-                          FirebaseFirestore.instance.collection('everyday').doc('IppA94yUj2wrIzawr5Al').update({
-                            '$everydayCategoryValue.${_nameController.text.toString()}': double.parse(_priceController.text.toString())
-                          }).then((value) => null);
+                        if (_formKey.currentState!.validate()) {
+                          // If the form is valid, display a snackbar. In the real world,
+                          // you'd often call a server or save the information in a database.
+                          if (collectionsValue == 'everyday') {
+                            FirebaseFirestore.instance
+                                .collection('everyday')
+                                .doc('IppA94yUj2wrIzawr5Al')
+                                .update({
+                              '$everydayCategoryValue.${_nameController.text.toString()}':
+                                  double.parse(_priceController.text.toString())
+                            }).then((value) => null);
 
-                          await _deleteItemLogic(i);
+                            await _deleteItemLogic(i);
 
-                          String newKey = _nameController.text.toString();
-                          double newPrice = double.parse(_priceController.text.toString());
+                            String newKey = _nameController.text.toString();
+                            double newPrice =
+                                double.parse(_priceController.text.toString());
 
+                            allItems.remove(displayItems.keys.elementAt(i));
+                            displayItems.remove(displayItems.keys.elementAt(i));
+                            allItems[newKey] = [
+                              collectionsValue,
+                              everydayCategoryValue,
+                              newPrice
+                            ];
+                          } else {
+                            String document = '';
+                            for (int j = 0; j < collections.length; j++) {
+                              if (collections[j] == collectionsValue) {
+                                document = documents[j];
+                              }
+                            }
+                            if (weeklyCategoryValue == 'Panini') {
+                              FirebaseFirestore.instance
+                                  .collection(collectionsValue)
+                                  .doc(document)
+                                  .update({
+                                '$weeklyCategoryValue.${_nameController.text.toString()}':
+                                    double.parse(
+                                        _priceController.text.toString())
+                              }).then((value) => null);
+                              await _deleteItemLogic(i);
+                              String newKey = _nameController.text.toString();
+                              double newPrice = double.parse(
+                                  _priceController.text.toString());
+                              allItems.remove(displayItems.keys.elementAt(i));
+                              displayItems
+                                  .remove(displayItems.keys.elementAt(i));
+                              allItems[newKey] = [
+                                collectionsValue,
+                                weeklyCategoryValue,
+                                newPrice
+                              ];
+                            } else {
+                              FirebaseFirestore.instance
+                                  .collection(collectionsValue)
+                                  .doc(document)
+                                  .update({
+                                '$weeklyCategoryValue.$dayCategoryValue.${_nameController.text.toString()}':
+                                    double.parse(
+                                        _priceController.text.toString())
+                              }).then((value) => null);
+                              await _deleteItemLogic(i);
+                              String newKey = _nameController.text.toString();
+                              double newPrice = double.parse(
+                                  _priceController.text.toString());
 
-
-                          allItems.remove(displayItems.keys.elementAt(i));
-                          displayItems.remove(displayItems.keys.elementAt(i));
-                          allItems[newKey] = [collectionsValue,everydayCategoryValue,newPrice];
-
-
+                              allItems.remove(displayItems.keys.elementAt(i));
+                              displayItems
+                                  .remove(displayItems.keys.elementAt(i));
+                              allItems[newKey] = [
+                                collectionsValue,
+                                weeklyCategoryValue,
+                                dayCategoryValue,
+                                newPrice
+                              ];
+                            }
+                          }
                           Navigator.of(context).pop();
                         }
                       },
-                      child: Text('Confirm')
-                  )
+                      child: Text('Confirm'))
                 ],
               ),
             );
@@ -815,13 +929,12 @@ class _ItemCard extends State<ItemCard> {
         break;
       }
     }
-    if (itemData.length == 3) {
+    if (itemData.length == 3 || itemData[1] == 'Soup') {
       await FirebaseFirestore.instance
           .collection(displayItems.values.elementAt(i)[0])
           .doc(documents[docIndex])
           .update({
-        '${itemData[1]}.${displayItems.keys.elementAt(i)}':
-        FieldValue.delete()
+        '${itemData[1]}.${displayItems.keys.elementAt(i)}': FieldValue.delete()
       }).whenComplete(() {
         print('Field Deleted');
       });
@@ -847,10 +960,5 @@ class _ItemCard extends State<ItemCard> {
         displayItems.remove(displayItems.keys.elementAt(i));
       });
     } else {}
-
-  }
-
-  void _editItemLogic(int i){
-
   }
 }

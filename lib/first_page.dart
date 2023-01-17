@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:stevensontakeout/adminLogin.dart';
 import 'package:stevensontakeout/editAdminPage.dart';
@@ -17,14 +18,15 @@ class FirstPage extends StatelessWidget{
     return Scaffold(
       body: Column(
         children: <Widget>[
-          // const Center(
-          //   child: Image(
-          //       image: AssetImage('assets/images/patriot.png'),
-          //       width: 300,
-          //       height: 300
-          //
-          //   ),
-          // ),
+          SizedBox(height: 50,),
+          const Center(
+            child: Image(
+                image: AssetImage('assets/images/patriot.png'),
+                width: 300,
+                height: 300
+
+            ),
+          ),
           const SizedBox(height: 50,),
           AdminButton(),
           const SizedBox(height: 50,),

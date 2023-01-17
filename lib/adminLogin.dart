@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stevensontakeout/adminHome.dart';
+import 'package:stevensontakeout/first_page.dart';
 
 class AdminLogin extends StatelessWidget {
   @override
@@ -7,8 +8,14 @@ class AdminLogin extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
+          SizedBox(height: 50,),
+          Row(
+            children: [
+              BackButton(),
+            ],
+          ),
           const SizedBox(
-            height: 100,
+            height: 50,
           ),
           InputField(),
           ConfirmButton()
@@ -89,4 +96,19 @@ class ConfirmButton extends StatelessWidget {
       },
     );
   }
+}
+
+class BackButton extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+        onPressed: (){
+          Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => FirstPage()));
+        },
+        icon: Icon(Icons.arrow_back_ios_new)
+    );
+  }
+
 }
