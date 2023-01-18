@@ -58,10 +58,6 @@ class _AdminPage extends State<AdminPage> {
               label: 'Edit Item',
               backgroundColor: Color(0xFFc99a2c)),
           BottomNavigationBarItem(
-              icon: Icon(Icons.add),
-              label: 'Add Item',
-              backgroundColor: Color(0xFFc99a2c)),
-          BottomNavigationBarItem(
               icon: Icon(Icons.production_quantity_limits),
               label: 'Set Limits',
               backgroundColor: Color(0xFFc99a2c)),
@@ -70,6 +66,8 @@ class _AdminPage extends State<AdminPage> {
         selectedItemColor: const Color(0xFF1f5d39),
         onTap: _onItemTapped,
       ),
+      floatingActionButton: const FloatingActionButton(onPressed: null, child: Icon(Icons.add)),
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndDocked,
     );
   }
 

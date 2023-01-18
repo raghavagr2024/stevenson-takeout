@@ -382,7 +382,7 @@ class _ItemCard extends State<ItemCard> {
       title: Text(displayItems.keys.elementAt(index)),
       subtitle: Text(itemData[0]),
       trailing: Container(
-        width: 100,
+        width: 144,
         child: Row(
           children: [
 

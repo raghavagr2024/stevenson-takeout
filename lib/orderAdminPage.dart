@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -11,12 +12,19 @@ class OrderPage extends StatelessWidget {
     print(data.length);
     return Column(
       children: [
-        Expanded(
+        if (data.isNotEmpty)
+          Expanded(
           child: ListView.builder(
             itemBuilder: _getOrders,
             itemCount: data.length,
           ),
-        )
+        ),
+        if (data.isEmpty)
+          SizedBox(height: 40),
+          Text("No orders", style: TextStyle(fontSize: 30),),
+          const SizedBox()
+
+
       ],
     );
   }
@@ -99,9 +107,70 @@ class _OrderTile extends State<OrderTile> {
                 style: const TextStyle(fontSize: 25),
               ),
               const SizedBox(height: 20),
-              Text(current)
+              ListTile(
+                title: Text(current),
+                trailing: IconButton(
+                  onPressed: (){
+                    deleteOrderDialog(index);
+                  },
+                  icon: Icon(Icons.highlight_remove_outlined),
+                ),
+              )
+
             ],
           ),
         ));
   }
+
+  Future<void> deleteOrderDialog(int i) async {
+
+    return await showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, s) {
+            return Container(
+              height: 300,
+              width: 300,
+              child: AlertDialog(
+                title: Text("Deleting order for student ID :${data.keys.elementAt(index)}"),
+                content: SingleChildScrollView(
+                  child: ListBody(
+                    children: <Widget>[
+                      Text("Deleting this order will clear it from the list")
+                    ],
+                  ),
+                ),
+                actions: <Widget>[
+                    TextButton(
+                        onPressed: (){
+                          Navigator.of(context).pop();
+                        },
+                        child: Text("Cancel")
+                    ),
+                  TextButton(
+                      onPressed: () async {
+                        await FirebaseFirestore.instance
+                            .collection('users')
+                            .doc('SxHI0lmZHaO8r2BnwtuH')
+                            .update({
+                          '${data.keys.elementAt(index)}': FieldValue.delete()
+                        }).whenComplete(() {
+                          print('Field Deleted');
+                        });
+                        print("done with delete");
+                        Navigator.of(context).pop();
+                        setState(() {
+                          data.remove(data.keys.elementAt(index));
+                        });
+                      },
+                      child: Text("Confirm")
+                  ),
+
+                ],
+              ),
+            );
+          });
+        });
+  }
+
 }

@@ -23,13 +23,13 @@ class LoginPage extends StatelessWidget{
               BackButton(),
             ],
           ),
-          const SizedBox(height: 50),
+          const SizedBox(height: 20),
           EmailTextField(),
-          const SizedBox(height: 30),
+          const SizedBox(height: 20),
           PasswordTextField(),
           const SizedBox(height:30),
           LoginButton(),
-          const SizedBox(height: 30),SignUpNavigator()
+          //const SizedBox(height: 30),SignUpNavigator()
 
         ],
       ),

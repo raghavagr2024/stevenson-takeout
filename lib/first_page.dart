@@ -19,14 +19,14 @@ class FirstPage extends StatelessWidget{
       body: Column(
         children: <Widget>[
           SizedBox(height: 50,),
-          const Center(
-            child: Image(
-                image: AssetImage('assets/images/patriot.png'),
-                width: 300,
-                height: 300
-
-            ),
-          ),
+          // const Center(
+          //   child: Image(
+          //       image: AssetImage('assets/images/patriot.png'),
+          //       width: 300,
+          //       height: 300
+          //
+          //   ),
+          // ),
           const SizedBox(height: 50,),
           AdminButton(),
           const SizedBox(height: 50,),
