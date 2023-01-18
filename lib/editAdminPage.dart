@@ -385,6 +385,13 @@ class _ItemCard extends State<ItemCard> {
         width: 100,
         child: Row(
           children: [
+
+            IconButton(
+                onPressed: (){
+                  print("hi");
+                },
+                icon: Icon(Icons.remove_red_eye)
+            ),
             IconButton(
                 onPressed: () {
                   if (itemData[1] == 'Soup') {

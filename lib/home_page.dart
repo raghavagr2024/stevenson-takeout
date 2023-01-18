@@ -9,6 +9,7 @@ import 'main.dart';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 void createCount(){
+  count = [];
   for(int i = 0; i<101;i++){
     count.add(i.toString());
   }
@@ -34,7 +35,7 @@ class EveryDayItems extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     CollectionReference users =
-        FirebaseFirestore.instance.collection('everyday');
+    FirebaseFirestore.instance.collection('everyday');
 
     String id = "IppA94yUj2wrIzawr5Al";
 
@@ -154,71 +155,71 @@ class WeekItems extends StatelessWidget {
           try {
             return Scaffold(
                 body: SingleChildScrollView(
-              physics: const NeverScrollableScrollPhysics(),
-              child: Column(
-                children: <Widget>[
-                  const SizedBox(height: 50),
-                  Text(
-                    getDay(),
-                    style: const TextStyle(fontSize: 30),
+                  physics: const NeverScrollableScrollPhysics(),
+                  child: Column(
+                    children: <Widget>[
+                      const SizedBox(height: 50),
+                      Text(
+                        getDay(),
+                        style: const TextStyle(fontSize: 30),
+                      ),
+                      const Text(
+                        "Comfort",
+                        style: TextStyle(fontSize: 30),
+                      ),
+                      ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: weeklyItems[getDay()].values.elementAt(0).length,
+                          itemBuilder: _getComfort),
+                      const Text(
+                        "Mindful",
+                        style: TextStyle(fontSize: 30),
+                      ),
+                      ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: weeklyItems[getDay()].values.elementAt(1).length,
+                          itemBuilder: _getMindful),
+                      const Text(
+                        "Sides",
+                        style: TextStyle(fontSize: 30),
+                      ),
+                      ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: weeklyItems[getDay()].values.elementAt(2).length,
+                          itemBuilder: _getSides),
+                      const Text(
+                        "Panini:",
+                        style: TextStyle(fontSize: 30),
+                      ),
+                      ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: weeklyItems["Panini"].length,
+                          itemBuilder: _getPanini),
+                      const Text(
+                        "Soups: ",
+                        style: TextStyle(fontSize: 30),
+                      ),
+                      ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: weeklyItems["Soup"].length,
+                          itemBuilder: (BuildContext context, int index) {
+                            Map soups = weeklyItems['Soup'];
+                            return Card(
+                                child: ListTile(
+                                    title: Text(soups.keys.elementAt(index)),
+                                    trailing: SoupTrailer(index, soups)
+                                )
+                            );
+                          }),
+                      NextButton()
+                    ],
                   ),
-                  const Text(
-                    "Comfort",
-                    style: TextStyle(fontSize: 30),
-                  ),
-                  ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: weeklyItems[getDay()].values.elementAt(0).length,
-                      itemBuilder: _getComfort),
-                  const Text(
-                    "Mindful",
-                    style: TextStyle(fontSize: 30),
-                  ),
-                  ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: weeklyItems[getDay()].values.elementAt(1).length,
-                      itemBuilder: _getMindful),
-                  const Text(
-                    "Sides",
-                    style: TextStyle(fontSize: 30),
-                  ),
-                  ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: weeklyItems[getDay()].values.elementAt(2).length,
-                      itemBuilder: _getSides),
-                  const Text(
-                    "Panini:",
-                    style: TextStyle(fontSize: 30),
-                  ),
-                  ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: weeklyItems["Panini"].length,
-                      itemBuilder: _getPanini),
-                  const Text(
-                    "Soups: ",
-                    style: TextStyle(fontSize: 30),
-                  ),
-                  ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: weeklyItems["Soup"].length,
-                      itemBuilder: (BuildContext context, int index) {
-                        Map soups = weeklyItems['Soup'];
-                        return Card(
-                            child: ListTile(
-                                title: Text(soups.keys.elementAt(index)),
-                                trailing: SoupTrailer(index, soups)
-                            )
-                        );
-                      }),
-                  NextButton()
-                ],
-              ),
-            ));
+                ));
           } catch (NoSuchMethodError) {
             log("test");
           }
@@ -323,10 +324,10 @@ class _Tile extends State<Tile> {
 
     return Card(
         child: ListTile(
-      trailing: SizedBox(width: 130, child: CounterButton(index, items)),
-      title: Text(items.keys.elementAt(index)),
-      subtitle: Text(format.format(items.values.elementAt(index))),
-    ));
+          trailing: SizedBox(width: 130, child: CounterButton(index, items)),
+          title: Text(items.keys.elementAt(index)),
+          subtitle: Text(format.format(items.values.elementAt(index))),
+        ));
   }
 }
 
@@ -404,19 +405,19 @@ class _NextButton extends State<NextButton> {
   Widget build(BuildContext context) {
     log("in build for nextbuttn");
     log(selected.toString());
-     return ValueListenableBuilder<int>(
-         valueListenable: _counter,
-         builder: (BuildContext context,var s,Widget? child){
-           return ElevatedButton(
-                 onPressed: ifEmpty()? null: ()=> nextPage(context),
-                 style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1f5d39)),
-                 child: const Text("continue"),
-               );
-         }
-     );
+    return ValueListenableBuilder<int>(
+        valueListenable: _counter,
+        builder: (BuildContext context,var s,Widget? child){
+          return ElevatedButton(
+            onPressed: ifEmpty()? null: ()=> nextPage(context),
+            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1f5d39)),
+            child: const Text("continue"),
+          );
+        }
+    );
     //
   }
-  
+
   bool ifEmpty(){
     print("in if empty");
     print(selected.toString());
@@ -425,7 +426,7 @@ class _NextButton extends State<NextButton> {
     }
     return false;
   }
-  
+
   void nextPage(BuildContext context){
     if(selectedSoups.containsKey(soup1.keys.elementAt(0))){
       selectedSoups.remove(soup1.keys.elementAt(0));
@@ -491,7 +492,7 @@ class _CounterButton extends State<CounterButton> {
               size: 20,
             ),
             onPressed:
-                text != 0 ? () => subtract(items.keys.elementAt(index)) : null,
+            text != 0 ? () => subtract(items.keys.elementAt(index)) : null,
           ),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 3),
@@ -602,34 +603,34 @@ class _SoupTrailer extends State<SoupTrailer> {
           ),
           const SizedBox(width: 20),
           Container(
-            child: DropdownButton2<String>(
-              value: checkSoup() ? soup1.values.elementAt(0)[0].toString():soup2.values.elementAt(0)[0].toString(),
-              dropdownMaxHeight: 250,
-              onChanged: (String? value) {
-                // This is called when the user selects an item.
-                setState(() {
-                  if (checkSoup()){
-                    soup1[soup1.keys.elementAt(0)][0] = int.parse(value!);
+              child: DropdownButton2<String>(
+                value: checkSoup() ? soup1.values.elementAt(0)[0].toString():soup2.values.elementAt(0)[0].toString(),
+                dropdownMaxHeight: 250,
+                onChanged: (String? value) {
+                  // This is called when the user selects an item.
+                  setState(() {
+                    if (checkSoup()){
+                      soup1[soup1.keys.elementAt(0)][0] = int.parse(value!);
 
-                  }
-                  else{
-                    soup2[soup2.keys.elementAt(0)][0] = int.parse(value!);
-                  }
-                  _counter.value = selected.length + soup1.values.elementAt(0)[0] as int;
-                  _counter.value += soup1.values.elementAt(0)[1] as int;
-                  _counter.value += soup2.values.elementAt(0)[0] as int;
-                  _counter.value += soup2.values.elementAt(0)[1] as int;
-                  log("soup 1: ${soup1.toString()}");
-                  log("soup 2: ${soup2.toString()}");
-                });
-              },
-              items: count.map<DropdownMenuItem<String>>((var value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            )
+                    }
+                    else{
+                      soup2[soup2.keys.elementAt(0)][0] = int.parse(value!);
+                    }
+                    _counter.value = selected.length + soup1.values.elementAt(0)[0] as int;
+                    _counter.value += soup1.values.elementAt(0)[1] as int;
+                    _counter.value += soup2.values.elementAt(0)[0] as int;
+                    _counter.value += soup2.values.elementAt(0)[1] as int;
+                    log("soup 1: ${soup1.toString()}");
+                    log("soup 2: ${soup2.toString()}");
+                  });
+                },
+                items: count.map<DropdownMenuItem<String>>((var value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              )
           ),
           const SizedBox(
             width: 30,

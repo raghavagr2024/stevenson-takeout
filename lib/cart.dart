@@ -94,8 +94,8 @@ class _ItemList extends State<ItemList> {
         itemCount: selected.length,
         itemBuilder: _getSelectedItems,
         separatorBuilder: (BuildContext context, int index) => const SizedBox(
-              height: 0,
-            ));
+          height: 0,
+        ));
   }
 
   Widget _getSelectedItems(BuildContext context, int index) {
@@ -301,7 +301,7 @@ class _Item extends State<Item> {
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(builder: (context) => Cart()),
-                            (Route<dynamic> route) => false,
+                                (Route<dynamic> route) => false,
                           );
                         }
                       },
@@ -348,7 +348,7 @@ class _Item extends State<Item> {
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (context) => Cart()),
-                    (Route<dynamic> route) => false,
+                        (Route<dynamic> route) => false,
                   );
                 },
                 child: const Text("done"))
@@ -363,8 +363,8 @@ class CounterButton extends StatefulWidget {
   var index;
 
   CounterButton(
-    this.index,
-  );
+      this.index,
+      );
 
   @override
   State<StatefulWidget> createState() {
@@ -510,109 +510,109 @@ class _SoupList extends State<SoupList> {
           var ans = soup[0] * 2 + soup[1] * 1.5;
           return Container(
               child: Row(
-            children: [
-              const SizedBox(width: 20),
-              Expanded(
-                  child: Align(
-                alignment: Alignment.centerLeft,
-                child: SizedBox(
-                  height: 50,
-                  child: Column(children: [
-                    Text("12 oz.: ${soup[0]}", style: const TextStyle(fontSize: 20)),
-                    Text("8 oz.: ${soup[1]}", style: const TextStyle(fontSize: 20))
-                  ]),
-                ),
-              )),
-              Expanded(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: TextButton(
-                    child: Text(selectedSoups.keys.elementAt(index),
-                        style: const TextStyle(fontSize: 15)),
-                    onPressed: () {
-                      _showSoupDialog(index);
-                    },
+                children: [
+                  const SizedBox(width: 20),
+                  Expanded(
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: SizedBox(
+                          height: 50,
+                          child: Column(children: [
+                            Text("12 oz.: ${soup[0]}", style: const TextStyle(fontSize: 20)),
+                            Text("8 oz.: ${soup[1]}", style: const TextStyle(fontSize: 20))
+                          ]),
+                        ),
+                      )),
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: TextButton(
+                        child: Text(selectedSoups.keys.elementAt(index),
+                            style: const TextStyle(fontSize: 15)),
+                        onPressed: () {
+                          _showSoupDialog(index);
+                        },
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              Expanded(
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child:
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child:
                       Text(format.format(ans), style: const TextStyle(fontSize: 20)),
-                ),
-              ),
-              const SizedBox(width: 25),
-            ],
-          ));
+                    ),
+                  ),
+                  const SizedBox(width: 25),
+                ],
+              ));
         } else if (soup[0] == 0 && soup[1] != 0) {
           var ans = soup[0] * 2 + soup[1] * 1.5;
 
           return Container(
               child: Row(
-            children: [
-              const SizedBox(width: 20),
-              Expanded(
-                  child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text("8 oz.: ${soup[1]}",
-                          style: const TextStyle(fontSize: 20)))),
+                children: [
+                  const SizedBox(width: 20),
+                  Expanded(
+                      child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text("8 oz.: ${soup[1]}",
+                              style: const TextStyle(fontSize: 20)))),
 
-              const SizedBox(
-                width: 20,
-              ),
-              Expanded(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: TextButton(
-                    child: Text(selectedSoups.keys.elementAt(index),
-                        style: const TextStyle(fontSize: 15)),
-                    onPressed: () { _showSoupDialog(index);},
+                  const SizedBox(
+                    width: 20,
                   ),
-                ),
-              ),
-              Expanded(
-                child: Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(format.format(ans),
-                        style: const TextStyle(fontSize: 20))),
-              ),
-              const SizedBox(width: 35),
-            ],
-          ));
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: TextButton(
+                        child: Text(selectedSoups.keys.elementAt(index),
+                            style: const TextStyle(fontSize: 15)),
+                        onPressed: () { _showSoupDialog(index);},
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(format.format(ans),
+                            style: const TextStyle(fontSize: 20))),
+                  ),
+                  const SizedBox(width: 35),
+                ],
+              ));
         } else {
           var ans = soup[0] * 2 + soup[1] * 1.5;
 
           return Container(
               child: Row(
-            children: [
-              const SizedBox(width: 20),
-              Expanded(
-                  child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text("12 oz.: ${soup[0]}",
-                          style: const TextStyle(fontSize: 20)))),
-              Expanded(
-                child: Align(
-                  alignment: Alignment.center,
-                  child: TextButton(
-                    child: Text(selectedSoups.keys.elementAt(index),
-                        style: const TextStyle(fontSize: 15)),
-                    onPressed: () {
-                      _showSoupDialog(index);
-                    },
+                children: [
+                  const SizedBox(width: 20),
+                  Expanded(
+                      child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text("12 oz.: ${soup[0]}",
+                              style: const TextStyle(fontSize: 20)))),
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: TextButton(
+                        child: Text(selectedSoups.keys.elementAt(index),
+                            style: const TextStyle(fontSize: 15)),
+                        onPressed: () {
+                          _showSoupDialog(index);
+                        },
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              Expanded(
-                child: Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(format.format(ans),
-                        style: const TextStyle(fontSize: 20))),
-              ),
-              const SizedBox(width: 25),
-            ],
-          ));
+                  Expanded(
+                    child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(format.format(ans),
+                            style: const TextStyle(fontSize: 20))),
+                  ),
+                  const SizedBox(width: 25),
+                ],
+              ));
         }
       },
       itemCount: selectedSoups.length,
@@ -638,132 +638,132 @@ class _SoupList extends State<SoupList> {
         context: context,
         builder: (BuildContext context) {
           return StatefulBuilder(builder: (context,s){
-          return Container(
-            height: 400,
-            width: 320,
-            child: AlertDialog(
-              title: Text(selectedSoups.keys.elementAt(i)),
-              content: SingleChildScrollView(
-                child: ListBody(
-                  children: [
-                    Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Tooltip(
-                            message: "Size: 12 oz.\nPrice: \$2.00",
-                            child: Text("L: "),
-                          ),
-                          const SizedBox(width: 20),
-                          Container(
-                              child: DropdownButton2<String>(
-                                value: soup.values.elementAt(0)[0].toString(),
-                                dropdownMaxHeight: 250,
-                                onChanged: (String? value) {
-                                  // This is called when the user selects an item.
-                                  s((){
-                                    soup.values.elementAt(0)[0] = int.parse(value!);
+            return Container(
+                height: 400,
+                width: 320,
+                child: AlertDialog(
+                  title: Text(selectedSoups.keys.elementAt(i)),
+                  content: SingleChildScrollView(
+                    child: ListBody(
+                      children: [
+                        Container(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Tooltip(
+                                message: "Size: 12 oz.\nPrice: \$2.00",
+                                child: Text("L: "),
+                              ),
+                              const SizedBox(width: 20),
+                              Container(
+                                  child: DropdownButton2<String>(
+                                    value: soup.values.elementAt(0)[0].toString(),
+                                    dropdownMaxHeight: 250,
+                                    onChanged: (String? value) {
+                                      // This is called when the user selects an item.
+                                      s((){
+                                        soup.values.elementAt(0)[0] = int.parse(value!);
 
-                                  });
+                                      });
 
-                                },
-                                items: count.map<DropdownMenuItem<String>>((var value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList(),
-                              )
-                          ),
-                          const SizedBox(
-                            width: 30,
-                          ),
-                          const Tooltip(
-                            message: "Size: 8 oz.\nPrice: \$1.50",
-                            child: Text("S: "),
-                          ),
-                          Container(
-                              child: DropdownButton2<String>(
-                                dropdownMaxHeight: 250,
-                                value: soup.values.elementAt(0)[1].toString(),
-                                onChanged: (String? value) {
-                                  // This is called when the user selects an item.
+                                    },
+                                    items: count.map<DropdownMenuItem<String>>((var value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                                  )
+                              ),
+                              const SizedBox(
+                                width: 30,
+                              ),
+                              const Tooltip(
+                                message: "Size: 8 oz.\nPrice: \$1.50",
+                                child: Text("S: "),
+                              ),
+                              Container(
+                                  child: DropdownButton2<String>(
+                                    dropdownMaxHeight: 250,
+                                    value: soup.values.elementAt(0)[1].toString(),
+                                    onChanged: (String? value) {
+                                      // This is called when the user selects an item.
 
-                                    s((){
-                                      soup.values.elementAt(0)[1] = int.parse(value!);
-                                      print(soup.toString());
-                                    });
-                                },
-                                items: count.map<DropdownMenuItem<String>>((var value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value),
-                                  );
-                                }).toList(),
-                              )
+                                      s((){
+                                        soup.values.elementAt(0)[1] = int.parse(value!);
+                                        print(soup.toString());
+                                      });
+                                    },
+                                    items: count.map<DropdownMenuItem<String>>((var value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                                  )
+                              ),
+
+
+                            ],
                           ),
+                        )
+                      ],
+                    ),
+                  ),
+                  actions: [
+                    IconButton(
+                      onPressed: (){
+                        setState(() {
+                          if(soup.keys.elementAt(0)==soup1.keys.elementAt(0)){
+                            soup1[soup1.keys.elementAt(0)] = [0,0];
+                          }
+                          else{
+                            soup1[soup1.keys.elementAt(0)] = [0,0];
+                          }
 
+                          selectedSoups.remove(soup.keys.elementAt(0));
+                        });
 
-                        ],
-                      ),
+                        Navigator.of(context).pop();
+                      },
+                      icon: const Icon(Icons.delete),
+                    ),
+                    TextButton(
+                        onPressed: (){
+
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text("cancel")
+                    ),
+                    TextButton(
+                        onPressed: (){
+
+                          setState((){
+                            if(soup.keys.elementAt(0)==soup1.keys.elementAt(0)){
+                              soup1[soup1.keys.elementAt(0)] = soup[soup.keys.elementAt(0)];
+                              selectedSoups[soup1.keys.elementAt(0)] = soup1[soup1.keys.elementAt(0)];
+                              if(soup.values.elementAt(0)[0]==0 && soup.values.elementAt(0)[1]==0){
+                                selectedSoups.remove(soup.keys.elementAt(0));
+                              }
+                            }
+                            else{
+                              soup2[soup2.keys.elementAt(0)] = soup[soup.keys.elementAt(0)];
+                              selectedSoups[soup2.keys.elementAt(0)] = soup2[soup2.keys.elementAt(0)];
+                              if(soup.values.elementAt(0)[0]==0 && soup.values.elementAt(0)[1]==0){
+                                selectedSoups.remove(soup.keys.elementAt(0));
+                              }
+                            }
+
+                          });
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => Cart()));
+                        },
+                        child: const Text("confirm")
                     )
                   ],
-                ),
-              ),
-              actions: [
-                IconButton(
-                    onPressed: (){
-                      setState(() {
-                        if(soup.keys.elementAt(0)==soup1.keys.elementAt(0)){
-                          soup1[soup1.keys.elementAt(0)] = [0,0];
-                        }
-                        else{
-                          soup1[soup1.keys.elementAt(0)] = [0,0];
-                        }
 
-                        selectedSoups.remove(soup.keys.elementAt(0));
-                      });
-
-                      Navigator.of(context).pop();
-                    },
-                    icon: const Icon(Icons.delete),
-                ),
-                TextButton(
-                    onPressed: (){
-
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text("cancel")
-                ),
-                TextButton(
-                    onPressed: (){
-
-                      setState((){
-                        if(soup.keys.elementAt(0)==soup1.keys.elementAt(0)){
-                          soup1[soup1.keys.elementAt(0)] = soup[soup.keys.elementAt(0)];
-                          selectedSoups[soup1.keys.elementAt(0)] = soup1[soup1.keys.elementAt(0)];
-                          if(soup.values.elementAt(0)[0]==0 && soup.values.elementAt(0)[1]==0){
-                            selectedSoups.remove(soup.keys.elementAt(0));
-                          }
-                        }
-                        else{
-                          soup2[soup2.keys.elementAt(0)] = soup[soup.keys.elementAt(0)];
-                          selectedSoups[soup2.keys.elementAt(0)] = soup2[soup2.keys.elementAt(0)];
-                          if(soup.values.elementAt(0)[0]==0 && soup.values.elementAt(0)[1]==0){
-                            selectedSoups.remove(soup.keys.elementAt(0));
-                          }
-                        }
-
-                      });
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Cart()));
-                    },
-                    child: const Text("confirm")
                 )
-              ],
-
-            )
-          );}
+            );}
           );
         });
   }
