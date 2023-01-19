@@ -7,8 +7,9 @@ import 'package:stevensontakeout/editAdminPage.dart';
 import 'orderAdminPage.dart';
 
 Map data = {};
-var everydayCategories = ['Soup','Grille','Panini','Slice of Life'];
-var weeklyCategories = ['Monday','Tuesday','Wednesday','Thursday','Friday','Panini','Soup'];
+
+var allEverydayCategories = ['Grille','Panini','Slice of Life','Soup'];
+var allWeeklyCategories = ['Monday','Tuesday','Wednesday', 'Thursday','Friday', 'Panini','Soup'];
 Future<void> getData() async {
   await FirebaseFirestore.instance
       .collection('users')
@@ -95,6 +96,8 @@ class _AdminPage extends State<AdminPage> {
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
     var currentCollection = collections[0];
+    var currentEverydayCategory = allEverydayCategories[0];
+    var currentWeeklyCategory = allWeeklyCategories[0];
 
     return await showDialog(
         context: context,
@@ -127,6 +130,56 @@ class _AdminPage extends State<AdminPage> {
                               );
                             }).toList(),
                       ),
+
+                      if(currentCollection == 'everyday')
+                        DropdownButton<String>(
+                          value: currentEverydayCategory,
+                          elevation: 16,
+                          onChanged: (String? value) {
+                            // This is called when the user selects an item.
+
+                            s(() {
+                              currentEverydayCategory = value!;
+                            });
+                          },
+                          items: allEverydayCategories.map<DropdownMenuItem<String>>(
+                                  (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                        ),
+
+                      if(currentCollection != 'everyday')
+                        DropdownButton<String>(
+                          value: currentWeeklyCategory,
+                          elevation: 16,
+                          onChanged: (String? value) {
+                            // This is called when the user selects an item.
+
+                            s(() {
+                              currentWeeklyCategory = value!;
+                            });
+                          },
+                          items: allWeeklyCategories.map<DropdownMenuItem<String>>(
+                                  (String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                        ),
+
+                      if(currentCollection == 'everyday' && currentEverydayCategory != 'Soup')
+                        TextFormField(
+
+                        ),
+                        TextFormField(
+
+                        )
+
+
                     ],
                   ),
                 ),
