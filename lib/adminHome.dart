@@ -7,7 +7,8 @@ import 'package:stevensontakeout/editAdminPage.dart';
 import 'orderAdminPage.dart';
 
 Map data = {};
-
+var everydayCategories = ['Soup','Grille','Panini','Slice of Life'];
+var weeklyCategories = ['Monday','Tuesday','Wednesday','Thursday','Friday','Panini','Soup'];
 Future<void> getData() async {
   await FirebaseFirestore.instance
       .collection('users')
@@ -47,26 +48,33 @@ class _AdminPage extends State<AdminPage> {
     return Scaffold(
       body: (_getPage()),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Color(0xFFc99a2c),
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.featured_play_list_rounded),
             label: 'Orders',
-            backgroundColor: Color(0xFFc99a2c),
+
           ),
           BottomNavigationBarItem(
               icon: Icon(Icons.edit),
               label: 'Edit Item',
-              backgroundColor: Color(0xFFc99a2c)),
+              ),
           BottomNavigationBarItem(
               icon: Icon(Icons.production_quantity_limits),
               label: 'Set Limits',
-              backgroundColor: Color(0xFFc99a2c)),
+              ),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: const Color(0xFF1f5d39),
         onTap: _onItemTapped,
       ),
-      floatingActionButton: const FloatingActionButton(onPressed: null, child: Icon(Icons.add)),
+      floatingActionButton:  FloatingActionButton(
+          backgroundColor: const Color(0xFF1f5d39),
+          onPressed: (){
+              addItemDialog();
+          },
+          child: Icon(Icons.add)
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndDocked,
     );
   }
@@ -82,6 +90,67 @@ class _AdminPage extends State<AdminPage> {
     }
     return const Text("default");
   }
+
+  Future<void> addItemDialog() async {
+    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+    var currentCollection = collections[0];
+
+    return await showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, s) {
+            return Container(
+              height: 300,
+              width: 300,
+              child: AlertDialog(
+                title: Text("Adding Item"),
+                content: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      DropdownButton<String>(
+                        value: currentCollection,
+                        elevation: 16,
+                        onChanged: (String? value) {
+                          // This is called when the user selects an item.
+
+                          s(() {
+                            currentCollection = value!;
+                          });
+                        },
+                        items: collections.map<DropdownMenuItem<String>>(
+                                (String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                      ),
+                    ],
+                  ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                      onPressed: (){
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("Cancel")
+                  ),
+                  TextButton(
+                      onPressed: () async {
+
+                      },
+                      child: Text("Confirm")
+                  ),
+
+                ],
+              ),
+            );
+          });
+        });
+  }
+
 }
 
 
