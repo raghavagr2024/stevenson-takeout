@@ -20,8 +20,10 @@ class OrderPage extends StatelessWidget {
           ),
         ),
 
-         // SizedBox(height: 40),
-          //Text("No orders", style: TextStyle(fontSize: 30),),
+         SizedBox(height: 40),
+          if(data.isEmpty)
+            Text("No orders", style: TextStyle(fontSize: 30),),
+
           const SizedBox()
 
 

@@ -94,7 +94,8 @@ class _AdminPage extends State<AdminPage> {
 
   Future<void> addItemDialog() async {
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+    var itemName = TextEditingController();
+    var itemPrice = TextEditingController();
     var currentCollection = collections[0];
     var currentEverydayCategory = allEverydayCategories[0];
     var currentWeeklyCategory = allWeeklyCategories[0];
@@ -171,13 +172,28 @@ class _AdminPage extends State<AdminPage> {
                               }).toList(),
                         ),
 
-                      if(currentCollection == 'everyday' && currentEverydayCategory != 'Soup')
-                        TextFormField(
-
-                        ),
-                        TextFormField(
-
+                      if((currentCollection == 'everyday' && currentEverydayCategory != 'Soup') || (currentCollection != 'everyday' && currentWeeklyCategory != 'Soup'))
+                        Container(
+                          height: 200,
+                          child:
+                          Column(
+                            children: [
+                              TextFormField(
+                                decoration: InputDecoration(
+                                  hintText: "Item name"
+                                ),
+                                controller: itemName,
+                              ),
+                              TextFormField(
+                                decoration: InputDecoration(
+                                  hintText: "Item price"
+                                ),
+                                controller: itemPrice,
+                              ),
+                            ],
+                          ),
                         )
+
 
 
                     ],
@@ -192,7 +208,17 @@ class _AdminPage extends State<AdminPage> {
                   ),
                   TextButton(
                       onPressed: () async {
+                        if(currentCollection == 'everyday'){
+                          FirebaseFirestore.instance
+                              .collection(currentCollection)
+                              .doc("IppA94yUj2wrIzawr5Al")
+                              .update({
+                            '$currentEverydayCategory.${itemName.text}': int.parse(itemPrice.text)
+                          }).whenComplete(() {
+                            print("item added");
+                          });
 
+                        }
                       },
                       child: Text("Confirm")
                   ),
