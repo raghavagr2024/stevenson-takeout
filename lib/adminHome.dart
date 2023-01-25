@@ -57,13 +57,13 @@ class _AdminPage extends State<AdminPage> {
 
           ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.edit),
-              label: 'Edit Item',
-              ),
+            icon: Icon(Icons.edit),
+            label: 'Edit Item',
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.production_quantity_limits),
-              label: 'Set Limits',
-              ),
+            icon: Icon(Icons.production_quantity_limits),
+            label: 'Set Limits',
+          ),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: const Color(0xFF1f5d39),
@@ -72,7 +72,7 @@ class _AdminPage extends State<AdminPage> {
       floatingActionButton:  FloatingActionButton(
           backgroundColor: const Color(0xFF1f5d39),
           onPressed: (){
-              addItemDialog();
+            addItemDialog();
           },
           child: Icon(Icons.add)
       ),
@@ -96,11 +96,10 @@ class _AdminPage extends State<AdminPage> {
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     var itemName = TextEditingController();
     var itemPrice = TextEditingController();
-    List tags = [];
-    tags.add(collections.first);
-    tags.add('Panini');
-    tags.add(dayCategories[0]);
-
+    var currentCollection = collections[0];
+    var currentEverydayCategory = allEverydayCategories[0];
+    var currentWeeklyCategory = allWeeklyCategories[0];
+    var dailyCategoryValue = dayCategories[0];
     return await showDialog(
         context: context,
         builder: (context) {
@@ -115,13 +114,13 @@ class _AdminPage extends State<AdminPage> {
                   child: Column(
                     children: [
                       DropdownButton<String>(
-                        value: tags[0],
+                        value: currentCollection,
                         elevation: 16,
                         onChanged: (String? value) {
                           // This is called when the user selects an item.
 
                           s(() {
-                            tags[0] = value!;
+                            currentCollection = value!;
                           });
                         },
                         items: collections.map<DropdownMenuItem<String>>(
@@ -133,15 +132,15 @@ class _AdminPage extends State<AdminPage> {
                             }).toList(),
                       ),
 
-                      if(tags[0] == 'everyday')
+                      if(currentCollection == 'everyday')
                         DropdownButton<String>(
-                          value: tags[1],
+                          value: currentEverydayCategory,
                           elevation: 16,
                           onChanged: (String? value) {
                             // This is called when the user selects an item.
 
                             s(() {
-                              tags[1] = value!;
+                              currentEverydayCategory = value!;
                             });
                           },
                           items: allEverydayCategories.map<DropdownMenuItem<String>>(
@@ -153,18 +152,19 @@ class _AdminPage extends State<AdminPage> {
                               }).toList(),
                         ),
 
-                      if(tags[0] != 'everyday')
+                      if(currentCollection != 'everyday')
                         Container(
+                          height: 100,
                           child: Column(
                             children: [
                               DropdownButton<String>(
-                                value: tags[1],
+                                value: currentWeeklyCategory,
                                 elevation: 16,
                                 onChanged: (String? value) {
                                   // This is called when the user selects an item.
 
                                   s(() {
-                                    tags[1] = value!;
+                                    currentWeeklyCategory = value!;
                                   });
                                 },
                                 items: allWeeklyCategories.map<DropdownMenuItem<String>>(
@@ -175,15 +175,15 @@ class _AdminPage extends State<AdminPage> {
                                       );
                                     }).toList(),
                               ),
-                              if(days.contains(tags[1]))
+                              if(currentWeeklyCategory != 'Panini')
                                 DropdownButton<String>(
-                                  value: tags[2],
+                                  value: dailyCategoryValue,
                                   elevation: 16,
                                   onChanged: (String? value) {
                                     // This is called when the user selects an item.
 
                                     s(() {
-                                      tags[2] = value!;
+                                      dailyCategoryValue = value!;
                                     });
                                   },
                                   items: dayCategories.map<DropdownMenuItem<String>>(
@@ -195,11 +195,11 @@ class _AdminPage extends State<AdminPage> {
                                       }).toList(),
                                 ),
                             ],
-                          ),
+                          ) ,
                         ),
 
 
-                      if((tags[0] == 'everyday' && tags[1] != 'Soup') || (tags[0] != 'everyday' && tags[1] != 'Soup'))
+                      if((currentCollection == 'everyday' && currentEverydayCategory != 'Soup') || (currentCollection != 'everyday' && currentWeeklyCategory != 'Soup'))
                         Container(
                           height: 200,
                           child:
@@ -207,28 +207,14 @@ class _AdminPage extends State<AdminPage> {
                             children: [
                               TextFormField(
                                 decoration: InputDecoration(
-                                  hintText: "Item name"
+                                    hintText: "Item name"
                                 ),
-                                validator: (value){
-                                  if(value==null || value.isEmpty){
-                                    return "Please enter a  name";
-                                  }
-                                  return null;
-                                },
                                 controller: itemName,
                               ),
                               TextFormField(
                                 decoration: InputDecoration(
-                                  hintText: "Item price"
+                                    hintText: "Item price"
                                 ),
-                                validator: (value){
-                                  if(value == null || value.isEmpty){
-                                    return "Please enter a price";
-                                  }
-                                  else{
-
-                                  }
-                                },
                                 controller: itemPrice,
                               ),
                             ],
@@ -249,21 +235,17 @@ class _AdminPage extends State<AdminPage> {
                   ),
                   TextButton(
                       onPressed: () async {
-                        String call = "";
-                        if((tags[0]=='everyday' && tags[1] != 'Soup') || (tags[0]!='everyday' && tags[1]=='Panini')){
-                          call = "${tags[0]}.${tags[1]}.${itemName.text}";
-                        }
-                        else if(tags[0]=='everyday' && tags[1] != 'Soup'){
-                          call = "${tags[0]}.${tags[1]}.${tags[2]}.${itemName.text}";
-                        }
-                        FirebaseFirestore.instance
-                            .collection('everyday')
-                            .doc('IppA94yUj2wrIzawr5Al')
-                            .update({
-                          '$call':
-                          double.parse(itemPrice.text.toString())
-                        }).then((value) => null);
+                        if(currentCollection == 'everyday'){
+                          FirebaseFirestore.instance
+                              .collection(currentCollection)
+                              .doc("IppA94yUj2wrIzawr5Al")
+                              .update({
+                            '$currentEverydayCategory.${itemName.text}': int.parse(itemPrice.text)
+                          }).whenComplete(() {
+                            print("item added");
+                          });
 
+                        }
                       },
                       child: Text("Confirm")
                   ),
