@@ -105,8 +105,7 @@ class _AdminPage extends State<AdminPage> {
         builder: (context) {
           return StatefulBuilder(builder: (context, s) {
             return Container(
-              height: 300,
-              width: 300,
+
               child: AlertDialog(
                 title: Text("Adding Item"),
                 content: Form(
@@ -153,8 +152,7 @@ class _AdminPage extends State<AdminPage> {
                         ),
 
                       if(currentCollection != 'everyday')
-                        Container(
-                          height: 100,
+                        Expanded(
                           child: Column(
                             children: [
                               DropdownButton<String>(
@@ -175,7 +173,7 @@ class _AdminPage extends State<AdminPage> {
                                       );
                                     }).toList(),
                               ),
-                              if(currentWeeklyCategory != 'Panini')
+                              if(currentWeeklyCategory != 'Panini' && currentWeeklyCategory != 'Soup')
                                 DropdownButton<String>(
                                   value: dailyCategoryValue,
                                   elevation: 16,
@@ -200,8 +198,8 @@ class _AdminPage extends State<AdminPage> {
 
 
                       if((currentCollection == 'everyday' && currentEverydayCategory != 'Soup') || (currentCollection != 'everyday' && currentWeeklyCategory != 'Soup'))
-                        Container(
-                          height: 200,
+                        Expanded(
+
                           child:
                           Column(
                             children: [
@@ -209,12 +207,34 @@ class _AdminPage extends State<AdminPage> {
                                 decoration: InputDecoration(
                                     hintText: "Item name"
                                 ),
+                                validator: (value){
+                                  if(value==null || value.isEmpty){
+                                    return "Please enter a  name";
+                                  }
+                                  return null;
+                                },
                                 controller: itemName,
                               ),
                               TextFormField(
                                 decoration: InputDecoration(
                                     hintText: "Item price"
                                 ),
+                                validator: (value){
+                                  if (value == null || value.isEmpty) {
+                                    return "Please enter a valid price";
+                                  } else if (double.tryParse(value) == null) {
+                                    return "Please make sure the price is a number";
+                                  } else {
+                                    var priceNumber =
+                                    double.parse(itemPrice.text);
+                                    priceNumber =
+                                        (priceNumber * 100).round() / 100;
+                                    itemPrice.text =
+                                        priceNumber.toString();
+                                    print(priceNumber);
+                                    return null;
+                                  }
+                                },
                                 controller: itemPrice,
                               ),
                             ],
@@ -235,16 +255,38 @@ class _AdminPage extends State<AdminPage> {
                   ),
                   TextButton(
                       onPressed: () async {
-                        if(currentCollection == 'everyday'){
+                        if(currentCollection == 'everyday' && currentEverydayCategory != 'Soup'){
                           FirebaseFirestore.instance
                               .collection(currentCollection)
                               .doc("IppA94yUj2wrIzawr5Al")
                               .update({
-                            '$currentEverydayCategory.${itemName.text}': int.parse(itemPrice.text)
+                            '$currentEverydayCategory.${itemName.text}': double.parse(itemPrice.text)
                           }).whenComplete(() {
                             print("item added");
                           });
 
+
+
+                        }
+                        else{
+                          if(currentWeeklyCategory=='Panini'){
+                            String document = '';
+                            for (int j = 0; j < collections.length; j++) {
+                              if (collections[j] == currentCollection) {
+                                document = documents[j];
+                              }
+                            }
+                            FirebaseFirestore.instance
+                                .collection(currentCollection)
+                                .doc(document)
+                                .update({
+                              '$currentWeeklyCategory.${itemName.text}': double.parse(itemPrice.text)
+                            }).whenComplete(() {
+                              print("item added");
+                            });
+
+
+                          }
                         }
                       },
                       child: Text("Confirm")
