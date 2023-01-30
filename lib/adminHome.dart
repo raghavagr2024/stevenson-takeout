@@ -100,6 +100,9 @@ class _AdminPage extends State<AdminPage> {
     var currentEverydayCategory = allEverydayCategories[0];
     var currentWeeklyCategory = allWeeklyCategories[0];
     var dailyCategoryValue = dayCategories[0];
+
+    var size1Name = TextEditingController(),size1Price = TextEditingController(),size2Name = TextEditingController(),size2Price  = TextEditingController();
+
     return await showDialog(
         context: context,
         builder: (context) {
@@ -173,6 +176,44 @@ class _AdminPage extends State<AdminPage> {
                                       );
                                     }).toList(),
                               ),
+
+                              if((currentWeeklyCategory == 'Soup' && currentCollection != 'everyday') || (currentEverydayCategory == 'Soup' && currentCollection == 'everyday'))
+                                Container(
+                                  height: 100,
+                                  child: Column(
+                                    children: [
+                                      TextFormField(
+                                        controller: itemPrice,
+                                      ),
+                                      Expanded(child: Row(
+                                        children: [
+                                          Text("Size: "),
+                                          TextFormField(
+                                            controller: size1Name,
+                                          ),
+                                          Text("Price: "),
+                                          TextFormField(
+                                            controller: size1Price,
+                                          ),
+                                        ],
+                                      )
+                                      ),
+                                      Expanded(child: Row(
+                                        children: [
+                                          Text("Size: "),
+                                          TextFormField(
+                                            controller: size2Name,
+                                          ),
+                                          Text("Price: "),
+                                          TextFormField(
+                                            controller: size2Price,
+                                          ),
+                                        ],
+                                      )
+                                      )
+                                    ],
+                                  ),
+                                ),
                               if(currentWeeklyCategory != 'Panini' && currentWeeklyCategory != 'Soup')
                                 DropdownButton<String>(
                                   value: dailyCategoryValue,
@@ -269,13 +310,13 @@ class _AdminPage extends State<AdminPage> {
 
                         }
                         else{
-                          if(currentWeeklyCategory=='Panini'){
-                            String document = '';
-                            for (int j = 0; j < collections.length; j++) {
-                              if (collections[j] == currentCollection) {
-                                document = documents[j];
-                              }
+                          String document = '';
+                          for (int j = 0; j < collections.length; j++) {
+                            if (collections[j] == currentCollection) {
+                              document = documents[j];
                             }
+                          }
+                          if(currentWeeklyCategory=='Panini'){
                             FirebaseFirestore.instance
                                 .collection(currentCollection)
                                 .doc(document)
@@ -284,9 +325,19 @@ class _AdminPage extends State<AdminPage> {
                             }).whenComplete(() {
                               print("item added");
                             });
-
-
                           }
+
+                          else if(currentWeeklyCategory != 'Soup'){
+                            FirebaseFirestore.instance
+                                .collection(currentCollection)
+                                .doc(document)
+                                .update({
+                              '$currentWeeklyCategory.$dailyCategoryValue.${itemName.text}': double.parse(itemPrice.text)
+                            }).whenComplete(() {
+                              print("item added");
+                            });
+                          }
+
                         }
                       },
                       child: Text("Confirm")
