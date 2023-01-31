@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -66,12 +68,9 @@ class _AdminPage extends State<AdminPage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.edit),
-            label: 'Edit Item',
+            label: 'Items',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.production_quantity_limits),
-            label: 'Set Limits',
-          ),
+
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: const Color(0xFF1f5d39),
@@ -92,10 +91,10 @@ class _AdminPage extends State<AdminPage> {
     getData();
     if (_selectedIndex == 0) {
       return OrderPage();
-    } else if (_selectedIndex == 1) {
+    } else  {
       return EditPage();
     }
-    return const Text("default");
+
   }
 
   Future<void> addItemDialog() async {
@@ -282,10 +281,10 @@ class _AdminPage extends State<AdminPage> {
                                       child: TextFormField(
                                         controller: size1Name,
                                         validator: (value) {
-                                          if (value == null || value.isEmpty || double.tryParse(value) == null) {
+                                          if (value == null || value.isEmpty || int.tryParse(value) == null) {
                                             return "Invalid";
                                           }  else {
-                                            size1Name.text = double.parse(size1Name.text).toStringAsFixed(2);
+                                            size1Name.text = int.parse(size1Name.text).toString();
                                             return null;
                                           }
                                         },
@@ -301,6 +300,7 @@ class _AdminPage extends State<AdminPage> {
                                           return "Invalid";
                                         }  else {
                                           size1Price.text = double.parse(size1Price.text).toStringAsFixed(2);
+                                          print(size1Price.text + "size1Price");
                                           return null;
                                         }
                                       },
@@ -317,10 +317,11 @@ class _AdminPage extends State<AdminPage> {
                                     child: TextFormField(
                                       controller: size2Name,
                                       validator: (value) {
-                                        if (value == null || value.isEmpty || double.tryParse(value) == null) {
+                                        if (value == null || value.isEmpty || int.tryParse(value) == null) {
                                           return "Invalid";
                                         }  else {
-                                          size2Name.text = double.parse(size1Name.text).toStringAsFixed(2);
+                                          size2Name.text = int.parse(size2Name.text).toString();
+
                                           return null;
                                         }
                                       },
@@ -337,6 +338,7 @@ class _AdminPage extends State<AdminPage> {
                                           return "Invalid";
                                         }  else {
                                           size2Price.text = double.parse(size2Price.text).toStringAsFixed(2);
+                                          print(size2Price.text + "size2Price");
                                           return null;
                                         }
                                       },
@@ -366,17 +368,15 @@ class _AdminPage extends State<AdminPage> {
                   FirebaseFirestore.instance
                       .collection(currentCollection)
                       .doc("IppA94yUj2wrIzawr5Al")
-                      .update({
-                    '$currentEverydayCategory.${itemName.text}.$size1Name':
-                    double.parse(size1Price.text)
-                  }).whenComplete(() {
+                      .update({'Soup.${itemName.text}.${"${size1Name.text} oz"}':double.parse(size1Price.text)})
+                      .whenComplete(() {
                     print("item added");
                   });
                   FirebaseFirestore.instance
                       .collection(currentCollection)
                       .doc("IppA94yUj2wrIzawr5Al")
                       .update({
-                    '$currentEverydayCategory.${itemName.text}.$size2Name':
+                    'Soup.${itemName.text}.${"${size2Name.text} oz"}':
                     double.parse(size2Price.text)
                   }).whenComplete(() {
                     print("item added");
@@ -422,7 +422,27 @@ class _AdminPage extends State<AdminPage> {
                     print("item added");
                   });
                 }
+                else{
+                  FirebaseFirestore.instance
+                      .collection(currentCollection)
+                      .doc(document)
+                      .update({'Soup.${itemName.text}.${"${size1Name.text} oz"}':double.parse(size1Price.text)})
+                      .whenComplete(() {
+                    print("item added");
+                  });
+                  FirebaseFirestore.instance
+                      .collection(currentCollection)
+                      .doc(document)
+                      .update({
+                    'Soup.${itemName.text}.${"${size2Name.text} oz"}':
+                    double.parse(size2Price.text)
+                  }).whenComplete(() {
+                    print("item added");
+                  });
+                }
               }
+
+              Navigator.of(context).pop();
 
             }
 

@@ -388,9 +388,9 @@ class _ItemCard extends State<ItemCard> {
 
             IconButton(
                 onPressed: (){
-                  print("hi");
+                  setLimit(index);
                 },
-                icon: Icon(Icons.remove_red_eye)
+                icon: Icon(Icons.production_quantity_limits)
             ),
             IconButton(
                 onPressed: () {
@@ -967,5 +967,63 @@ class _ItemCard extends State<ItemCard> {
         displayItems.remove(displayItems.keys.elementAt(i));
       });
     } else {}
+  }
+
+  Future<void> setLimit(int i) async {
+    int limit = 0;
+
+
+    return await showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, s) {
+            return Container(
+              height: 300,
+              width: 300,
+              child: AlertDialog(
+                title: Text("Adding limit for ${displayItems.keys.elementAt(i)}"),
+                content: SingleChildScrollView(
+                  child: ListBody(
+                    children: <Widget>[
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(child: Text("limit: ")),
+                                Expanded(
+                                    child: TextFormField(
+                                  validator: (value){
+                                    if( value == null|| value.isEmpty || int.tryParse(value)== false){
+                                      return "Please enter a valid number";
+                                    }
+
+                                    limit = int.parse(value);
+                                    return null;
+                                  },
+                                    ),
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                actions: <Widget>[
+                    TextButton(
+                        onPressed: (){
+
+                        },
+                        child: Text("Confirm")
+
+                    )
+                ],
+              ),
+            );
+          });
+        });
   }
 }
