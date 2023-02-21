@@ -13,6 +13,8 @@ Map allItems = {};
 Map displayItems = {};
 var _search = TextEditingController();
 
+Map limits = {};
+
 var documents = [
   'IppA94yUj2wrIzawr5Al',
   'GoeTLas8A4sj29bRuyw2',
@@ -278,6 +280,18 @@ Future<void> getAllItems() async {
 
     displayItems = allItems;
   });
+
+  await FirebaseFirestore.instance
+      .collection('limits')
+      .doc("kZ5NRpx5WBxLOLwKPWwQ")
+      .get()
+      .then((DocumentSnapshot documentSnapshot) {
+    if (documentSnapshot.exists) {
+      limits = documentSnapshot.data() as Map<dynamic, dynamic>;
+    } else {
+      print('Document does not exist on the database');
+    }
+  });
 }
 
 class EditPage extends StatefulWidget {
@@ -385,13 +399,11 @@ class _ItemCard extends State<ItemCard> {
         width: 144,
         child: Row(
           children: [
-
             IconButton(
-                onPressed: (){
+                onPressed: () {
                   setLimit(index);
                 },
-                icon: Icon(Icons.production_quantity_limits)
-            ),
+                icon: Icon(Icons.production_quantity_limits)),
             IconButton(
                 onPressed: () {
                   if (itemData[1] == 'Soup') {
@@ -458,7 +470,8 @@ class _ItemCard extends State<ItemCard> {
     TextEditingController _nameController = TextEditingController();
     _nameController.text = displayItems.keys.elementAt(i);
     TextEditingController _priceController = TextEditingController();
-    _priceController.text = displayItems.values.elementAt(i).last.toStringAsFixed(2);
+    _priceController.text =
+        displayItems.values.elementAt(i).last.toStringAsFixed(2);
     Map sizes = {};
     String collectionsValue = displayItems.values.elementAt(i)[0];
     print("sizes in dialog");
@@ -505,7 +518,6 @@ class _ItemCard extends State<ItemCard> {
                                 return null;
                               },
                             ),
-
                             Container(
                               height: 100,
                               width: 300,
@@ -522,9 +534,11 @@ class _ItemCard extends State<ItemCard> {
                                             controller:
                                                 sizes.keys.elementAt(index),
                                             validator: (value) {
-                                              if (value == null || value.isEmpty) {
+                                              if (value == null ||
+                                                  value.isEmpty) {
                                                 return "Empty field";
-                                              } else if (int.tryParse(value) == null) {
+                                              } else if (int.tryParse(value) ==
+                                                  null) {
                                                 return "Not a size";
                                               } else {
                                                 return null;
@@ -541,22 +555,30 @@ class _ItemCard extends State<ItemCard> {
                                             child: TextFormField(
                                           controller:
                                               sizes.values.elementAt(index),
-                                              validator: (value){
-                                                if(value == null || value.isEmpty){
-                                                  return "Empty field";
-                                                }
-                                                else if(double.tryParse(value) == null){
-                                                  return "Not a price";
-                                                }
-                                                else{
-                                                  var priceNumber = double.parse(sizes.values.elementAt(index).text);
-                                                  print("price number");
-                                                  print(priceNumber.toString());
-                                                  priceNumber = ((priceNumber*100).round())/100;
-                                                  sizes.values.elementAt(index).text = priceNumber.toString();
-                                                  return null;
-                                                }
-                                              },
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return "Empty field";
+                                            } else if (double.tryParse(value) ==
+                                                null) {
+                                              return "Not a price";
+                                            } else {
+                                              var priceNumber = double.parse(
+                                                  sizes.values
+                                                      .elementAt(index)
+                                                      .text);
+                                              print("price number");
+                                              print(priceNumber.toString());
+                                              priceNumber = ((priceNumber * 100)
+                                                      .round()) /
+                                                  100;
+                                              sizes.values
+                                                      .elementAt(index)
+                                                      .text =
+                                                  priceNumber.toString();
+                                              return null;
+                                            }
+                                          },
                                         ))
                                       ],
                                     );
@@ -576,19 +598,18 @@ class _ItemCard extends State<ItemCard> {
                                         collectionsValue = value!;
                                       });
                                     },
-                                    items: collections.map<DropdownMenuItem<String>>(
+                                    items: collections
+                                        .map<DropdownMenuItem<String>>(
                                             (String value) {
-                                          return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Text(value),
-                                          );
-                                        }).toList(),
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
                                   ),
                                 )
                               ],
                             ),
-
-
                           ],
                         ),
                       ),
@@ -599,25 +620,24 @@ class _ItemCard extends State<ItemCard> {
                   TextButton(
                       onPressed: () {
                         Navigator.of(context).pop();
-
                       },
                       child: Text("Cancel")),
                   TextButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           String document = '';
-                          for(int j = 0; j<collections.length;j++){
-                            if(collectionsValue==collections[j]) {
+                          for (int j = 0; j < collections.length; j++) {
+                            if (collectionsValue == collections[j]) {
                               document = documents[j];
                             }
                           }
-                          for(int j = 0; j<sizes.length;j++){
+                          for (int j = 0; j < sizes.length; j++) {
                             FirebaseFirestore.instance
                                 .collection(collectionsValue)
                                 .doc(document)
                                 .update({
                               'Soup.${_nameController.text}.${sizes.keys.elementAt(j).text + " oz"}':
-                              double.parse(sizes.values.elementAt(j).text)
+                                  double.parse(sizes.values.elementAt(j).text)
                             }).then((value) => null);
                             await _deleteItemLogic(i);
 
@@ -628,8 +648,8 @@ class _ItemCard extends State<ItemCard> {
                             allItems.remove(displayItems.keys.elementAt(i));
                             displayItems.remove(displayItems.keys.elementAt(i));
 
-                            List data = [collectionsValue,'Soup'];
-                            for(int j = 0; j<sizes.length;j++){
+                            List data = [collectionsValue, 'Soup'];
+                            for (int j = 0; j < sizes.length; j++) {
                               data.add(sizes.keys.elementAt(j).text);
                               data.add(sizes.values.elementAt(j).text);
                             }
@@ -650,7 +670,8 @@ class _ItemCard extends State<ItemCard> {
     TextEditingController _nameController = TextEditingController();
     _nameController.text = displayItems.keys.elementAt(i);
     TextEditingController _priceController = TextEditingController();
-    _priceController.text = displayItems.values.elementAt(i).last.toStringAsFixed(2);
+    _priceController.text =
+        displayItems.values.elementAt(i).last.toStringAsFixed(2);
     String everydayCategoryValue;
     String weeklyCategoryValue;
     String dayCategoryValue;
@@ -970,9 +991,18 @@ class _ItemCard extends State<ItemCard> {
   }
 
   Future<void> setLimit(int i) async {
-    int limit = 0;
+    TextEditingController limit = TextEditingController();
+    List itemData = displayItems.values.elementAt(i);
+    var currentLimit = limits[displayItems.keys.elementAt(i)][1];
+    if(currentLimit != null){
+      limit.text = currentLimit.toString();
+    }
 
+    print(currentLimit);
 
+    if(currentLimit != null){
+      limit.text = currentLimit.toString();
+    }
     return await showDialog(
         context: context,
         builder: (context) {
@@ -981,7 +1011,8 @@ class _ItemCard extends State<ItemCard> {
               height: 300,
               width: 300,
               child: AlertDialog(
-                title: Text("Adding limit for ${displayItems.keys.elementAt(i)}"),
+                title:
+                    Text("Adding limit for ${displayItems.keys.elementAt(i)}"),
                 content: SingleChildScrollView(
                   child: ListBody(
                     children: <Widget>[
@@ -991,19 +1022,69 @@ class _ItemCard extends State<ItemCard> {
                           children: [
                             Row(
                               children: [
-                                Expanded(child: Text("limit: ")),
-                                Expanded(
-                                    child: TextFormField(
-                                  validator: (value){
-                                    if( value == null|| value.isEmpty || int.tryParse(value)== false){
-                                      return "Please enter a valid number";
-                                    }
+                                if(itemData[1]=='Soup')
+                                  Container(
+                                    width: 200,
+                                    height: 200,
+                                      child: Column(
+                                        children: [
+                                          Expanded(
+                                            child: TextFormField(
+                                              validator: (value) {
+                                                if (value == null ||
+                                                    value.isEmpty ||
+                                                    int.tryParse(value) ==
+                                                        false) {
+                                                  return "Please enter a valid number";
+                                                }
+                                                return null;
+                                              },
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: TextFormField(
+                                              validator: (value) {
+                                                if (value == null ||
+                                                    value.isEmpty ||
+                                                    int.tryParse(value) ==
+                                                        false) {
+                                                  return "Please enter a valid number";
+                                                }
+                                                return null;
+                                              },
+                                            ),
+                                          )
+                                        ],
+                                      ),
 
-                                    limit = int.parse(value);
-                                    return null;
-                                  },
+
+                                  ),
+                                if (itemData[1] != 'Soup')
+                                  Container(
+                                    height: 50,
+                                    width: 200,
+                                    child: Column(
+                                      children: [
+                                        Expanded(
+                                          child: TextFormField(
+                                            controller: limit,
+                                            decoration: const InputDecoration(
+                                              hintText: "limit for item"
+                                            ),
+                                            validator: (value) {
+                                              if (value == null ||
+                                                  value.isEmpty ||
+                                                  int.tryParse(value) ==
+                                                      false) {
+                                                return "Please enter a valid number";
+                                              }
+                                              return null;
+                                            },
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                )
+                                  )
                               ],
                             )
                           ],
@@ -1013,13 +1094,21 @@ class _ItemCard extends State<ItemCard> {
                   ),
                 ),
                 actions: <Widget>[
-                    TextButton(
-                        onPressed: (){
-
-                        },
-                        child: Text("Confirm")
-
-                    )
+                  TextButton(
+                      onPressed: () async {
+                        print(itemData);
+                        if (itemData[1] == 'Soup') {
+                        } else {
+                          FirebaseFirestore.instance
+                              .collection('limits')
+                              .doc('kZ5NRpx5WBxLOLwKPWwQ')
+                              .update({
+                            displayItems.keys.elementAt(i):
+                            [limits[displayItems.keys.elementAt(i)][1],int.parse(limit.text)]
+                          }).then((value) => null);
+                        }
+                      },
+                      child: Text("Confirm"))
                 ],
               ),
             );
