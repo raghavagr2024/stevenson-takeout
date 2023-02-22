@@ -288,6 +288,8 @@ Future<void> getAllItems() async {
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
       limits = documentSnapshot.data() as Map<dynamic, dynamic>;
+      print("limit");
+      print(limits.toString());
     } else {
       print('Document does not exist on the database');
     }
@@ -993,14 +995,14 @@ class _ItemCard extends State<ItemCard> {
   Future<void> setLimit(int i) async {
     TextEditingController limit = TextEditingController();
     List itemData = displayItems.values.elementAt(i);
-    var currentLimit = limits[displayItems.keys.elementAt(i)][1];
-    if(currentLimit != null){
+    var currentLimit;
+    if (limits.containsKey(displayItems.keys.elementAt(i))) {
+      currentLimit = limits[displayItems.keys.elementAt(i)][1];
       limit.text = currentLimit.toString();
     }
-
     print(currentLimit);
 
-    if(currentLimit != null){
+    if (currentLimit != null) {
       limit.text = currentLimit.toString();
     }
     return await showDialog(
@@ -1022,55 +1024,27 @@ class _ItemCard extends State<ItemCard> {
                           children: [
                             Row(
                               children: [
-                                if(itemData[1]=='Soup')
+                                if (itemData[1] == 'Soup')
                                   Container(
                                     width: 200,
                                     height: 200,
-                                      child: Column(
-                                        children: [
-                                          Expanded(
-                                            child: TextFormField(
-                                              validator: (value) {
-                                                if (value == null ||
-                                                    value.isEmpty ||
-                                                    int.tryParse(value) ==
-                                                        false) {
-                                                  return "Please enter a valid number";
-                                                }
-                                                return null;
-                                              },
-                                            ),
-                                          ),
-                                          Expanded(
-                                            child: TextFormField(
-                                              validator: (value) {
-                                                if (value == null ||
-                                                    value.isEmpty ||
-                                                    int.tryParse(value) ==
-                                                        false) {
-                                                  return "Please enter a valid number";
-                                                }
-                                                return null;
-                                              },
-                                            ),
-                                          )
-                                        ],
-                                      ),
-
-
-                                  ),
-                                if (itemData[1] != 'Soup')
-                                  Container(
-                                    height: 50,
-                                    width: 200,
                                     child: Column(
                                       children: [
                                         Expanded(
                                           child: TextFormField(
-                                            controller: limit,
-                                            decoration: const InputDecoration(
-                                              hintText: "limit for item"
-                                            ),
+                                            validator: (value) {
+                                              if (value == null ||
+                                                  value.isEmpty ||
+                                                  int.tryParse(value) ==
+                                                      false) {
+                                                return "Please enter a valid number";
+                                              }
+                                              return null;
+                                            },
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: TextFormField(
                                             validator: (value) {
                                               if (value == null ||
                                                   value.isEmpty ||
@@ -1082,6 +1056,47 @@ class _ItemCard extends State<ItemCard> {
                                             },
                                           ),
                                         )
+                                      ],
+                                    ),
+                                  ),
+                                if (itemData[1] != 'Soup')
+                                  Container(
+                                    height: 80,
+                                    width: 200,
+                                    child: Column(
+                                      children: [
+                                        if (currentLimit != null)
+                                          Expanded(
+                                              child: Text(
+                                                  "${limits[displayItems.keys.elementAt(i)][0]} orders have been placed")),
+
+                                        Expanded(
+                                            child: Row(
+                                          children: [
+                                            Expanded(child: Text("Limit: ")),
+                                            Expanded(
+                                              child: TextFormField(
+                                                controller: limit,
+                                                decoration:
+                                                    const InputDecoration(
+                                                        hintText:
+                                                            "Add a limit"),
+                                                validator: (value) {
+                                                  if (value == null ||
+                                                      value.isEmpty ||
+                                                      int.tryParse(value) == null) {
+                                                    return "Invalid number";
+                                                  } else if (int.parse(value) <
+                                                      limits[displayItems.keys
+                                                          .elementAt(i)][0]) {
+                                                    return "More orders";
+                                                  }
+                                                  return null;
+                                                },
+                                              ),
+                                            )
+                                          ],
+                                        ))
                                       ],
                                     ),
                                   )
@@ -1096,16 +1111,34 @@ class _ItemCard extends State<ItemCard> {
                 actions: <Widget>[
                   TextButton(
                       onPressed: () async {
-                        print(itemData);
-                        if (itemData[1] == 'Soup') {
-                        } else {
-                          FirebaseFirestore.instance
-                              .collection('limits')
-                              .doc('kZ5NRpx5WBxLOLwKPWwQ')
-                              .update({
-                            displayItems.keys.elementAt(i):
-                            [limits[displayItems.keys.elementAt(i)][1],int.parse(limit.text)]
-                          }).then((value) => null);
+                        if (_formKey.currentState!.validate()) {
+                          print(itemData);
+                          if (itemData[1] == 'Soup') {
+                          } else {
+                            if(currentLimit == null){
+                              FirebaseFirestore.instance
+                                  .collection('limits')
+                                  .doc('kZ5NRpx5WBxLOLwKPWwQ')
+                                  .update({
+                                displayItems.keys.elementAt(i): [
+                                  0,
+                                  int.parse(limit.text)
+                                ]
+                              }).then((value) => null);
+                            }
+                            else{
+                              FirebaseFirestore.instance
+                                  .collection('limits')
+                                  .doc('kZ5NRpx5WBxLOLwKPWwQ')
+                                  .update({
+                                displayItems.keys.elementAt(i): [
+                                  limits[displayItems.keys.elementAt(i)][1],
+                                  int.parse(limit.text)
+                                ]
+                              }).then((value) => null);
+                            }
+
+                          }
                         }
                       },
                       child: Text("Confirm"))
