@@ -1030,32 +1030,43 @@ class _ItemCard extends State<ItemCard> {
                                     height: 200,
                                     child: Column(
                                       children: [
-                                        Expanded(
-                                          child: TextFormField(
-                                            validator: (value) {
-                                              if (value == null ||
-                                                  value.isEmpty ||
-                                                  int.tryParse(value) ==
-                                                      false) {
-                                                return "Please enter a valid number";
-                                              }
-                                              return null;
-                                            },
-                                          ),
+                                        Row(
+                                          children: [
+                                            const Expanded(child: Text("Large:")),
+                                            Expanded(
+                                              child: TextFormField(
+                                                validator: (value) {
+                                                  if (value == null ||
+                                                      value.isEmpty ||
+                                                      int.tryParse(value) ==
+                                                          false) {
+                                                    return "Please enter a valid number";
+                                                  }
+                                                  return null;
+                                                },
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        Expanded(
-                                          child: TextFormField(
-                                            validator: (value) {
-                                              if (value == null ||
-                                                  value.isEmpty ||
-                                                  int.tryParse(value) ==
-                                                      false) {
-                                                return "Please enter a valid number";
-                                              }
-                                              return null;
-                                            },
-                                          ),
+                                        Row(
+                                          children: [
+                                            const Expanded(child: Text("Small:")),
+                                            Expanded(
+                                              child: TextFormField(
+                                                validator: (value) {
+                                                  if (value == null ||
+                                                      value.isEmpty ||
+                                                      int.tryParse(value) ==
+                                                          false) {
+                                                    return "Please enter a valid number";
+                                                  }
+                                                  return null;
+                                                },
+                                              ),
+                                            ),
+                                          ],
                                         )
+
                                       ],
                                     ),
                                   ),
@@ -1109,6 +1120,7 @@ class _ItemCard extends State<ItemCard> {
                   ),
                 ),
                 actions: <Widget>[
+                  TextButton(onPressed: (){Navigator.of(context).pop();}, child: Text("Cancel")),
                   TextButton(
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
@@ -1141,7 +1153,8 @@ class _ItemCard extends State<ItemCard> {
                           }
                         }
                       },
-                      child: Text("Confirm"))
+                      child: Text("Confirm")),
+
                 ],
               ),
             );

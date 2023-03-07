@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_database/firebase_database.dart';
 
 class Order {
   Map foods;
@@ -15,6 +14,7 @@ class Order {
   Future<void> addOrder() async {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
     print("in add order");
+    print(soups.toString());
     addCount();
     return users
         .doc("SxHI0lmZHaO8r2BnwtuH/")
@@ -29,38 +29,66 @@ class Order {
         })
         .then((value) => print("User Added"))
         .catchError((error) => print("Failed to add user: $error"));
-
   }
 
   Future<void> addCount() async {
-    Map limits = {};
+    print("in add count");
+    CollectionReference ref = FirebaseFirestore.instance.collection('orders');
+    Map placed = {};
     await FirebaseFirestore.instance
-        .collection('limits')
-        .doc("kZ5NRpx5WBxLOLwKPWwQ")
+        .collection('orders')
+        .doc("placed")
         .get()
         .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
-        limits = documentSnapshot.data() as Map<dynamic, dynamic>;
+        placed = documentSnapshot.data() as Map<dynamic, dynamic>;
       } else {
-        print('Document does not exist on the database');
+        print("error occured while fetching order count");
       }
-      print("done with getData");
     });
-    CollectionReference reference =
-        FirebaseFirestore.instance.collection('limits');
+
     for (int i = 0; i < foods.length; i++) {
-      if (limits.containsKey(foods.keys.elementAt(i))) {
-        reference
-            .doc('kZ5NRpx5WBxLOLwKPWwQ')
-            .update({'${foods.keys.elementAt(i)}': limits[foods.keys.elementAt(i)]+foods[foods.keys.elementAt(i)][0]})
-            .then((value) => print("User Added"))
-            .catchError((error) => print("Failed to add user: $error"));
+      if (placed.containsKey(foods.keys.elementAt(i))) {
+        ref.doc('placed').update({
+          foods.keys.elementAt(i):
+              foods.values.elementAt(i)[0] + placed[foods.keys.elementAt(i)]
+        });
       } else {
-        reference
-            .doc('kZ5NRpx5WBxLOLwKPWwQ')
-            .update({'${foods.keys.elementAt(i)}' : foods[foods.keys.elementAt(i)][0]})
-            .then((value) => print("User Added"))
-            .catchError((error) => print("Failed to add user: $error"));
+        ref
+            .doc('placed')
+            .update({foods.keys.elementAt(i): foods.values.elementAt(i)[0]});
+      }
+    }
+    List sizes = ['large', 'small'];
+    print(soups.toString());
+    for (int i = 0; i < soups.length; i++) {
+      for (int j = 0; j < soups.values.elementAt(i).length; j++) {
+        if (soups.values.elementAt(i)[j] != 0) {
+          if(placed.containsKey(soups.keys.elementAt(i))){
+            if (placed[soups.keys.elementAt(i)].containsKey(sizes[j])) {
+              ref.doc('placed').update({
+                "${soups.keys.elementAt(i)}.${sizes[j]}":
+                placed[soups.keys.elementAt(i)][sizes[j]] +
+                    soups.values.elementAt(i)[j]
+              });
+              print("in first if");
+            } else {
+              ref.doc('placed').update({
+                "${soups.keys.elementAt(i)}.${sizes[j]}":
+                soups.values.elementAt(i)[j]
+              });
+              print("in if else");
+            }
+          }
+          else{
+            ref.doc('placed').update({
+              "${soups.keys.elementAt(i)}.${sizes[j]}":
+              soups.values.elementAt(i)[j]
+            });
+            print("in else else");
+          }
+        }
+
       }
     }
   }
