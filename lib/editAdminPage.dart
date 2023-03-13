@@ -14,7 +14,7 @@ Map displayItems = {};
 var _search = TextEditingController();
 
 Map limits = {};
-
+Map placedOrders = {};
 var documents = [
   'IppA94yUj2wrIzawr5Al',
   'GoeTLas8A4sj29bRuyw2',
@@ -282,14 +282,25 @@ Future<void> getAllItems() async {
   });
 
   await FirebaseFirestore.instance
-      .collection('limits')
-      .doc("kZ5NRpx5WBxLOLwKPWwQ")
+      .collection('orders')
+      .doc("limits")
       .get()
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
       limits = documentSnapshot.data() as Map<dynamic, dynamic>;
       print("limit");
       print(limits.toString());
+    } else {
+      print('Document does not exist on the database');
+    }
+  });
+  await FirebaseFirestore.instance
+      .collection('orders')
+      .doc("placed")
+      .get()
+      .then((DocumentSnapshot documentSnapshot) {
+    if (documentSnapshot.exists) {
+      placedOrders = documentSnapshot.data() as Map<dynamic, dynamic>;
     } else {
       print('Document does not exist on the database');
     }
@@ -353,7 +364,7 @@ class _EditPage extends State<EditPage> {
   }
 
   Widget getItemCard(BuildContext context, int index) {
-    print("in get itemCard");
+
     return ItemCard(context, index);
   }
 
@@ -994,16 +1005,41 @@ class _ItemCard extends State<ItemCard> {
 
   Future<void> setLimit(int i) async {
     TextEditingController limit = TextEditingController();
+    TextEditingController large = TextEditingController();
+    TextEditingController small = TextEditingController();
     List itemData = displayItems.values.elementAt(i);
+
+    var placed;
+    print("in set limit");
+    print(placedOrders);
     var currentLimit;
     if (limits.containsKey(displayItems.keys.elementAt(i))) {
-      currentLimit = limits[displayItems.keys.elementAt(i)][1];
-      limit.text = currentLimit.toString();
+      print("limits");
+      print(limits.toString());
+      currentLimit = limits[displayItems.keys.elementAt(i)];
     }
+    print("currentlimit");
     print(currentLimit);
+    if(placedOrders.containsKey(displayItems.keys.elementAt(i))){
+      placed = placedOrders[displayItems.keys.elementAt(i)];
+    }
 
     if (currentLimit != null) {
-      limit.text = currentLimit.toString();
+      if(currentLimit.runtimeType != Map){
+        limit.text = currentLimit.toString();
+
+      }
+      else{
+        int l = currentLimit[0];
+        int s = currentLimit[1];
+
+        if(l!=0){
+          large.text = l.toString();
+        }
+        if(s!=0){
+          small.text = s.toString();
+        }
+      }
     }
     return await showDialog(
         context: context,
@@ -1030,11 +1066,16 @@ class _ItemCard extends State<ItemCard> {
                                     height: 200,
                                     child: Column(
                                       children: [
+                                        if(placed != null && placed.containsKey('large'))
+                                          Text('${placed['large']} large soups ordered'),
+                                        if(placed != null && placed.containsKey('small'))
+                                          Text('${placed['small']} small soups ordered'),
                                         Row(
                                           children: [
                                             const Expanded(child: Text("Large:")),
                                             Expanded(
                                               child: TextFormField(
+                                                controller: large,
                                                 validator: (value) {
                                                   if (value == null ||
                                                       value.isEmpty ||
@@ -1053,6 +1094,7 @@ class _ItemCard extends State<ItemCard> {
                                             const Expanded(child: Text("Small:")),
                                             Expanded(
                                               child: TextFormField(
+                                                controller: small,
                                                 validator: (value) {
                                                   if (value == null ||
                                                       value.isEmpty ||
@@ -1076,10 +1118,10 @@ class _ItemCard extends State<ItemCard> {
                                     width: 200,
                                     child: Column(
                                       children: [
-                                        if (currentLimit != null)
+                                        if (placed != null)
                                           Expanded(
-                                              child: Text(
-                                                  "${limits[displayItems.keys.elementAt(i)][0]} orders have been placed")),
+                                              child: placed != 1? Text(
+                                                  "$placed orders have been placed"):Text("1 order has been placed")),
 
                                         Expanded(
                                             child: Row(
@@ -1097,10 +1139,6 @@ class _ItemCard extends State<ItemCard> {
                                                       value.isEmpty ||
                                                       int.tryParse(value) == null) {
                                                     return "Invalid number";
-                                                  } else if (int.parse(value) <
-                                                      limits[displayItems.keys
-                                                          .elementAt(i)][0]) {
-                                                    return "More orders";
                                                   }
                                                   return null;
                                                 },
@@ -1126,29 +1164,37 @@ class _ItemCard extends State<ItemCard> {
                         if (_formKey.currentState!.validate()) {
                           print(itemData);
                           if (itemData[1] == 'Soup') {
+                              if(int.parse(large.text)!=0){
+                                FirebaseFirestore.instance
+                                    .collection('orders')
+                                    .doc('limits')
+                                    .update({
+                                  "${displayItems.keys.elementAt(i)}.large": int.parse(large.text)
+                                }).then((value) => null);
+                              }
+                              if(int.parse(small.text)!=0){
+                                FirebaseFirestore.instance
+                                    .collection('orders')
+                                    .doc('limits')
+                                    .update({
+                                  "${displayItems.keys.elementAt(i)}.small": int.parse(small.text)
+                                }).then((value) => null);
+                              }
+
+                              List soupLimit = [int.parse(large.text),int.parse(small.text)];
+                              limits[displayItems.keys.elementAt(i)] = soupLimit;
+
                           } else {
-                            if(currentLimit == null){
+
                               FirebaseFirestore.instance
-                                  .collection('limits')
-                                  .doc('kZ5NRpx5WBxLOLwKPWwQ')
+                                  .collection('orders')
+                                  .doc('limits')
                                   .update({
-                                displayItems.keys.elementAt(i): [
-                                  0,
-                                  int.parse(limit.text)
-                                ]
+                                displayItems.keys.elementAt(i): int.parse(limit.text)
                               }).then((value) => null);
-                            }
-                            else{
-                              FirebaseFirestore.instance
-                                  .collection('limits')
-                                  .doc('kZ5NRpx5WBxLOLwKPWwQ')
-                                  .update({
-                                displayItems.keys.elementAt(i): [
-                                  limits[displayItems.keys.elementAt(i)][1],
-                                  int.parse(limit.text)
-                                ]
-                              }).then((value) => null);
-                            }
+
+                              limits[displayItems.keys.elementAt(i)] = int.parse(limit.text);
+
 
                           }
                         }
