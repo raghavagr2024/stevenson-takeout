@@ -8,16 +8,41 @@ import 'cart.dart';
 import 'main.dart';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
-void createCount(){
-  count = [];
-  for(int i = 0; i<101;i++){
-    count.add(i.toString());
-  }
-}
+
+
+Map maxLimit = {};
+Map placed = {};
 class HomePage extends StatelessWidget {
+
+
+  @override
+  void initState(){
+    FirebaseFirestore.instance
+        .collection('orders')
+        .doc('limits')
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        maxLimit = documentSnapshot.data() as Map<dynamic,dynamic>;
+      } else {
+        print('Document does not exist on the database');
+      }
+    });
+    FirebaseFirestore.instance
+        .collection('orders')
+        .doc('placed')
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        placed = documentSnapshot.data() as Map<dynamic,dynamic>;
+      } else {
+        print('Document does not exist on the database');
+      }
+    });
+  }
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    initState();
     return Scaffold(
       body: EveryDayItems(),
     );
@@ -477,6 +502,13 @@ class _CounterButton extends State<CounterButton> {
     } else {
       text = selected[items.keys.elementAt(index)][0];
     }
+    var max = 100;
+    if(maxLimit.containsKey(items.keys.elementAt(index))){
+      max = maxLimit[items.keys.elementAt(index)];
+      if(placed.containsKey(items.keys.elementAt(index))){
+        max -= placed[items.keys.elementAt(index)] as int;
+      }
+    }
 
     return Container(
       padding: const EdgeInsets.all(3),
@@ -503,10 +535,15 @@ class _CounterButton extends State<CounterButton> {
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.add_circle,
-                color: Color(0xFFc99a2c), size: 20),
+            icon:  Icon(Icons.add_circle,
+                color: text < max? Color(0xFFc99a2c): Colors.grey, size: 20),
             onPressed: () {
-              add(items.keys.elementAt(index), items.values.elementAt(index));
+              if(text<max){
+                add(items.keys.elementAt(index), items.values.elementAt(index));
+              }
+              else{
+                null;
+              }
             },
           ),
         ],
@@ -591,6 +628,40 @@ class _SoupTrailer extends State<SoupTrailer> {
 
   @override
   Widget build(BuildContext context) {
+    List large = [];
+    List small = [];
+    var l = 100;
+    var s = 100;
+
+    if(maxLimit.containsKey(items.keys.elementAt(index))){
+      var soup = maxLimit[items.keys.elementAt(index)];
+      if(soup.containsKey("large")){
+        l = soup['large'];
+      }
+      if(placed.containsKey(items.keys.elementAt(index))){
+        soup = placed[items.keys.elementAt(index)];
+        if(soup.containsKey("large")){
+          l -= soup['large'] as int;
+        }
+      }
+      soup = maxLimit[items.keys.elementAt(index)];
+      if(soup.containsKey("small")){
+        s = soup['small'];
+      }
+      if(placed.containsKey(items.keys.elementAt(index))){
+        soup = placed[items.keys.elementAt(index)];
+        if(soup.containsKey("small")){
+          s -= soup['small'] as int;
+        }
+      }
+    }
+
+    for(int i = 0; i<=l;i++){
+      large.add("$i");
+    }
+    for(int i = 0; i<=s;i++){
+      small.add("$i");
+    }
 
     return Container(
       width: 250,
@@ -624,7 +695,7 @@ class _SoupTrailer extends State<SoupTrailer> {
                     log("soup 2: ${soup2.toString()}");
                   });
                 },
-                items: count.map<DropdownMenuItem<String>>((var value) {
+                items: large.map<DropdownMenuItem<String>>((var value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),
@@ -660,7 +731,7 @@ class _SoupTrailer extends State<SoupTrailer> {
                     log("soup 2: ${soup2.toString()}");
                   });
                 },
-                items: count.map<DropdownMenuItem<String>>((var value) {
+                items: small.map<DropdownMenuItem<String>>((var value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),

@@ -1140,6 +1140,11 @@ class _ItemCard extends State<ItemCard> {
                                                       int.tryParse(value) == null) {
                                                     return "Invalid number";
                                                   }
+                                                  else if(int.parse(value)<placed){
+                                                    return "Limit less than orders placed";
+                                                  }
+
+
                                                   return null;
                                                 },
                                               ),
