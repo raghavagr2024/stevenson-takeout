@@ -3,8 +3,10 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:stevensontakeout/first_page.dart';
 import 'package:stevensontakeout/order.dart';
+import '.env';
 //TODO: Migrate from realtime database to cloud firestore
 Map<String, dynamic> everyDayItems = {};
 Map selected = {};
@@ -13,9 +15,12 @@ var soup1 = {};
 var soup2 = {};
 bool initDone = false;
 Map<String, dynamic> weeklyItems = {};
+
 Future<void> main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
+  Stripe.publishableKey = stripePublishableKey;
+  await Stripe.instance.applySettings();
   await Firebase.initializeApp();
   runApp(const MyApp());
 }
