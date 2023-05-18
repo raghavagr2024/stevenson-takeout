@@ -1,12 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:stevensontakeout/adminLogin.dart';
-import 'package:stevensontakeout/editAdminPage.dart';
-import 'package:stevensontakeout/sign_up_page.dart';
+import 'package:stevensontakeout/admin_login_page.dart';
+import 'package:stevensontakeout/admin_edit.dart';
+import 'package:stevensontakeout/student_sign_up.dart';
 
-import 'adminHome.dart';
+import 'admin_home_page.dart';
 import 'home_page.dart';
-import 'login_page.dart';
+import 'student_login.dart';
 import 'main.dart';
 
 class FirstPage extends StatelessWidget{

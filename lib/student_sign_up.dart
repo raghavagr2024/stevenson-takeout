@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'login_page.dart';
-import 'verification_page.dart';
+import 'student_login.dart';
+import 'student_verification.dart';
 late TextEditingController _name;
 late TextEditingController _email;
 late TextEditingController _password;

@@ -4,10 +4,10 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:stevensontakeout/home_page.dart';
-import 'package:stevensontakeout/sign_up_page.dart';
+import 'package:stevensontakeout/student_sign_up.dart';
 
 import 'first_page.dart';
-import 'verification_page.dart';
+import 'student_verification.dart';
 
 late TextEditingController _email, _password;
 class LoginPage extends StatelessWidget{
@@ -29,7 +29,7 @@ class LoginPage extends StatelessWidget{
           PasswordTextField(),
           const SizedBox(height:30),
           LoginButton(),
-          //const SizedBox(height: 30),SignUpNavigator()
+          const SizedBox(height: 30),SignUpNavigator()
 
         ],
       ),

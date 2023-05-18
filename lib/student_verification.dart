@@ -12,7 +12,7 @@ class VerificationPage extends StatefulWidget{
   var temp;
   VerificationPage(
       this.temp,
-  );
+      );
 
   @override
   State<VerificationPage> createState() {
@@ -43,24 +43,24 @@ class _VerificationPage extends State<VerificationPage> {
       scheduleTimeout(5);
     }
   }
-    @override
-    void initState() {
-      scheduleTimeout(5);
-    }
-    @override
-    Widget build(BuildContext context) {
-      log(_email.text);
-
-      return Scaffold(
-        body: Column(
-          children: <Widget>[
-            EmailVerificationField(),
-            VerificationButton()
-          ],
-        ),
-      );
-    }
+  @override
+  void initState() {
+    scheduleTimeout(5);
   }
+  @override
+  Widget build(BuildContext context) {
+    log(_email.text);
+
+    return Scaffold(
+      body: Column(
+        children: <Widget>[
+          EmailVerificationField(),
+          VerificationButton()
+        ],
+      ),
+    );
+  }
+}
 
 
 
@@ -120,8 +120,8 @@ class _VerificationButton extends State<VerificationButton>{
     return ElevatedButton(
         onPressed: valid ? () => sendEmail() : null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFFc99a2c),
-          padding: const EdgeInsets.fromLTRB(60, 0, 60, 0)
+            backgroundColor: const Color(0xFFc99a2c),
+            padding: const EdgeInsets.fromLTRB(60, 0, 60, 0)
         ),
         child: const Text("Resend email")
     );

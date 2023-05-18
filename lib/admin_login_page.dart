@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stevensontakeout/adminHome.dart';
+import 'package:stevensontakeout/admin_home_page.dart';
 import 'package:stevensontakeout/first_page.dart';
 
 class AdminLogin extends StatelessWidget {

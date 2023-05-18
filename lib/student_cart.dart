@@ -1,12 +1,12 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:stevensontakeout/confirmation.dart';
+import 'package:stevensontakeout/student_confirmation.dart';
 import 'package:stevensontakeout/home_page.dart';
 
-import 'checkout.dart';
+import 'student_checkout.dart';
 import 'main.dart';
-import 'order.dart';
+import 'order_class.dart';
 
 var periods = [
   "4A (11:10 - 11:30)",
