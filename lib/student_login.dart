@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:stevensontakeout/home_page.dart';
+import 'package:stevensontakeout/student_home.dart';
 import 'package:stevensontakeout/student_sign_up.dart';
 
 import 'first_page.dart';

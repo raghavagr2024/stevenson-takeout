@@ -45,6 +45,37 @@ class HomePage extends StatelessWidget {
     initState();
     return Scaffold(
       body: EveryDayItems(),
+      drawer: Drawer(width: 200,child: Column(
+        children: [
+          SizedBox(height: 50,),
+              ListTile(
+                title: Text("View Orders"),
+                leading: Icon(Icons.account_circle),
+                onTap: (){
+
+                },
+              ),
+            ListTile(
+              title: Text("Create a new Order"),
+              leading: Icon(Icons.add),
+              onTap: (){
+
+              },
+            ),
+          ListTile(
+            title: Text("Sign Out"),
+            leading: Icon(Icons.timer),
+            onTap: (){
+                selectedSoups.clear();
+                selected.clear();
+
+            },
+          ),
+
+
+        ],
+      ),
+      ),
     );
   }
 }
@@ -89,11 +120,23 @@ class EveryDayItems extends StatelessWidget {
               physics: const ScrollPhysics(),
               child: Column(
                 children: <Widget>[
-                  const SizedBox(height: 50),
-                  const Text(
-                    "Grille:",
-                    style: TextStyle(fontSize: 30),
+                  const SizedBox(height: 60),
+                  Row(
+                    children:  [
+                      const SizedBox(width: 10,),
+                     IconButton(onPressed: (){
+                       print("in icon pressed");
+                       Scaffold.of(context).openDrawer();
+
+                     }, icon: Icon(Icons.menu,size: 35,)) ,
+                      const SizedBox(width: 125,),
+                      const Text(
+                        "Grille:",
+                        style: TextStyle(fontSize: 30),
+                      ),
+                    ],
                   ),
+
                   ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,

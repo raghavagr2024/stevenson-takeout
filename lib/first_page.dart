@@ -5,7 +5,7 @@ import 'package:stevensontakeout/admin_edit.dart';
 import 'package:stevensontakeout/student_sign_up.dart';
 
 import 'admin_home_page.dart';
-import 'home_page.dart';
+import 'student_home.dart';
 import 'student_login.dart';
 import 'main.dart';
 
@@ -19,15 +19,16 @@ class FirstPage extends StatelessWidget{
       body: Column(
         children: <Widget>[
           SizedBox(height: 50,),
-          // const Center(
-          //   child: Image(
-          //       image: AssetImage('assets/images/patriot.png'),
-          //       width: 300,
-          //       height: 300
-          //
-          //   ),
-          // ),
-          const SizedBox(height: 50,),
+          const Center(
+            child: Image(
+                image: AssetImage('assets/images/patriot.png'),
+                width: 0,
+                height: 0
+
+            ),
+          ),
+          const Text("Stevenson Takeout", style: TextStyle(fontSize: 35),),
+          const SizedBox(height: 200,),
           AdminButton(),
           const SizedBox(height: 50,),
           StudentButton()
