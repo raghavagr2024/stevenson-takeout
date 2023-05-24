@@ -1,9 +1,10 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-
+import 'first_page.dart';
 import 'student_cart.dart';
 import 'main.dart';
 
@@ -65,10 +66,17 @@ class HomePage extends StatelessWidget {
           ListTile(
             title: Text("Sign Out"),
             leading: Icon(Icons.timer),
-            onTap: (){
+            onTap: () async {
                 selectedSoups.clear();
                 selected.clear();
-
+                await FirebaseAuth.instance.signOut();
+                print(FirebaseAuth.instance.currentUser);
+                print("signed out");
+                if (context.mounted) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => FirstPage()));
+                }
             },
           ),
 
