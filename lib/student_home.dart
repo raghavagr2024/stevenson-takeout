@@ -57,15 +57,19 @@ class HomePage extends StatelessWidget {
                 },
               ),
             ListTile(
-              title: Text("Create a new Order"),
-              leading: Icon(Icons.add),
+              title: const Text("Create a new Order"),
+              leading: const Icon(Icons.add),
               onTap: (){
-
+                if (context.mounted) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomePage()));
+                }
               },
             ),
           ListTile(
-            title: Text("Sign Out"),
-            leading: Icon(Icons.timer),
+            title: const Text("Sign Out"),
+            leading: const Icon(Icons.timer),
             onTap: () async {
                 selectedSoups.clear();
                 selected.clear();

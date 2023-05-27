@@ -5,17 +5,32 @@ class Order {
   String orderTime;
   String orderLocation;
   String paymentMethod;
-  int id;
+  int id = 0;
   Map soups;
 
   Order(this.foods, this.soups, this.orderTime, this.orderLocation,
-      this.paymentMethod, this.id);
+      this.paymentMethod);
 
   Future<void> addOrder() async {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
     print("in add order");
     print(soups.toString());
     addCount();
+
+    await FirebaseFirestore.instance
+        .collection('orders')
+        .doc('users')
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        id = (documentSnapshot.data() as Map<dynamic,dynamic>)['ordered'] + 10000;
+      } else {
+        print('Document does not exist on the database');
+      }
+    });
+    print("sucessful");
+
+    incrementOrdered();
     return users
         .doc("SxHI0lmZHaO8r2BnwtuH/")
         .update({
@@ -92,4 +107,13 @@ class Order {
       }
     }
   }
+  Future<void> incrementOrdered() async {
+    CollectionReference orderId  = FirebaseFirestore.instance.collection('orders');
+    orderId.doc("users").update({
+      "ordered": id-9999
+    }
+    );
+  }
 }
+
+
