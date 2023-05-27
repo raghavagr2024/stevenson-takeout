@@ -18,7 +18,7 @@ var periods = [
 
 var total = 0;
 var locations = ["East Commons", "West Commons"];
-var paymentOptions = ["Pay online", "Pay in person"];
+var paymentOptions = ["Pay online"];
 var preferences = [periods.first, locations.first, paymentOptions.first];
 List meats = [
   "Chicken",
@@ -462,7 +462,7 @@ class _TotalPrice extends State<TotalPrice> {
             child: Align(
               alignment: Alignment.centerRight,
               child: Text(
-                "total:   ${format.format(_getPrice())}",
+                "total:   ${format.format(getPrice())}",
                 style: const TextStyle(fontSize: 20),
               ),
             ),
@@ -475,20 +475,7 @@ class _TotalPrice extends State<TotalPrice> {
     );
   }
 
-  double _getPrice() {
-    double total = 0;
-    for (int i = 0; i < selected.length; i++) {
-      total +=
-          selected.values.elementAt(i)[0] * selected.values.elementAt(i)[1];
-    }
 
-    for (int i = 0; i < selectedSoups.length; i++) {
-      total += selectedSoups.values.elementAt(i)[0] * 2 +
-          selectedSoups.values.elementAt(i)[1] * 1.5;
-    }
-
-    return total;
-  }
 }
 
 class SoupList extends StatefulWidget {
@@ -620,7 +607,7 @@ class _SoupList extends State<SoupList> {
   }
 
   Future<void> _showSoupDialog(int i) async {
-
+    print("in show soup dialog");
     var soup = {};
     if(selectedSoups.keys.elementAt(i)==weeklyItems['Soup'].keys.elementAt(0)){
 
@@ -637,9 +624,12 @@ class _SoupList extends State<SoupList> {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
+          for(int i = 0;i<100;i++){
+            count.add("$i");
+          }
           return StatefulBuilder(builder: (context,s){
             return Container(
-                height: 400,
+                height: 700,
                 width: 320,
                 child: AlertDialog(
                   title: Text(selectedSoups.keys.elementAt(i)),
@@ -663,7 +653,11 @@ class _SoupList extends State<SoupList> {
                                       // This is called when the user selects an item.
                                       s((){
                                         soup.values.elementAt(0)[0] = int.parse(value!);
-
+                                        if(getPrice()==0){
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => HomePage()));
+                                        }
                                       });
 
                                     },
@@ -691,7 +685,11 @@ class _SoupList extends State<SoupList> {
 
                                       s((){
                                         soup.values.elementAt(0)[1] = int.parse(value!);
-                                        print(soup.toString());
+                                        if(getPrice()==0){
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => HomePage()));
+                                        }
                                       });
                                     },
                                     items: count.map<DropdownMenuItem<String>>((var value) {
@@ -783,4 +781,19 @@ class NextButton extends StatelessWidget {
         },
         child: const Text("Continue"));
   }
+}
+
+double getPrice() {
+  double total = 0;
+  for (int i = 0; i < selected.length; i++) {
+    total +=
+        selected.values.elementAt(i)[0] * selected.values.elementAt(i)[1];
+  }
+
+  for (int i = 0; i < selectedSoups.length; i++) {
+    total += selectedSoups.values.elementAt(i)[0] * 2 +
+        selectedSoups.values.elementAt(i)[1] * 1.5;
+  }
+
+  return total;
 }

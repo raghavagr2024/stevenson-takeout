@@ -411,64 +411,7 @@ class _Tile extends State<Tile> {
   }
 }
 
-//var international = [];
-/*
-class InternationalTile extends StatefulWidget{
-  Map<String, dynamic> items;
-  BuildContext context;
-  int index;
 
-  InternationalTile(this.context,this.items,this.index);
-
-  @override
-  State<StatefulWidget> createState() {
-    return _InternationalTile(context,items,index);
-  }
-}
-
-class _InternationalTile extends State<InternationalTile>{
-  @override
-  BuildContext context;
-  Map<String, dynamic> items;
-  int index;
-
-  _InternationalTile(this.context,this.items,this.index);
-
-  @override
-  Widget build(context){
-
-
-    return Card(
-        child: ListTile(
-          trailing: international.contains(items.keys.elementAt(index)) ? const Icon(Icons.check_circle, color: Colors.green,) : const Icon(Icons.circle_outlined) ,
-          onTap: (){
-            if(international.contains(items.keys.elementAt(index))){
-              removeItem();
-            }
-            else{
-              addItem();
-            }
-          } ,
-          title: Text(items.keys.elementAt(index)),
-
-        )
-    );
-  }
-
-  void addItem(){
-    international.add(items.keys.elementAt(index));
-    setState(() {
-
-    });
-  }
-  void removeItem(){
-    international.remove(items.keys.elementAt(index));
-    setState(() {
-
-    });
-  }
-}
-*/
 
 class NextButton extends StatefulWidget{
   @override
@@ -501,7 +444,12 @@ class _NextButton extends State<NextButton> {
   bool ifEmpty(){
     print("in if empty");
     print(selected.toString());
-    if(_counter.value==0){
+    print(soup1.toString());
+    print(soup2.toString());
+    if(selected.isEmpty && soup1.isEmpty && soup2.isEmpty){
+      return true;
+    }
+    if(selected.isEmpty && soup1.values.elementAt(0)[0]+soup1.values.elementAt(0)[1]+soup2.values.elementAt(0)[0]+soup2.values.elementAt(0)[1]==0){
       return true;
     }
     return false;
@@ -525,7 +473,7 @@ class _NextButton extends State<NextButton> {
     }
 
 
-    log(selected.toString());
+    log(selectedSoups.toString());
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => Cart()));
   }
