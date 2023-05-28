@@ -7,7 +7,7 @@ import 'student_verification.dart';
 late TextEditingController _name;
 late TextEditingController _email;
 late TextEditingController _password;
-late TextEditingController _studentID;
+late TextEditingController studentID;
 bool temp = false;
 class SignUpPage extends StatelessWidget{
   @override
@@ -137,7 +137,7 @@ class _StudentIDTextField extends State<StudentIDTextField>{
   @override
   void initState(){
     super.initState();
-    _studentID = TextEditingController();
+    studentID = TextEditingController();
   }
   @override
   Widget build(BuildContext context) {
@@ -145,7 +145,7 @@ class _StudentIDTextField extends State<StudentIDTextField>{
         child: SizedBox(
           width: 250,
           child: TextFormField(
-            controller: _studentID,
+            controller: studentID,
             decoration: const InputDecoration(
               labelText: 'Student ID',
               labelStyle: TextStyle(color: Color(0xFFc99a2c)),
@@ -211,6 +211,7 @@ class LoginNavigator extends StatelessWidget{
         foregroundColor: const Color(0xFFc99a2c),
       ),
       onPressed: (){
+
         Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => LoginPage()));

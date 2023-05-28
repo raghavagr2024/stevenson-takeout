@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:stevensontakeout/student_home.dart';
+import 'package:stevensontakeout/student_sign_up.dart';
 
 
 
@@ -34,7 +36,10 @@ class _VerificationPage extends State<VerificationPage> {
       user.reload();
     }
     if (user != null && user.emailVerified) {
-
+      CollectionReference reference = FirebaseFirestore.instance.collection("users");
+      reference.doc("K9303KrOwITuk8itlqrg").update({
+        user.email.toString() : studentID.text
+      });
       Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => HomePage()));

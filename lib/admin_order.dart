@@ -105,7 +105,7 @@ class _OrderTile extends State<OrderTile> {
           child: Column(
             children: [
               Text(
-                'Student id: ${data.keys.elementAt(index)}',
+                'Order id: ${data.keys.elementAt(index)}',
                 style: const TextStyle(fontSize: 25),
               ),
               const SizedBox(height: 20),
@@ -134,7 +134,7 @@ class _OrderTile extends State<OrderTile> {
               height: 300,
               width: 300,
               child: AlertDialog(
-                title: Text("Deleting order for student ID :${data.keys.elementAt(index)}"),
+                title: Text("Deleting order for order ID :${data.keys.elementAt(index)}"),
                 content: SingleChildScrollView(
                   child: ListBody(
                     children: <Widget>[

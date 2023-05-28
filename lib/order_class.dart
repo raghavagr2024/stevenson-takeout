@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Order {
   Map foods;
@@ -7,7 +8,7 @@ class Order {
   String paymentMethod;
   int id = 0;
   Map soups;
-
+  String std = "";
   Order(this.foods, this.soups, this.orderTime, this.orderLocation,
       this.paymentMethod);
 
@@ -28,6 +29,26 @@ class Order {
         print('Document does not exist on the database');
       }
     });
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc('K9303KrOwITuk8itlqrg')
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        Map temp = (documentSnapshot.data() as Map<dynamic,dynamic>);
+        User? user = FirebaseAuth.instance.currentUser;
+        if(user!=null){
+          String? key = user.email.toString().substring(0,user.email.toString().length-4);
+          std = temp[key]['com'];
+        }
+        else{
+          print("Fatal Error: user does not exist");
+        }
+
+      } else {
+        print('Document does not exist on the database');
+      }
+    });
     print("sucessful");
 
     incrementOrdered();
@@ -39,7 +60,8 @@ class Order {
             "soups": soups,
             "location": orderLocation,
             "time": orderTime,
-            "payment method": paymentMethod
+            "payment method": paymentMethod,
+            "student-id": std
           }
         })
         .then((value) => print("User Added"))
