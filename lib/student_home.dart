@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:stevensontakeout/student_order_history.dart';
 import 'first_page.dart';
 import 'student_cart.dart';
 import 'main.dart';
@@ -52,8 +53,11 @@ class HomePage extends StatelessWidget {
               ListTile(
                 title: Text("View Orders"),
                 leading: Icon(Icons.account_circle),
-                onTap: (){
-
+                onTap: () async {
+                  await getOrders();
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => OrderHistory()));
                 },
               ),
             ListTile(
