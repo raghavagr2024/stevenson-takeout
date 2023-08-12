@@ -462,7 +462,7 @@ class _TotalPrice extends State<TotalPrice> {
             child: Align(
               alignment: Alignment.centerRight,
               child: Text(
-                "total:   ${format.format(_getPrice())}",
+                "total:   ${format.format(getPrice())}",
                 style: const TextStyle(fontSize: 20),
               ),
             ),
@@ -475,21 +475,24 @@ class _TotalPrice extends State<TotalPrice> {
     );
   }
 
-  double _getPrice() {
-    double total = 0;
-    for (int i = 0; i < selected.length; i++) {
-      total +=
-          selected.values.elementAt(i)[0] * selected.values.elementAt(i)[1];
-    }
 
-    for (int i = 0; i < selectedSoups.length; i++) {
-      total += selectedSoups.values.elementAt(i)[0] * 2 +
-          selectedSoups.values.elementAt(i)[1] * 1.5;
-    }
-
-    return total;
-  }
 }
+
+double getPrice() {
+  double total = 0;
+  for (int i = 0; i < selected.length; i++) {
+    total +=
+        selected.values.elementAt(i)[0] * selected.values.elementAt(i)[1];
+  }
+
+  for (int i = 0; i < selectedSoups.length; i++) {
+    total += selectedSoups.values.elementAt(i)[0] * 2 +
+        selectedSoups.values.elementAt(i)[1] * 1.5;
+  }
+
+  return total;
+}
+
 
 class SoupList extends StatefulWidget {
   @override
