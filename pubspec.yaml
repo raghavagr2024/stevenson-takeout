@@ -42,9 +42,11 @@ dependencies:
   firebase_database: ^10.0.6
   dropdown_button2: ^1.9.2
   flutter_stripe: ^9.0.0+1
-  http: ^0.13.5
+  http: ^0.13.6
   flutter_bloc: ^8.1.2
   equatable: ^2.0.5
+  fl_chart: ^0.63.0
+
 
 
 

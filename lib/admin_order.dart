@@ -5,30 +5,40 @@ import 'package:intl/intl.dart';
 import 'admin_home_page.dart';
 
 class OrderPage extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
-    print("in order page");
+    print("getting data");
 
-    print(data.length);
-    return Column(
-      children: [
-        if (data.isNotEmpty)
-          Expanded(
-          child: ListView.builder(
-            itemBuilder: _getOrders,
-            itemCount: data.length,
-          ),
-        ),
+    return FutureBuilder<dynamic>(
+        future: getData(),
+        builder: (context, AsyncSnapshot<dynamic> snapshot) {
+          if (snapshot.hasData) {
+            print("in order page");
+            print(data.length);
+            return Column(
+              children: [
+                if (data.isNotEmpty)
+                  Expanded(
+                    child: ListView.builder(
+                      itemBuilder: _getOrders,
+                      itemCount: data.length,
+                    ),
+                  ),
 
-         SizedBox(height: 40),
-          if(data.isEmpty)
-            Text("No orders", style: TextStyle(fontSize: 30),),
+                SizedBox(height: 40),
+                if(data.isEmpty)
+                  Text("No orders", style: TextStyle(fontSize: 30),),
 
-          const SizedBox()
+                const SizedBox()
 
 
-      ],
-    );
+              ],
+            );
+          } else {
+            return const CircularProgressIndicator();
+          }
+        });
   }
 
   Widget _getOrders(BuildContext context, int index) {

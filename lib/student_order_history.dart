@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:stevensontakeout/admin_home_page.dart';
+import 'package:stevensontakeout/student_home.dart';
+
+import 'first_page.dart';
+import 'main.dart';
 var ans = {};
 getOrders() async {
   String id = "";
@@ -50,17 +54,63 @@ getOrders() async {
 }
 class OrderHistory extends StatelessWidget{
 
-
-
-
   @override
   Widget build(BuildContext context) {
 
     print("in order page");
     print(ans.toString());
     return Scaffold(
+      drawer: Drawer(width: 200,child: Column(
+        children: [
+
+
+          SizedBox(height: 50,),
+          ListTile(
+            title: Text("View Orders"),
+            leading: Icon(Icons.account_circle),
+            onTap: () async {
+              await getOrders();
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => OrderHistory()));
+            },
+          ),
+          ListTile(
+            title: const Text("Create a new Order"),
+            leading: const Icon(Icons.add),
+            onTap: (){
+              if (context.mounted) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomePage()));
+              }
+            },
+          ),
+          ListTile(
+            title: const Text("Sign Out"),
+            leading: const Icon(Icons.timer),
+            onTap: () async {
+              selectedSoups.clear();
+              selected.clear();
+              await FirebaseAuth.instance.signOut();
+              print(FirebaseAuth.instance.currentUser);
+              print("signed out");
+              if (context.mounted) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => FirstPage()));
+              }
+            },
+          ),
+
+
+        ],
+      ),
+      ),
       body: Column(
         children: [
+          SizedBox(height: 50,),
+          DrawerButton(),
           if (ans.isNotEmpty)
             Expanded(
               child: ListView.builder(
@@ -163,12 +213,7 @@ class _OrderTile extends State<OrderTile> {
               const SizedBox(height: 20),
               ListTile(
                 title: Text(current),
-                trailing: IconButton(
-                  onPressed: (){
-                    deleteOrderDialog(index);
-                  },
-                  icon: Icon(Icons.highlight_remove_outlined),
-                ),
+
               )
 
             ],
@@ -225,6 +270,21 @@ class _OrderTile extends State<OrderTile> {
             );
           });
         });
+  }
+
+}
+
+class DrawerButton extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: IconButton(onPressed: (){
+        print("in icon pressed");
+        Scaffold.of(context).openDrawer();
+
+      }, icon: Icon(Icons.menu,size: 35,)) ,
+    );
   }
 
 }

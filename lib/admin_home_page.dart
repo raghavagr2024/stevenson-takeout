@@ -5,6 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:stevensontakeout/admin_edit.dart';
+import 'package:stevensontakeout/admin_statistics.dart';
 
 import 'admin_order.dart';
 
@@ -21,7 +22,7 @@ var allWeeklyCategories = [
   'Soup'
 ];
 
-Future<void> getData() async {
+Future<dynamic> getData() async {
   await FirebaseFirestore.instance
       .collection('users')
       .doc("SxHI0lmZHaO8r2BnwtuH")
@@ -29,12 +30,14 @@ Future<void> getData() async {
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
       data = documentSnapshot.data() as Map<dynamic, dynamic>;
-      print(data.toString());
+
     } else {
       print('Document does not exist on the database');
     }
-    print("done with getData");
+
   });
+
+  return data;
 }
 
 class AdminPage extends StatefulWidget {
@@ -70,6 +73,10 @@ class _AdminPage extends State<AdminPage> {
             icon: Icon(Icons.edit),
             label: 'Items',
           ),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.auto_graph),
+              label: 'Stats',
+          )
 
         ],
         currentIndex: _selectedIndex,
@@ -91,8 +98,11 @@ class _AdminPage extends State<AdminPage> {
     getData();
     if (_selectedIndex == 0) {
       return OrderPage();
-    } else  {
+    } else if(_selectedIndex==1) {
       return EditPage();
+    }
+    else{
+      return StatsPage();
     }
 
   }
