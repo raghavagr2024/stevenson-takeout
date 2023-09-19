@@ -884,7 +884,7 @@ class _ItemCard extends State<ItemCard> {
                                   double.parse(_priceController.text.toString())
                             }).then((value) => null);
 
-                            await _deleteItemLogic(i);
+
 
                             String newKey = _nameController.text.toString();
                             double newPrice =
@@ -913,7 +913,7 @@ class _ItemCard extends State<ItemCard> {
                                     double.parse(
                                         _priceController.text.toString())
                               }).then((value) => null);
-                              await _deleteItemLogic(i);
+                              
                               String newKey = _nameController.text.toString();
                               double newPrice = double.parse(
                                   _priceController.text.toString());
@@ -934,7 +934,7 @@ class _ItemCard extends State<ItemCard> {
                                     double.parse(
                                         _priceController.text.toString())
                               }).then((value) => null);
-                              await _deleteItemLogic(i);
+
                               String newKey = _nameController.text.toString();
                               double newPrice = double.parse(
                                   _priceController.text.toString());
@@ -1140,6 +1140,9 @@ class _ItemCard extends State<ItemCard> {
                                                       int.tryParse(value) == null) {
                                                     return "Invalid number";
                                                   }
+                                                  else if(placed==null){
+                                                    return null;
+                                                  }
                                                   else if(int.parse(value)<placed){
                                                     return "Limit less than orders placed";
                                                   }
@@ -1202,6 +1205,7 @@ class _ItemCard extends State<ItemCard> {
 
 
                           }
+                          Navigator.of(context).pop();
                         }
                       },
                       child: Text("Confirm")),
