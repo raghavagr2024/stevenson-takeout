@@ -4,7 +4,16 @@ import 'package:intl/intl.dart';
 
 import 'admin_home_page.dart';
 
-class OrderPage extends StatelessWidget {
+class OrderPage extends StatefulWidget{
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return _OrderPage();
+  }
+
+}
+
+class _OrderPage extends State<OrderPage> {
   @override
   Widget build(BuildContext context) {
     print("in order page");
@@ -57,15 +66,20 @@ class _OrderTile extends State<OrderTile> {
   _OrderTile(this.context, this.index);
 
   Widget build(context) {
-    print("in order tile");
+
     Map values = data.values.elementAt(index);
+
+    print(values);
     Map foods = values['foods'];
     Map soups = values['soups'];
-    values.remove('foods');
-    values.remove('soups');
+    // values.remove('foods');
+    // values.remove('soups');
     String current = "";
 
     for (var i = 0; i < values.length - 1; i++) {
+      if(values.keys.elementAtOrNull(i)=='foods'||values.keys.elementAtOrNull(i)=='soups'){
+        continue;
+      }
       current += values.keys.elementAt(i) +
           ":    " +
           values.values.elementAt(i) +
@@ -78,6 +92,9 @@ class _OrderTile extends State<OrderTile> {
     else{
       current += "foods: \n";
       for(int i = 0; i<foods.length;i++){
+        if(values.keys.elementAtOrNull(i)=='foods'||values.keys.elementAtOrNull(i)=='soups'){
+          continue;
+        }
         current += "${foods.values.elementAt(i)[0]}   ${foods.keys.elementAt(i)}:   ${format.format(foods.values.elementAt(i)[0]*foods.values.elementAt(i)[1])}\n";
       }
     }
@@ -87,6 +104,9 @@ class _OrderTile extends State<OrderTile> {
     else{
       current += "Soups: \n";
       for(int i = 0; i<soups.length;i++){
+        if(values.keys.elementAtOrNull(i)=='foods'||values.keys.elementAtOrNull(i)=='soups'){
+          continue;
+        }
         if(soups.values.elementAt(i)[0]!=0){
           current += "${soups.values.elementAt(i)[0]}   12 oz. ${soups.keys.elementAt(i)}: ${format.format(soups.values.elementAt(i)[0]*2)}\n";
         }
@@ -160,10 +180,11 @@ class _OrderTile extends State<OrderTile> {
                           print('Field Deleted');
                         });
                         print("done with delete");
-                        Navigator.of(context).pop();
                         setState(() {
                           data.remove(data.keys.elementAt(index));
                         });
+                        Navigator.of(context).pop();
+
                       },
                       child: Text("Confirm")
                   ),

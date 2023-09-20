@@ -1,5 +1,5 @@
 import 'dart:ffi';
-import 'dart:io';
+
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +48,12 @@ Future<void> getAllItems() async {
       .get()
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
-      temp = documentSnapshot.data() as Map<dynamic, dynamic>;
+      if(documentSnapshot.data()==null){
+        temp = {};
+      }
+      else{
+        temp = documentSnapshot.data() as Map<dynamic, dynamic>;
+      }
       for (int i = 0; i < temp.length; i++) {
         Map currentCategory = temp.values.elementAt(i);
         for (int j = 0; j < currentCategory.length; j++) {
