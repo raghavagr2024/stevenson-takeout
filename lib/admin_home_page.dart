@@ -7,8 +7,9 @@ import 'package:intl/intl.dart';
 import 'package:stevensontakeout/admin_edit.dart';
 
 import 'admin_order.dart';
+import 'main.dart';
 
-Map data = {};
+
 
 var allEverydayCategories = ['Grille', 'Panini', 'Slice of Life', 'Soup'];
 var allWeeklyCategories = [
@@ -21,20 +22,23 @@ var allWeeklyCategories = [
   'Soup'
 ];
 
-Future<void> getData() async {
+Future<Map> getOrders() async {
+  Map temp = {};
   await FirebaseFirestore.instance
       .collection('users')
       .doc("SxHI0lmZHaO8r2BnwtuH")
       .get()
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
-      data = documentSnapshot.data() as Map<dynamic, dynamic>;
-      print(data.toString());
+       temp = documentSnapshot.data() as Map<dynamic, dynamic>;
+      print(orders.toString());
     } else {
       print('Document does not exist on the database');
     }
     print("done with getData");
+    print(temp);
   });
+  return temp;
 }
 
 class AdminPage extends StatefulWidget {
@@ -55,7 +59,7 @@ class _AdminPage extends State<AdminPage> {
 
   @override
   Widget build(BuildContext context) {
-    getData();
+    getOrders();
     print("in main page");
     return Scaffold(
       body: (_getPage()),
@@ -88,7 +92,7 @@ class _AdminPage extends State<AdminPage> {
 
   Widget _getPage() {
     print("in get page");
-    getData();
+    getOrders();
     if (_selectedIndex == 0) {
       return OrderPage();
     } else  {

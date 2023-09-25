@@ -54,7 +54,7 @@ class HomePage extends StatelessWidget {
                 title: Text("View Orders"),
                 leading: Icon(Icons.account_circle),
                 onTap: () async {
-                  await getOrders();
+
                   Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => OrderHistory()));

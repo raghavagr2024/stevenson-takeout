@@ -48,8 +48,6 @@ class AdminButton extends StatelessWidget{
             padding: const EdgeInsets.fromLTRB(60, 0, 60, 0)
         ),
           onPressed: (){
-            getData();
-            getAllItems();
             Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => AdminLogin()));
@@ -68,11 +66,9 @@ class StudentButton extends StatelessWidget{
             padding: const EdgeInsets.fromLTRB(60, 0, 60, 0)
         ),
         onPressed: (){
-          //change to Sign Up
           Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => LoginPage()));
-
         },
 
         child: const Text("Student")
