@@ -115,7 +115,7 @@ class _OrderHistory extends State<OrderHistory>{
   //returns individual order cards
   Widget _getOrderCards(BuildContext context, int index) {
     print("in get orders");
-    return OrderTile(context, index,ans);
+    return OrderTile(context, index,ans,false);
   }
 }
 

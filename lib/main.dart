@@ -5,6 +5,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:stevensontakeout/admin_home_page.dart';
+import 'package:stevensontakeout/admin_login_page.dart';
+import 'package:stevensontakeout/admin_order.dart';
 import 'package:stevensontakeout/first_page.dart';
 import 'package:stevensontakeout/order_class.dart';
 //TODO: Migrate from realtime database to cloud firestore
@@ -44,11 +47,12 @@ class OrderTile extends StatefulWidget {
   BuildContext context;
   int index;
   Map temp;
-  OrderTile(this.context, this.index, this.temp);
+  bool admin;
+  OrderTile(this.context, this.index, this.temp, this.admin);
 
   @override
   State<StatefulWidget> createState() {
-    return _OrderTile(context, index, temp);
+    return _OrderTile(context, index, temp,admin);
   }
 }
 
@@ -57,13 +61,15 @@ class _OrderTile extends State<OrderTile> {
 
   int index;
   Map temp;
+  bool admin;
   Map values = {};
-  _OrderTile(this.context, this.index, this.temp);
+  String orderId = "";
+  _OrderTile(this.context, this.index, this.temp, this.admin);
 
   Widget build(context) {
 
     values = temp.values.elementAt(index);
-    String orderId = temp.keys.elementAt(index);
+    orderId = temp.keys.elementAt(index);
     print(values);
     print("values");
     print(temp);
@@ -125,12 +131,12 @@ class _OrderTile extends State<OrderTile> {
               const SizedBox(height: 20),
               ListTile(
                 title: Text(current),
-                trailing: IconButton(
+                trailing: admin?IconButton(
                   onPressed: (){
                     deleteOrderDialog(index);
                   },
                   icon: Icon(Icons.highlight_remove_outlined),
-                ),
+                ):null,
               )
 
             ],
@@ -148,8 +154,8 @@ class _OrderTile extends State<OrderTile> {
               height: 300,
               width: 300,
               child: AlertDialog(
-                title: Text("Deleting order for order ID :${values.keys.elementAt(index)}"),
-                content: SingleChildScrollView(
+                title: Text("Deleting order for order ID :${orderId}"),
+                content: const SingleChildScrollView(
                   child: ListBody(
                     children: <Widget>[
                       Text("Deleting this order will clear it from the list")
@@ -169,15 +175,15 @@ class _OrderTile extends State<OrderTile> {
                             .collection('users')
                             .doc('SxHI0lmZHaO8r2BnwtuH')
                             .update({
-                          '${values.keys.elementAt(index)}': FieldValue.delete()
+                          orderId: FieldValue.delete()
                         }).whenComplete(() {
                           print('Field Deleted');
                         });
                         print("done with delete");
-                        setState(() {
-                          values.remove(values.keys.elementAt(index));
-                        });
-                        Navigator.of(context).pop();
+
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => AdminPage()));
 
                       },
                       child: Text("Confirm")

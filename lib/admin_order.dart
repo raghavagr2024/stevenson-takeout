@@ -39,12 +39,11 @@ class _OrderPage extends State<OrderPage> {
                 SizedBox(height: 40),
                 const SizedBox()
 
-
               ],
             );
           }
           else{
-            return Text("No orders", style: TextStyle(fontSize: 30),);
+            return const Text("No orders", style: TextStyle(fontSize: 30),);
           }
         },
 
@@ -55,7 +54,7 @@ class _OrderPage extends State<OrderPage> {
 
   Widget _getOrders(BuildContext context, int index) {
     print("in get orders");
-    return OrderTile(context, index,orders);
+    return OrderTile(context, index,orders,true);
   }
 }
 

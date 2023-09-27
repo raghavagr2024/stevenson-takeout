@@ -40,7 +40,7 @@ var dayCategories = ['Comfort Food', 'Mindful', 'Sides'];
 
 var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 
-Future<void> getAllItems() async {
+Future<dynamic> getAllItems() async {
   print("in getAllItems");
   await FirebaseFirestore.instance
       .collection('everyday')
@@ -283,7 +283,7 @@ Future<void> getAllItems() async {
       print('Document does not exist on the database');
     }
 
-    displayItems = allItems;
+
   });
 
   await FirebaseFirestore.instance
@@ -306,10 +306,13 @@ Future<void> getAllItems() async {
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
       placedOrders = documentSnapshot.data() as Map<dynamic, dynamic>;
+      print("placedorders done");
     } else {
       print('Document does not exist on the database');
     }
   });
+  displayItems = allItems;
+  return allItems;
 }
 
 class EditPage extends StatefulWidget {
@@ -320,52 +323,73 @@ class EditPage extends StatefulWidget {
 }
 
 class _EditPage extends State<EditPage> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _search.text = "";
+
+  }
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizedBox(
-          height: 40,
-        ),
-        Align(
-          alignment: Alignment.center,
-          child: Container(
-              height: 40,
-              width: 380,
-              color: Colors.white,
-              alignment: Alignment.center,
-              child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    border: Border.all(color: Colors.grey, width: 2)),
-                child: TextFormField(
-                  textAlign: TextAlign.center,
-                  controller: _search,
-                  onFieldSubmitted: (_search) {
-                    print(_search.toString());
-                  },
-                  onChanged: (_search) {
-                    setState(() {
-                      _getSearchedList(_search);
-                    });
-                  },
-                  decoration: const InputDecoration(
-                    hintText: 'Search for an item',
-                    labelStyle: TextStyle(color: Colors.greenAccent),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.transparent),
-                    ),
-                  ),
+    return FutureBuilder(
+      future: getAllItems(),
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot){
+          if(snapshot.hasData){
+            allItems = snapshot.data;
+            print("display items");
+            print(displayItems);
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 40,
                 ),
-              )),
-        ),
-        Expanded(
-            child: ListView.builder(
-          itemBuilder: getItemCard,
-          itemCount: displayItems.length,
-        ))
-      ],
+                Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                      height: 40,
+                      width: 380,
+                      color: Colors.white,
+                      alignment: Alignment.center,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                            border: Border.all(color: Colors.grey, width: 2)),
+                        child: TextFormField(
+                          textAlign: TextAlign.center,
+                          controller: _search,
+                          onFieldSubmitted: (_search) {
+                            print(_search.toString());
+                          },
+                          onChanged: (_search) {
+                            setState(() {
+                              _getSearchedList(_search);
+                            });
+                          },
+                          decoration: const InputDecoration(
+                            hintText: 'Search for an item',
+                            labelStyle: TextStyle(color: Colors.greenAccent),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.transparent),
+                            ),
+                          ),
+                        ),
+                      )),
+                ),
+                Expanded(
+                    child: ListView.builder(
+                      itemBuilder: getItemCard,
+                      itemCount: displayItems.length,
+                    ))
+              ],
+            );
+          }
+          else{
+            return CircularProgressIndicator();
+          }
+        }
     );
+
   }
 
   Widget getItemCard(BuildContext context, int index) {
