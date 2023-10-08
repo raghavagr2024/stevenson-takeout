@@ -328,7 +328,6 @@ class _EditPage extends State<EditPage> {
   void initState() {
     // TODO: implement initState
     _search.text = "";
-
   }
   @override
   Widget build(BuildContext context) {
