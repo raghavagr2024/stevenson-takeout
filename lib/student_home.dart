@@ -14,18 +14,26 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 
 Map maxLimit = {};
 Map placed = {};
-class HomePage extends StatelessWidget {
-
-
+class HomePage extends StatefulWidget {
   @override
-  void initState(){
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
     FirebaseFirestore.instance
         .collection('orders')
         .doc('limits')
         .get()
         .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
-        maxLimit = documentSnapshot.data() as Map<dynamic,dynamic>;
+        if (mounted) {
+          setState(() {
+            maxLimit = documentSnapshot.data() as Map<dynamic, dynamic>;
+          });
+        }
       } else {
         print('Document does not exist on the database');
       }
@@ -36,15 +44,19 @@ class HomePage extends StatelessWidget {
         .get()
         .then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
-        placed = documentSnapshot.data() as Map<dynamic,dynamic>;
+        if (mounted) {
+          setState(() {
+            placed = documentSnapshot.data() as Map<dynamic, dynamic>;
+          });
+        }
       } else {
         print('Document does not exist on the database');
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
-    initState();
     return Scaffold(
       body: EveryDayItems(),
       drawer: Drawer(width: 200,child: Column(
@@ -330,7 +342,7 @@ class WeekItems extends StatelessWidget {
 
   String getDay() {
     DateTime now = DateTime.now();
-    switch (now.weekday + 1) {
+    switch (now.weekday) {
       case DateTime.monday:
         return "Monday";
       case DateTime.tuesday:
