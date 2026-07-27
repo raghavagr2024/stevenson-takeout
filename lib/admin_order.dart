@@ -151,9 +151,14 @@ class _OrderTile extends State<OrderTile> {
                     ),
                   TextButton(
                       onPressed: () async {
+                        Map selectedOrder = data.values.elementAt(index);
+                        String studentId = "SxHI0lmZHaO8r2BnwtuH";
+                        if (selectedOrder["student-id"] != null) {
+                          studentId = selectedOrder["student-id"];
+                        }
                         await FirebaseFirestore.instance
                             .collection('users')
-                            .doc('SxHI0lmZHaO8r2BnwtuH')
+                            .doc(studentId)
                             .update({
                           '${data.keys.elementAt(index)}': FieldValue.delete()
                         }).whenComplete(() {

@@ -50,11 +50,15 @@ class Order {
       }
     });
     print("sucessful");
+    if (std.isEmpty) {
+      print("Failed to determine current student ID");
+      return;
+    }
 
     incrementOrdered();
     return users
-        .doc("SxHI0lmZHaO8r2BnwtuH/")
-        .update({
+        .doc(std)
+        .set({
           id.toString(): {
             "foods": foods,
             "soups": soups,
@@ -63,7 +67,7 @@ class Order {
             "payment method": paymentMethod,
             "student-id": std
           }
-        })
+        }, SetOptions(merge: true))
         .then((value) => print("User Added"))
         .catchError((error) => print("Failed to add user: $error"));
   }
@@ -137,5 +141,4 @@ class Order {
     );
   }
 }
-
 
