@@ -5,47 +5,90 @@ import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:stevensontakeout/admin_home_page.dart';
 var ans = {};
-getOrders() async {
+String currentStudentId = "";
+
+Future<String> getCurrentStudentId() async {
   String id = "";
-  print("in get orders");
   await FirebaseFirestore.instance
       .collection('users')
       .doc('K9303KrOwITuk8itlqrg')
       .get()
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
-      Map temp = (documentSnapshot.data() as Map<dynamic,dynamic>);
+      Map temp = (documentSnapshot.data() as Map<dynamic, dynamic>);
       User? user = FirebaseAuth.instance.currentUser;
-      if(user!=null){
-        String? key = user.email.toString().substring(0,user.email.toString().length-4);
-        id = temp[key]['com'];
-      }
-      else{
+      if (user != null) {
+        String email = user.email.toString();
+        String key = email.endsWith(".com")
+            ? email.substring(0, email.length - 4)
+            : email;
+        if (temp[key] is Map && temp[key]['com'] != null) {
+          id = temp[key]['com'].toString();
+        } else if (temp[email] != null) {
+          id = temp[email].toString();
+        } else if (temp[key] != null) {
+          id = temp[key].toString();
+        }
+      } else {
         print("Fatal Error: user does not exist");
       }
-
     } else {
       print('Document does not exist on the database');
     }
   });
+  return id;
+}
+
+getOrders() async {
+  print("in get orders");
+  ans.clear();
+  String id = await getCurrentStudentId();
+  currentStudentId = id;
+  if (id.isEmpty) {
+    print("Could not resolve current student ID");
+    return;
+  }
 
   await FirebaseFirestore.instance
       .collection('users')
-      .doc('SxHI0lmZHaO8r2BnwtuH')
+      .doc(id)
       .get()
       .then((DocumentSnapshot documentSnapshot) {
     if (documentSnapshot.exists) {
-      Map temp = (documentSnapshot.data() as Map<dynamic,dynamic>);
-      for(int i = 0; i<temp.length;i++){
-        Map order = temp.values.elementAt(i);
-        if(id==order["student-id"]){
-          ans[temp.keys.elementAt(i)] = order;
+      Map temp = (documentSnapshot.data() as Map<dynamic, dynamic>);
+      for (int i = 0; i < temp.length; i++) {
+        if (temp.values.elementAt(i) is Map) {
+          Map order = temp.values.elementAt(i);
+          if (id == order["student-id"]) {
+            ans[temp.keys.elementAt(i)] = order;
+          }
         }
       }
     } else {
       print('Document does not exist on the database');
     }
   });
+  if (ans.isEmpty) {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc('SxHI0lmZHaO8r2BnwtuH')
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        Map temp = (documentSnapshot.data() as Map<dynamic, dynamic>);
+        for (int i = 0; i < temp.length; i++) {
+          if (temp.values.elementAt(i) is Map) {
+            Map order = temp.values.elementAt(i);
+            if (id == order["student-id"]) {
+              ans[temp.keys.elementAt(i)] = order;
+            }
+          }
+        }
+      } else {
+        print('Document does not exist on the database');
+      }
+    });
+  }
   print(ans);
 }
 class OrderHistory extends StatelessWidget{
@@ -203,9 +246,17 @@ class _OrderTile extends State<OrderTile> {
                   ),
                   TextButton(
                       onPressed: () async {
+                        String studentId = currentStudentId;
+                        Map selectedOrder = ans.values.elementAt(index);
+                        if (selectedOrder["student-id"] != null) {
+                          studentId = selectedOrder["student-id"];
+                        }
+                        String documentId = studentId.isEmpty
+                            ? 'SxHI0lmZHaO8r2BnwtuH'
+                            : studentId;
                         await FirebaseFirestore.instance
                             .collection('users')
-                            .doc('SxHI0lmZHaO8r2BnwtuH')
+                            .doc(documentId)
                             .update({
                           '${ans.keys.elementAt(index)}': FieldValue.delete()
                         }).whenComplete(() {

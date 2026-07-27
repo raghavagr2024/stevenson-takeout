@@ -22,17 +22,21 @@ var allWeeklyCategories = [
 ];
 
 Future<void> getData() async {
+  data = {};
   await FirebaseFirestore.instance
       .collection('users')
-      .doc("SxHI0lmZHaO8r2BnwtuH")
       .get()
-      .then((DocumentSnapshot documentSnapshot) {
-    if (documentSnapshot.exists) {
-      data = documentSnapshot.data() as Map<dynamic, dynamic>;
-      print(data.toString());
-    } else {
-      print('Document does not exist on the database');
+      .then((QuerySnapshot querySnapshot) {
+    for (var userDoc in querySnapshot.docs) {
+      Map userData = userDoc.data() as Map<dynamic, dynamic>;
+      for (int i = 0; i < userData.length; i++) {
+        var value = userData.values.elementAt(i);
+        if (value is Map && value.containsKey("student-id")) {
+          data[userData.keys.elementAt(i)] = value;
+        }
+      }
     }
+    print(data.toString());
     print("done with getData");
   });
 }
@@ -455,4 +459,3 @@ class _AdminPage extends State<AdminPage> {
         });
   }
 }
-
